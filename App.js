@@ -25,7 +25,7 @@ const getNavigation = (modules, screens, initialRoute) => {
       const Navigator = mod.value.navigator
       const options = mod.value.options
 
-      console.log(mod, "dddd")
+      console.log(mod, "dddfffd")
       const Component = () => {
         return (
           <OptionsContext.Provider value={getOptions(pakage)}>
