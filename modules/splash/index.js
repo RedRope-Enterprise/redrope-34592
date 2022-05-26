@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native"
 import React, { useEffect } from "react"
-import { View, StyleSheet, Image } from "react-native"
+import { View, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native"
 
-const NEXT_SCREEN_NAME = "TermsAndConditions"
+const NEXT_SCREEN_NAME = "Onboarding"
 
-const Splash = ({ navigation }) => {
+const Splash = ({}) => {
+  const navigation = useNavigation()
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate(NEXT_SCREEN_NAME)
@@ -11,16 +13,17 @@ const Splash = ({ navigation }) => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <Image
-        resizeMode="cover"
-        style={styles.image}
-        source={{
-          uri:
-            "https://crowdbotics-slack-dev.s3.amazonaws.com/media/resources/project/20577/3d82cb85-9133-48e4-bb4a-a1c8dd140bc4.png"
-        }}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar hidden />
+
+      <View style={styles.container}>
+        <Image
+          resizeMode="cover"
+          style={styles.image}
+          source={require("../assets/images/splash.png")}
+        />
+      </View>
+    </SafeAreaView>
   )
 }
 
@@ -29,10 +32,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFF"
   },
-  image: { width: "100%", height: '100%' }
+  image: { width: "100%", height: "100%" }
 })
 
 export default {
   title: "SplashScreen",
-  navigator: Splash
+  navigator: Splash,
+  options: {
+    headerShown: false
+  }
 }
