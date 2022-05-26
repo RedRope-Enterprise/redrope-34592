@@ -1033,11 +1033,6 @@
   dependencies:
     react-native-app-intro-slider "^4.0.4"
 
-"@modules/onboarding@file:./modules/onboarding/":
-  version "1.0.0"
-  dependencies:
-    react-native-app-intro-slider "^4.0.4"
-
 "@modules/payments@file:./modules/payments":
   version "1.0.1"
 
@@ -1062,6 +1057,9 @@
     uuid "^8.3.2"
 
 "@modules/splash@file:./modules/splash":
+  version "1.0.0"
+
+"@modules/splash@file:./modules/splash/":
   version "1.0.0"
 
 "@modules/terms-and-conditions@file:./modules/terms-and-conditions":
