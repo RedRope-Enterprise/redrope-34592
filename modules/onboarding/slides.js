@@ -1,24 +1,25 @@
 export const slides = [
   {
-    key: 'one',
-    title: 'Title 1',
-    text: 'Description.\nSay something cool',
-    image: {
-      uri:
-        'https://crowdbotics-slack-dev.s3.amazonaws.com/media/project_component_resources/cb-icon.png',
-    },
-    backgroundColor: '#59b2ab',
+    key: "one",
+    title: "Discover",
+    text: "Eget ut non dolor, ac nunc phasellus molestie platea. Nisl ut lobortis viverra in erat justo at.",
+    image: require("../assets/images/onboarding/1.png"),
+    backgroundColor: "rgba(0,0,0,1)"
   },
   {
-    key: 'two',
-    title: 'Title 2',
-    text: 'Other cool stuff',
-    image: {
-      uri:
-        'https://crowdbotics-slack-dev.s3.amazonaws.com/media/project_component_resources/cb-icon.png',
-    },
-    backgroundColor: '#febe29',
+    key: "Explore",
+    title: "Explore",
+    text: "Ac sed ultrices nec sem non commodo volutpat pharetra. Fringilla mattis maecenas arcu.",
+    image: require("../assets/images/onboarding/2.png"),
+    backgroundColor: "rgba(0,0,0,1)"
   },
+  {
+    key: "Share",
+    title: "Share",
+    text: "Proin a non arcu et senectus. Id blandit risus elit tellus lobortis vitae, faucibus sodales. Sit justo.",
+    image: require("../assets/images/onboarding/3.png"),
+    backgroundColor: "rgba(0,0,0,1)"
+  }
   // {
   //   key: 'three',
   //   title: 'Rocket guy',
@@ -26,4 +27,4 @@ export const slides = [
   //   image: require('./assets/3.jpg'),
   //   backgroundColor: '#22bcb5',
   // }
-];
+]
