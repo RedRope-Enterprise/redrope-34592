@@ -29,6 +29,91 @@ const Onboarding = ({ navigation }) => {
       </ImageBackground>
     )
   }
+  const renderSkipButton = eee => {
+    console.log(eee, "eeeee")
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 13,
+            paddingVertical: 10,
+            paddingHorizontal: 40,
+            borderRadius: 100,
+            textAlign: "center",
+            alignSelf: "flex-start",
+            color: "white",
+            fontFamily: "Poppins-Regular",
+            fontWeight: "normal",
+            textDecorationLine: "underline"
+          }}
+        >
+          {"skip for now"}
+        </Text>
+      </View>
+    )
+  }
+  const renderDoneButton = () => {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            paddingVertical: 10,
+            paddingHorizontal: 40,
+            backgroundColor: "#FF0000",
+            borderRadius: 100,
+            textAlign: "center",
+            alignSelf: "flex-start",
+            color: "white",
+            fontFamily: "Poppins-Regular",
+            fontWeight: "bold"
+          }}
+        >
+          {"Start"}
+        </Text>
+      </View>
+    )
+  }
+  const renderNextButton = () => {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row"
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            paddingVertical: 10,
+            paddingHorizontal: 40,
+            backgroundColor: "#FF0000",
+            borderRadius: 100,
+            textAlign: "center",
+            alignSelf: "flex-start",
+            color: "white",
+            fontFamily: "Poppins-Regular",
+            fontWeight: "bold"
+          }}
+        >
+          {"NEXT"}
+        </Text>
+      </View>
+    )
+  }
 
   const onDone = () => {
     navigation.navigate(REDIRECT_SCREEN_NAME)
@@ -45,34 +130,9 @@ const Onboarding = ({ navigation }) => {
         bottomButton
         showSkipButton
         onDone={onDone}
-        renderNextButton={() => (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row"
-            }}
-          >
-            <Pressable>
-              {
-                <Text
-                  style={{
-                    fontSize: 14,
-                    paddingVertical: 10,
-                    paddingHorizontal: 40,
-                    backgroundColor: "#FF0000",
-                    borderRadius: 100,
-                    textAlign: "center",
-                    alignSelf: "flex-start",
-                    color: "white"
-                  }}
-                >
-                  {"NEXT"}
-                </Text>
-              }
-            </Pressable>
-          </View>
-        )}
+        renderNextButton={renderNextButton}
+        renderSkipButton={renderSkipButton}
+        renderDoneButton={renderDoneButton}
       />
     </View>
   )
@@ -106,12 +166,16 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.8)",
     textAlign: "center",
     fontSize: 16,
-    maxWidth: 270
+    maxWidth: 270,
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular"
   },
   title: {
     fontSize: 41,
     color: "white",
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: "Poppins-Regular",
+    fontWeight: "400"
   },
   titleContainer: {
     marginTop: 37

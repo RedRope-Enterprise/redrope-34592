@@ -46,7 +46,7 @@ const getNavigation = (modules, screens, initialRoute) => {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"SplashScreen"}
+          initialRouteName={"Onboarding"}
           screenOptions={screenOptions}
         >
           {routes}
@@ -76,7 +76,6 @@ const getStore = globalState => {
 
 const App = () => {
   const global = useContext(GlobalOptionsContext)
-  console.log(modules, "******")
   const Navigation = getNavigation(modules, screens, initialRoute)
   const store = getStore(global)
 
