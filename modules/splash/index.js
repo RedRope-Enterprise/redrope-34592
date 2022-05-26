@@ -20,7 +20,7 @@ const Splash = ({}) => {
         <Image
           resizeMode="cover"
           style={styles.image}
-          source={require("../assets/images/splash.png")}
+          source={require("./assets/splash.png")}
         />
       </View>
     </SafeAreaView>

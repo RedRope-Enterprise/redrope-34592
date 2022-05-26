@@ -24,8 +24,6 @@ const getNavigation = (modules, screens, initialRoute) => {
       const name = mod.value.title
       const Navigator = mod.value.navigator
       const options = mod.value.options
-
-      console.log(mod, "dddfffd")
       const Component = () => {
         return (
           <OptionsContext.Provider value={getOptions(pakage)}>
@@ -78,6 +76,7 @@ const getStore = globalState => {
 
 const App = () => {
   const global = useContext(GlobalOptionsContext)
+  console.log(modules, "******")
   const Navigation = getNavigation(modules, screens, initialRoute)
   const store = getStore(global)
 

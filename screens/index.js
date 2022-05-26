@@ -1,4 +1,4 @@
-import mods from "./*/index.js";
+import mods from "./*/index.js"
 
 export const screens = mods.map(mod => {
   return Object.assign(mod, {
@@ -7,10 +7,10 @@ export const screens = mods.map(mod => {
       title: mod.name
     }
   })
-});
+})
 
 export function getNavigationScreen(name) {
-  const screen = screens.find(screen => screen.name == name);
+  const screen = screens.find(screen => screen.name == name)
 
   if (screen) {
     return screen.name
