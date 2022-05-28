@@ -18,7 +18,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { createStackNavigator } from "@react-navigation/stack"
 import { slice } from "./auth"
-import { styles } from "./screens/styles"
+import { Color, styles } from "./screens/styles"
 import { SignInTab, SignupTab } from "./screens/loginsignup"
 import PasswordReset from "./screens/reset"
 
@@ -66,41 +66,33 @@ function LoginSignupTabs({ initialRouteName, children, screenOptions }) {
   return (
     <NavigationHelpersContext.Provider value={navigation}>
       <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
-        <ScrollView style={[styles.container]}>
-          <View style={{ flex: 1 }}>
-            <View style={styles.imageContainer}>
-              <ImageBackground
-                source={{
-                  uri: options.BACKGROUND_URL
-                }}
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  resizeMode: "cover",
-                  height: "100%",
-                  width: "100%"
-                }}
-              >
-                <Image
-                  source={{
-                    uri: options.LOGO_URL
-                  }}
-                  style={{
-                    width: 155,
-                    height: 155,
-                    alignSelf: "center",
-                    resizeMode: "contain"
-                  }}
-                />
-              </ImageBackground>
-            </View>
-          </View>
+        <ScrollView
+          style={[styles.container]}
+          contentContainerStyle={{
+            alignItems: "center",
+            // justifyContent: "center",
+            flexDirection: "column",
+            flex: 1
+          }}
+        >
+          {/* <View style={styles.imageContainer}></View> */}
+          <Text
+            style={{
+              fontFamily: "Poppins-Bold",
+              fontSize: 36,
+              color: Color.white,
+              marginVertical: 100
+            }}
+          >
+            {"Sign In"}
+          </Text>
+
           <View style={[styles.cardView]}>
-            <LoginTabBar
+            {/* <LoginTabBar
               navigation={navigation}
               state={state}
               descriptors={descriptors}
-            />
+            /> */}
             <View style={styles.tabContainerStyle}>
               {descriptors[state.routes[state.index].key].render()}
             </View>

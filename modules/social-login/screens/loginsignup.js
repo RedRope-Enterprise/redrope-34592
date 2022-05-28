@@ -263,7 +263,11 @@ export const SignInTab = ({ navigation }) => {
     password: ""
   })
 
-  const { api } = useSelector(state => state.login)
+  const state = useSelector(state => state)
+  console.log(state, "******")
+
+  const { api } = useSelector(state => state.Login)
+
   const dispatch = useDispatch()
 
   const onSigninPress = async () => {

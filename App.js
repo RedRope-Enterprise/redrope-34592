@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { Provider } from "react-redux"
 import "react-native-gesture-handler"
 import { NavigationContainer } from "@react-navigation/native"
@@ -16,6 +16,7 @@ import { connectors } from "@store"
 const Stack = createStackNavigator()
 
 import { GlobalOptionsContext, OptionsContext, getOptions } from "@options"
+import OneSignal from "react-native-onesignal"
 
 const getNavigation = (modules, screens, initialRoute) => {
   const Navigation = () => {
@@ -46,7 +47,7 @@ const getNavigation = (modules, screens, initialRoute) => {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"Onboarding"}
+          initialRouteName={"login"}
           screenOptions={screenOptions}
         >
           {routes}
@@ -78,7 +79,43 @@ const App = () => {
   const global = useContext(GlobalOptionsContext)
   const Navigation = getNavigation(modules, screens, initialRoute)
   const store = getStore(global)
+  useEffect(() => {
+    OneSignal.setAppId("QQQQQQQ")
+    OneSignal.setLogLevel(6, 0)
+    OneSignal.setRequiresUserPrivacyConsent(false)
+    OneSignal.setNotificationWillShowInForegroundHandler(notifReceivedEvent => {
+      console.log(notifReceivedEvent)
+      let notif = notifReceivedEvent.getNotification()
 
+      const button1 = {
+        text: "Cancel",
+        onPress: () => {
+          notifReceivedEvent.complete()
+        },
+        style: "cancel"
+      }
+      const button2 = {
+        text: "Complete",
+        onPress: () => {
+          notifReceivedEvent.complete(notif)
+        }
+      }
+      Alert.alert("Complete notification?", "Test", [button1, button2], {
+        cancelable: true
+      })
+    })
+    OneSignal.setNotificationOpenedHandler(notification => {
+      console.log(notification)
+    })
+    OneSignal.setInAppMessageClickHandler(event => {
+      console.log(event)
+    })
+    const deviceState = OneSignal.getDeviceState()
+
+    deviceState.then(res => {
+      setIsSubscribed(res)
+    })
+  }, [])
   let effects = {}
   hooks.map(hook => {
     effects[hook.name] = hook.value()

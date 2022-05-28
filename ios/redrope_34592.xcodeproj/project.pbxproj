@@ -11,7 +11,30 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		230340468622F33142488E13 /* libPods-redrope_34592.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCB3AEEA20B1CA0CC4E4D511 /* libPods-redrope_34592.a */; };
+		52D09D5E28409E6C00419906 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D09D5D28409E6C00419906 /* NotificationService.swift */; };
+		52D09D6228409E6C00419906 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 52D09D5B28409E6C00419906 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		52D09D6A2840AFB100419906 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE42F6EA456041EF95FD36AD /* Poppins-Black.ttf */; };
+		52D09D6B2840AFB100419906 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FA0C2E549294E488EAF53CE /* Poppins-BlackItalic.ttf */; };
+		52D09D6C2840AFB100419906 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 079E914F335F49D09B6120EE /* Poppins-Bold.ttf */; };
+		52D09D6D2840AFB100419906 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30F1AB6E7B1943378F3438BF /* Poppins-BoldItalic.ttf */; };
+		52D09D6E2840AFB100419906 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AAB29CE3017048908EBF5914 /* Poppins-ExtraBold.ttf */; };
+		52D09D6F2840AFB100419906 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F9BF930555B4538BB7B9740 /* Poppins-ExtraBoldItalic.ttf */; };
+		52D09D702840AFB100419906 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CBBFBD3F417B431384185F30 /* Poppins-ExtraLight.ttf */; };
+		52D09D712840AFB100419906 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DD5D4ABB25E412AA35A0C7E /* Poppins-ExtraLightItalic.ttf */; };
+		52D09D722840AFB100419906 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C54D142CCA74AD0A535EC44 /* Poppins-Italic.ttf */; };
+		52D09D732840AFB100419906 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9091828124E84BEC8918C9FF /* Poppins-Light.ttf */; };
+		52D09D742840AFB100419906 /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 822BB2FD1A374925BA2B6530 /* Poppins-LightItalic.ttf */; };
+		52D09D752840AFB100419906 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2004FB1428CF40F997516424 /* Poppins-Medium.ttf */; };
+		52D09D762840AFB100419906 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8029E589D164C3BB7F1B862 /* Poppins-MediumItalic.ttf */; };
+		52D09D772840AFB100419906 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 479DB10451314CB4ABA695E8 /* Poppins-Regular.ttf */; };
+		52D09D782840AFB100419906 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FABB32DFE5ED46D1AF12903D /* Poppins-SemiBold.ttf */; };
+		52D09D792840AFB100419906 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB567BA48C1F49B5886B6B7D /* Poppins-SemiBoldItalic.ttf */; };
+		52D09D7A2840AFB100419906 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 478875D1EE0043ECAA99F2B6 /* Poppins-Thin.ttf */; };
+		52D09D7B2840AFB100419906 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 432E9702BFEE4FB5B7A59070 /* Poppins-ThinItalic.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8C31F72A25FDF3B33B547DCA /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7803F77F6FD9439DCAA41AD /* libPods-redrope_34592-redrope_34592Tests.a */; };
+		CB1002FEE05EDB28DB08BD4F /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10DDA7F8D53E5CBD6BF0E2EB /* libPods-OneSignalNotificationServiceExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -22,20 +45,89 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = redrope_34592;
 		};
+		52D09D6028409E6C00419906 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52D09D5A28409E6C00419906;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		52D09D6628409E6C00419906 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				52D09D6228409E6C00419906 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* redrope_34592Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = redrope_34592Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* redrope_34592Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = redrope_34592Tests.m; sourceTree = "<group>"; };
+		079E914F335F49D09B6120EE /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		0AD8B295D6544F50AAAC65BE /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		10DDA7F8D53E5CBD6BF0E2EB /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* redrope_34592.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redrope_34592.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = redrope_34592/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = redrope_34592/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = redrope_34592/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = redrope_34592/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = redrope_34592/main.m; sourceTree = "<group>"; };
+		18B5BA8C55074FDD9CEC78DF /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		1F9BF930555B4538BB7B9740 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		2004FB1428CF40F997516424 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		26493C3BDB7243A7838FCEEA /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		265D59918D64985F541FA4B2 /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; sourceTree = "<group>"; };
+		2FA0C2E549294E488EAF53CE /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
+		30F1AB6E7B1943378F3438BF /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
+		38B889CEE72F4F69B321AF88 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		432E9702BFEE4FB5B7A59070 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
+		478875D1EE0043ECAA99F2B6 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
+		479DB10451314CB4ABA695E8 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		493FB92091794667BCCF8E80 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		52D09D5628409E1D00419906 /* redrope_34592.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = redrope_34592.entitlements; path = redrope_34592/redrope_34592.entitlements; sourceTree = "<group>"; };
+		52D09D5B28409E6C00419906 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		52D09D5D28409E6C00419906 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		52D09D5F28409E6C00419906 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52D09D6728409F7400419906 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		6389D7B2A3E05D93FF2B45C3 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		64CFB9A45E634B8CA7E7B15F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		69FB23BC71EF4EDB98ED016D /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		7256BF23F9084B8ABCC43AD5 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = redrope_34592/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		822BB2FD1A374925BA2B6530 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
+		8C54D142CCA74AD0A535EC44 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
+		9091828124E84BEC8918C9FF /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
+		97F3B02E4CD445F591D76396 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		9980AAA517AB499E9827FDC9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		9DD5D4ABB25E412AA35A0C7E /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		A69419EA11C144DF825F832E /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		AAB29CE3017048908EBF5914 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		AD0D0A83A2BE4E8D8655FA16 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		AF10AE5A05254E719E62DE89 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		B011B62BD0D248DEA0683674 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		B1AA14B3E560B88EDBDCE308 /* Pods-redrope_34592.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.debug.xcconfig"; sourceTree = "<group>"; };
+		B7803F77F6FD9439DCAA41AD /* libPods-redrope_34592-redrope_34592Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592-redrope_34592Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8029E589D164C3BB7F1B862 /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
+		CB567BA48C1F49B5886B6B7D /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		CBBFBD3F417B431384185F30 /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
+		CE83C1E949684329D7FA87FD /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		D6B6B2B4DAED4DA2B5463852 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		D99BBCA83A374D019F6559A5 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		DCB3AEEA20B1CA0CC4E4D511 /* libPods-redrope_34592.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE42F6EA456041EF95FD36AD /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
+		DFA1807C4A541A2F0BA53694 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F9ABD900E73D24466445F357 /* Pods-redrope_34592.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.release.xcconfig"; sourceTree = "<group>"; };
+		FABB32DFE5ED46D1AF12903D /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C31F72A25FDF3B33B547DCA /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +143,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				230340468622F33142488E13 /* libPods-redrope_34592.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52D09D5828409E6C00419906 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB1002FEE05EDB28DB08BD4F /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +178,7 @@
 		13B07FAE1A68108700A75B9A /* redrope_34592 */ = {
 			isa = PBXGroup;
 			children = (
+				52D09D5628409E1D00419906 /* redrope_34592.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -90,8 +193,62 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				DCB3AEEA20B1CA0CC4E4D511 /* libPods-redrope_34592.a */,
+				B7803F77F6FD9439DCAA41AD /* libPods-redrope_34592-redrope_34592Tests.a */,
+				10DDA7F8D53E5CBD6BF0E2EB /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3E0256119838432EA0062421 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DE42F6EA456041EF95FD36AD /* Poppins-Black.ttf */,
+				2FA0C2E549294E488EAF53CE /* Poppins-BlackItalic.ttf */,
+				079E914F335F49D09B6120EE /* Poppins-Bold.ttf */,
+				30F1AB6E7B1943378F3438BF /* Poppins-BoldItalic.ttf */,
+				AAB29CE3017048908EBF5914 /* Poppins-ExtraBold.ttf */,
+				1F9BF930555B4538BB7B9740 /* Poppins-ExtraBoldItalic.ttf */,
+				CBBFBD3F417B431384185F30 /* Poppins-ExtraLight.ttf */,
+				9DD5D4ABB25E412AA35A0C7E /* Poppins-ExtraLightItalic.ttf */,
+				8C54D142CCA74AD0A535EC44 /* Poppins-Italic.ttf */,
+				9091828124E84BEC8918C9FF /* Poppins-Light.ttf */,
+				822BB2FD1A374925BA2B6530 /* Poppins-LightItalic.ttf */,
+				2004FB1428CF40F997516424 /* Poppins-Medium.ttf */,
+				B8029E589D164C3BB7F1B862 /* Poppins-MediumItalic.ttf */,
+				479DB10451314CB4ABA695E8 /* Poppins-Regular.ttf */,
+				FABB32DFE5ED46D1AF12903D /* Poppins-SemiBold.ttf */,
+				CB567BA48C1F49B5886B6B7D /* Poppins-SemiBoldItalic.ttf */,
+				478875D1EE0043ECAA99F2B6 /* Poppins-Thin.ttf */,
+				432E9702BFEE4FB5B7A59070 /* Poppins-ThinItalic.ttf */,
+				97F3B02E4CD445F591D76396 /* AntDesign.ttf */,
+				AD0D0A83A2BE4E8D8655FA16 /* Entypo.ttf */,
+				18B5BA8C55074FDD9CEC78DF /* EvilIcons.ttf */,
+				B011B62BD0D248DEA0683674 /* Feather.ttf */,
+				26493C3BDB7243A7838FCEEA /* FontAwesome.ttf */,
+				D6B6B2B4DAED4DA2B5463852 /* FontAwesome5_Brands.ttf */,
+				9980AAA517AB499E9827FDC9 /* FontAwesome5_Regular.ttf */,
+				38B889CEE72F4F69B321AF88 /* FontAwesome5_Solid.ttf */,
+				7256BF23F9084B8ABCC43AD5 /* Fontisto.ttf */,
+				D99BBCA83A374D019F6559A5 /* Foundation.ttf */,
+				64CFB9A45E634B8CA7E7B15F /* Ionicons.ttf */,
+				0AD8B295D6544F50AAAC65BE /* MaterialCommunityIcons.ttf */,
+				493FB92091794667BCCF8E80 /* MaterialIcons.ttf */,
+				AF10AE5A05254E719E62DE89 /* Octicons.ttf */,
+				69FB23BC71EF4EDB98ED016D /* SimpleLineIcons.ttf */,
+				A69419EA11C144DF825F832E /* Zocial.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		52D09D5C28409E6C00419906 /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				52D09D6728409F7400419906 /* OneSignalNotificationServiceExtension.entitlements */,
+				52D09D5D28409E6C00419906 /* NotificationService.swift */,
+				52D09D5F28409E6C00419906 /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -107,8 +264,11 @@
 				13B07FAE1A68108700A75B9A /* redrope_34592 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* redrope_34592Tests */,
+				52D09D5C28409E6C00419906 /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				3E0256119838432EA0062421 /* Resources */,
+				B956C968045F87E4070A4AEA /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -120,8 +280,22 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* redrope_34592.app */,
 				00E356EE1AD99517003FC87E /* redrope_34592Tests.xctest */,
+				52D09D5B28409E6C00419906 /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B956C968045F87E4070A4AEA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B1AA14B3E560B88EDBDCE308 /* Pods-redrope_34592.debug.xcconfig */,
+				F9ABD900E73D24466445F357 /* Pods-redrope_34592.release.xcconfig */,
+				CE83C1E949684329D7FA87FD /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */,
+				265D59918D64985F541FA4B2 /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */,
+				DFA1807C4A541A2F0BA53694 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				6389D7B2A3E05D93FF2B45C3 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,9 +305,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "redrope_34592Tests" */;
 			buildPhases = (
+				3DDC538464BD279A850645CC /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				B58592B0BCA1A83D6438C26E /* [CP] Embed Pods Frameworks */,
+				F06FFEFB4B149EBB72154BD5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,20 +326,43 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "redrope_34592" */;
 			buildPhases = (
+				A97BD51B7AC644579C93E494 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				95D2357A0720381DF8A4BCC3 /* [CP] Embed Pods Frameworks */,
+				35EAC4C167DB0C4A967B382E /* [CP] Copy Pods Resources */,
+				52D09D6628409E6C00419906 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				52D09D6128409E6C00419906 /* PBXTargetDependency */,
 			);
 			name = redrope_34592;
 			productName = redrope_34592;
 			productReference = 13B07F961A680F5B00A75B9A /* redrope_34592.app */;
 			productType = "com.apple.product-type.application";
+		};
+		52D09D5A28409E6C00419906 /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52D09D6328409E6C00419906 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				ACB8366554E5C80D3064EF05 /* [CP] Check Pods Manifest.lock */,
+				52D09D5728409E6C00419906 /* Sources */,
+				52D09D5828409E6C00419906 /* Frameworks */,
+				52D09D5928409E6C00419906 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = 52D09D5B28409E6C00419906 /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -170,6 +370,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -178,6 +379,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					52D09D5A28409E6C00419906 = {
+						CreatedOnToolsVersion = 13.3;
 					};
 				};
 			};
@@ -196,6 +400,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* redrope_34592 */,
 				00E356ED1AD99517003FC87E /* redrope_34592Tests */,
+				52D09D5A28409E6C00419906 /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -212,8 +417,33 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52D09D6A2840AFB100419906 /* Poppins-Black.ttf in Resources */,
+				52D09D6B2840AFB100419906 /* Poppins-BlackItalic.ttf in Resources */,
+				52D09D6C2840AFB100419906 /* Poppins-Bold.ttf in Resources */,
+				52D09D6D2840AFB100419906 /* Poppins-BoldItalic.ttf in Resources */,
+				52D09D6E2840AFB100419906 /* Poppins-ExtraBold.ttf in Resources */,
+				52D09D6F2840AFB100419906 /* Poppins-ExtraBoldItalic.ttf in Resources */,
+				52D09D702840AFB100419906 /* Poppins-ExtraLight.ttf in Resources */,
+				52D09D712840AFB100419906 /* Poppins-ExtraLightItalic.ttf in Resources */,
+				52D09D722840AFB100419906 /* Poppins-Italic.ttf in Resources */,
+				52D09D732840AFB100419906 /* Poppins-Light.ttf in Resources */,
+				52D09D742840AFB100419906 /* Poppins-LightItalic.ttf in Resources */,
+				52D09D752840AFB100419906 /* Poppins-Medium.ttf in Resources */,
+				52D09D762840AFB100419906 /* Poppins-MediumItalic.ttf in Resources */,
+				52D09D772840AFB100419906 /* Poppins-Regular.ttf in Resources */,
+				52D09D782840AFB100419906 /* Poppins-SemiBold.ttf in Resources */,
+				52D09D792840AFB100419906 /* Poppins-SemiBoldItalic.ttf in Resources */,
+				52D09D7A2840AFB100419906 /* Poppins-Thin.ttf in Resources */,
+				52D09D7B2840AFB100419906 /* Poppins-ThinItalic.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52D09D5928409E6C00419906 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +463,140 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		35EAC4C167DB0C4A967B382E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3DDC538464BD279A850645CC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-redrope_34592-redrope_34592Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95D2357A0720381DF8A4BCC3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-redrope_34592/Pods-redrope_34592-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A97BD51B7AC644579C93E494 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-redrope_34592-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ACB8366554E5C80D3064EF05 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B58592B0BCA1A83D6438C26E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F06FFEFB4B149EBB72154BD5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -273,6 +637,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		52D09D5728409E6C00419906 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52D09D5E28409E6C00419906 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -281,11 +653,17 @@
 			target = 13B07F861A680F5B00A75B9A /* redrope_34592 */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
+		52D09D6128409E6C00419906 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52D09D5A28409E6C00419906 /* OneSignalNotificationServiceExtension */;
+			targetProxy = 52D09D6028409E6C00419906 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE83C1E949684329D7FA87FD /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -312,6 +690,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 265D59918D64985F541FA4B2 /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -335,10 +714,14 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1AA14B3E560B88EDBDCE308 /* Pods-redrope_34592.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = redrope_34592/redrope_34592.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6YKR59QXKM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = redrope_34592/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -350,7 +733,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "redrope-34592";
 				PRODUCT_NAME = redrope_34592;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -360,10 +743,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F9ABD900E73D24466445F357 /* Pods-redrope_34592.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = redrope_34592/redrope_34592.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6YKR59QXKM;
 				INFOPLIST_FILE = redrope_34592/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -374,10 +761,90 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "redrope-34592";
 				PRODUCT_NAME = redrope_34592;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		52D09D6428409E6C00419906 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFA1807C4A541A2F0BA53694 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6YKR59QXKM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "redrope-34592.OneSignalNotificationServiceExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		52D09D6528409E6C00419906 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6389D7B2A3E05D93FF2B45C3 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 6YKR59QXKM;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "redrope-34592.OneSignalNotificationServiceExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -414,6 +881,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -434,11 +902,7 @@
 					/usr/lib/swift,
 					"$(inherited)",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
-					"\"$(inherited)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -478,6 +942,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -491,11 +956,7 @@
 					/usr/lib/swift,
 					"$(inherited)",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
-					"\"$(inherited)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -519,6 +980,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52D09D6328409E6C00419906 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52D09D6428409E6C00419906 /* Debug */,
+				52D09D6528409E6C00419906 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
