@@ -10,10 +10,12 @@ import {
 } from "react-native"
 import { slides } from "./slides"
 import AppIntroSlider from "react-native-app-intro-slider"
+import { useNavigation } from "@react-navigation/native"
 
-const REDIRECT_SCREEN_NAME = "LoginAndSignup177769"
+const REDIRECT_SCREEN_NAME = "Login"
 
-const Onboarding = ({ navigation }) => {
+const Onboarding = ({}) => {
+  const navigation = useNavigation()
   const renderItem = ({ item }) => {
     return (
       <ImageBackground style={styles.image} source={item.image}>
@@ -29,8 +31,7 @@ const Onboarding = ({ navigation }) => {
       </ImageBackground>
     )
   }
-  const renderSkipButton = eee => {
-    console.log(eee, "eeeee")
+  const renderSkipButton = () => {
     return (
       <View
         style={{
@@ -64,7 +65,11 @@ const Onboarding = ({ navigation }) => {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          flexDirection: "row"
+          flexDirection: "row",
+          backgroundColor: "#FF0000",
+          borderRadius: 100,
+          // width: 100,
+          alignSelf: "center"
         }}
       >
         <Text
@@ -72,7 +77,6 @@ const Onboarding = ({ navigation }) => {
             fontSize: 14,
             paddingVertical: 10,
             paddingHorizontal: 40,
-            backgroundColor: "#FF0000",
             borderRadius: 100,
             textAlign: "center",
             alignSelf: "flex-start",
@@ -92,7 +96,11 @@ const Onboarding = ({ navigation }) => {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          flexDirection: "row"
+          flexDirection: "row",
+          backgroundColor: "#FF0000",
+          borderRadius: 100,
+          // width: 100,
+          alignSelf: "center"
         }}
       >
         <Text
@@ -100,8 +108,6 @@ const Onboarding = ({ navigation }) => {
             fontSize: 14,
             paddingVertical: 10,
             paddingHorizontal: 40,
-            backgroundColor: "#FF0000",
-            borderRadius: 100,
             textAlign: "center",
             alignSelf: "flex-start",
             color: "white",
