@@ -177,7 +177,8 @@ export const SignupTab = () => {
     password: ""
   })
 
-  const { api } = useSelector(state => state.login)
+  // const { api } = useSelector(state => state.login)
+  const api = {}
   const dispatch = useDispatch()
 
   const onSignupPress = async () => {
@@ -263,7 +264,8 @@ export const SignInTab = ({ navigation }) => {
     password: ""
   })
 
-  const { api } = useSelector(state => state.login)
+  // const { api } = useSelector(state => state.login)
+  const api = {}
   const dispatch = useDispatch()
 
   const onSigninPress = async () => {

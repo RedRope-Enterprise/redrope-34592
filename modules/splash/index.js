@@ -13,17 +13,17 @@ const Splash = ({}) => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <StatusBar hidden />
 
       <View style={styles.container}>
         <Image
           resizeMode="cover"
           style={styles.image}
-          source={require("../assets/images/splash.png")}
+          source={require("../../assets/images/splash.png")}
         />
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 

@@ -10,10 +10,13 @@ import {
 } from "react-native"
 import { slides } from "./slides"
 import AppIntroSlider from "react-native-app-intro-slider"
+import { useNavigation } from "@react-navigation/native"
 
-const REDIRECT_SCREEN_NAME = "LoginAndSignup177769"
+const REDIRECT_SCREEN_NAME = "login"
 
-const Onboarding = ({ navigation }) => {
+const Onboarding = ( ) => {
+  const navigation = useNavigation()
+
   const renderItem = ({ item }) => {
     return (
       <ImageBackground style={styles.image} source={item.image}>
