@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  web:
+  web_rr:
     build:
       context: .
       args:
@@ -13,6 +13,7 @@ services:
       - "8000:${PORT}"
   postgres:
     environment:
+      POSTGRES_DB: postgres_rr
       POSTGRES_PASSWORD: <postgres_pwd>
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -22,6 +23,5 @@ services:
     ports:
       - "6379:6379"
 
-volumes: 
+volumes:
   postgres-data:
-

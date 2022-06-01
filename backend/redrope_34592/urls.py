@@ -15,24 +15,32 @@ Including another URLconf
 """
 
 from django.contrib import admin
+from django.conf.urls import url
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from allauth.account.views import confirm_email
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from users.viewsets import FacebookLogin, GoogleLogin, AppleLogin
+
 
 urlpatterns = [
     path("", include("home.urls")),
     path("accounts/", include("allauth.urls")),
     path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
+    path("api/v1/events/", include("events.urls")),
     path("admin/", admin.site.urls),
-    path("users/", include("users.urls", namespace="users")),
+    path("api/v1/users/", include("users.urls", namespace="users")),
     path("rest-auth/", include("rest_auth.urls")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),
     path("rest-auth/registration/", include("rest_auth.registration.urls")),
+    # Social auth
+    url("rest-auth/facebook/$", FacebookLogin.as_view(), name="fb_login"),
+    url("rest-auth/google/$", GoogleLogin.as_view(), name="google_login"),
+    url("rest-auth/apple/$", AppleLogin.as_view(), name="apple_login"),
 ]
 
 admin.site.site_header = "RedRope"
@@ -57,6 +65,7 @@ urlpatterns += [
 ]
 
 
-urlpatterns += [path("", TemplateView.as_view(template_name='index.html'))]
-urlpatterns += [re_path(r"^(?:.*)/?$",
-                TemplateView.as_view(template_name='index.html'))]
+urlpatterns += [path("", TemplateView.as_view(template_name="index.html"))]
+urlpatterns += [
+    re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html"))
+]

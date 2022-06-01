@@ -8,53 +8,83 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
+from home.models import Category
 
 
 User = get_user_model()
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
 class SignupSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(
+        write_only=True, required=True, style={"input_type": "password"}
+    )
+
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'password')
+        fields = ("id", "name", "email", "password", "password2", "accept_tc")
         extra_kwargs = {
-            'password': {
-                'write_only': True,
-                'style': {
-                    'input_type': 'password'
-                }
+            "password": {"write_only": True, "style": {"input_type": "password"}},
+            "password2": {"write_only": True, "style": {"input_type": "password"}},
+            "email": {
+                "required": True,
+                "allow_blank": False,
             },
-            'email': {
-                'required': True,
-                'allow_blank': False,
-            }
         }
 
     def _get_request(self):
-        request = self.context.get('request')
-        if request and not isinstance(request, HttpRequest) and hasattr(request, '_request'):
+        request = self.context.get("request")
+        if (
+            request
+            and not isinstance(request, HttpRequest)
+            and hasattr(request, "_request")
+        ):
             request = request._request
         return request
 
-    def validate_email(self, email):
-        email = get_adapter().clean_email(email)
+    # def validate_email(self, email):
+    #     email = get_adapter().clean_email(email)
+    #     if allauth_settings.UNIQUE_EMAIL:
+    #         if email and email_address_exists(email):
+    #             raise serializers.ValidationError(
+    #                 _("A user is already registered with this e-mail address."))
+    #     return email
+
+    def validate(self, attrs):
+        email = get_adapter().clean_email(attrs["email"])
         if allauth_settings.UNIQUE_EMAIL:
             if email and email_address_exists(email):
                 raise serializers.ValidationError(
-                    _("A user is already registered with this e-mail address."))
-        return email
+                    {
+                        "email": _(
+                            "A user is already registered with this e-mail address."
+                        )
+                    }
+                )
+
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError({"password": "Password didn't match."})
+
+        if not attrs["accept_tc"]:
+            raise serializers.ValidationError(
+                {"accept_tc": "Please accept terms and conditions"}
+            )
+        return attrs
 
     def create(self, validated_data):
         user = User(
-            email=validated_data.get('email'),
-            name=validated_data.get('name'),
-            username=generate_unique_username([
-                validated_data.get('name'),
-                validated_data.get('email'),
-                'user'
-            ])
+            email=validated_data.get("email"),
+            name=validated_data.get("name"),
+            username=generate_unique_username(
+                [validated_data.get("name"), validated_data.get("email"), "user"]
+            ),
         )
-        user.set_password(validated_data.get('password'))
+        user.set_password(validated_data.get("password"))
         user.save()
         request = self._get_request()
         setup_user_email(request, user, [])
@@ -68,9 +98,42 @@ class SignupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'name']
+        fields = ["id", "email", "name"]
 
 
 class PasswordSerializer(PasswordResetSerializer):
     """Custom serializer for rest_auth to solve reset password error"""
+
     password_reset_form_class = ResetPasswordForm
+
+
+class CustomUserDetailSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+    """
+
+    interests = CategorySerializer(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "pk",
+            "username",
+            "name",
+            "bio",
+            "profile_picture",
+            "email",
+            "interests",
+            "address_longitude",
+            "address_latitude",
+            "phone",
+            "website",
+        )
+        read_only_fields = ("email",)
+
+        extra_kwargs = {
+            "username": {
+                "required": False,
+                "allow_blank": False,
+            }
+        }
