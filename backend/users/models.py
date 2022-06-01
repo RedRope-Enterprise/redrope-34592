@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -21,6 +22,21 @@ class User(AbstractUser):
     # First Name and Last Name do not cover name patterns
     # around the globe.
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
+    bio = models.TextField(_("Bio"), blank=True, null=True)
+    profile_picture = models.ImageField(
+        _("Profile Picture"), max_length=300, blank=True, null=True
+    )
+    interests = models.ManyToManyField(
+        "home.Category",
+        verbose_name=_("Interest"),
+        blank=True,
+        related_name="interest_users",
+    )
+    phone = models.CharField(_("Phone number"), max_length=15, null=True)
+    website = models.URLField(_("Website"), max_length=200, null=True)
+    accept_tc = models.BooleanField(_("Accept Terms and Conditions"), default=False)
+    address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
+    address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

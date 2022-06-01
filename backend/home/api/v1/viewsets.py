@@ -1,11 +1,14 @@
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-
+from home.models import Category
 from home.api.v1.serializers import (
     SignupSerializer,
     UserSerializer,
+    CategorySerializer,
 )
 
 
@@ -28,3 +31,8 @@ class LoginViewSet(ViewSet):
         token, created = Token.objects.get_or_create(user=user)
         user_serializer = UserSerializer(user)
         return Response({"token": token.key, "user": user_serializer.data})
+
+
+class CategoryViewSet(ListModelMixin, GenericViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
