@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { styles, textInputStyles } from "./styles"
-import { validateEmail, LOGO_URL } from "./constants.js"
+import { validateEmail, LOGO_URL } from "./constants"
 import { resetPassword } from "../auth"
 
 const PasswordRecover = ({ navigation }) => {

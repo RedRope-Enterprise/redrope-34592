@@ -22,6 +22,11 @@ const Splash = ({}) => {
           style={styles.image}
           source={require("../../assets/images/splash.png")}
         />
+        <Image
+          resizeMode="contain"
+          style={styles.icon}
+          source={require("../../assets/images/Icon.png")}
+        />
       </View>
     </View>
   )
@@ -32,7 +37,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFF"
   },
-  image: { width: "100%", height: "100%" }
+  image: { width: "100%", height: "100%" },
+  icon: {
+    position: "absolute",
+    width: "75%",
+    height: "100%",
+    bottom: "25%",
+    
+    alignSelf: "center"
+  }
 })
 
 export default {

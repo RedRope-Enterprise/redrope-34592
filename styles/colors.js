@@ -1,15 +1,12 @@
-export const APP_MAIN = "#FFF"
-export const APP_MAIN_2 = "#06A2E5"
-export const LIGHT_GREY = "#d5dade"
-export const GUL_GRAY = "#96A7B0";
-export const GRAY_MEDIUM = "#7f878b";
-export const THEME_TEXT_COLOR = "#04171F";
-export const BORDER_COLOR = "#143C4C"
-export const INPUT_BG_COLOR = "#f6f6f6";
-export const ICON_BG = "#ebeded"
-export const MAIN_BG = "#fbfbfd"
-export const WHITE = "#fff"
-export const RED = "#FF4B26"
-export const TAG_HEADER = "#547C8C"
-export const TEXT_COLOR_2 = "#231f20"
-export const INPUT_BG_COLOR_2= "#dededf"
+export const PRIMARY_1 = "#F6D365"
+export const PRIMARY_2 = "#FF4150"
+
+export const NETURAL_1 = "#FFFFFF"
+export const NETURAL_2 = "#A6A6A6"
+export const NETURAL_3 = "#131313"
+export const NETURAL_4 = "#1F1F1F"
+export const NETURAL_5 = "#2F2F2F"
+
+export const BORDER = "#383838"
+
+export const WHITE = "#FFF"

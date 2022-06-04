@@ -18,7 +18,9 @@ export const FONT_WEIGHT_400 = "400"
 
 
 // FONT SIZE
+export const FONT_SIZE_50 = scaleFont(50)
 export const FONT_SIZE_36 = scaleFont(36)
+export const FONT_SIZE_34 = scaleFont(34)
 export const FONT_SIZE_32 = scaleFont(32)
 export const FONT_SIZE_30 = scaleFont(30)
 export const FONT_SIZE_24 = scaleFont(24)
@@ -41,13 +43,13 @@ export const LINE_HEIGHT_24 = scaleFont(24)
 export const LINE_HEIGHT_20 = scaleFont(20)
 export const LINE_HEIGHT_16 = scaleFont(16)
 
-// FONT STYLE
-export const FONT_REGULAR = {
-  fontFamily: FONT_FAMILY_REGULAR,
-  fontWeight: FONT_WEIGHT_REGULAR
-}
+// // FONT STYLE
+// export const FONT_REGULAR = {
+//   fontFamily: FONT_FAMILY_REGULAR,
+//   fontWeight: FONT_WEIGHT_REGULAR
+// }
 
-export const FONT_BOLD = {
-  fontFamily: FONT_FAMILY_BOLD,
-  fontWeight: FONT_WEIGHT_BOLD
-}
+// export const FONT_BOLD = {
+//   fontFamily: FONT_FAMILY_BOLD,
+//   fontWeight: FONT_WEIGHT_BOLD
+// }
