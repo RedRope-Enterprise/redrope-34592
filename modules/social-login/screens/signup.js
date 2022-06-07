@@ -14,7 +14,7 @@ import {
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Colors, Typography } from "../../../styles"
-import { Input } from "../../../components"
+import { Input, Button } from "../../../components"
 
 const { width, height } = Dimensions.get("window")
 
@@ -55,15 +55,13 @@ const SignupScreen = ({}) => {
         iconLeft={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.NETURAL_2}
             source={require("../../../assets/images/login_signup/person.png")}
           />
         }
         iconHighlighted={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.PRIMARY_2}
-            source={require("../../../assets/images/login_signup/person.png")}
+            source={require("../../../assets/images/login_signup/person_active.png")}
           />
         }
       />
@@ -76,15 +74,13 @@ const SignupScreen = ({}) => {
         iconLeft={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.NETURAL_2}
             source={require("../../../assets/images/login_signup/email.png")}
           />
         }
         iconHighlighted={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.PRIMARY_2}
-            source={require("../../../assets/images/login_signup/email.png")}
+            source={require("../../../assets/images/login_signup/email_active.png")}
           />
         }
       />
@@ -98,15 +94,13 @@ const SignupScreen = ({}) => {
         iconLeft={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.NETURAL_2}
             source={require("../../../assets/images/login_signup/lock.png")}
           />
         }
         iconHighlighted={
           <Image
             style={{ width: 24, height: 24, margin: 10 }}
-            tintColor={Colors.PRIMARY_2}
-            source={require("../../../assets/images/login_signup/lock.png")}
+            source={require("../../../assets/images/login_signup/lock_active.png")}
           />
         }
       />
@@ -119,19 +113,142 @@ const SignupScreen = ({}) => {
         placeholder="Re-enter password"
         iconLeft={
           <Image
-            tintColor={Colors.NETURAL_2}
             style={{ width: 24, height: 24, margin: 10 }}
             source={require("../../../assets/images/login_signup/lock.png")}
           />
         }
         iconHighlighted={
           <Image
-            tintColor={Colors.PRIMARY_2}
             style={{ width: 24, height: 24, margin: 10 }}
-            source={require("../../../assets/images/login_signup/lock.png")}
+            source={require("../../../assets/images/login_signup/lock_active.png")}
           />
         }
       />
+
+      <View
+        style={{ flexDirection: "row", alignItems: "center", marginTop: "10%" }}
+      >
+        <View
+          style={{
+            borderBottomColor: Colors.NETURAL_2,
+            borderBottomWidth: 1,
+            flex: 1,
+            marginHorizontal: "7%"
+          }}
+        />
+        <Text
+          style={{
+            fontSize: Typography.FONT_SIZE_14,
+            color: Colors.GREY,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
+            fontWeight: Typography.FONT_WEIGHT_400
+          }}
+        >
+          Or
+        </Text>
+        <View
+          style={{
+            borderBottomColor: Colors.NETURAL_2,
+            borderBottomWidth: 1,
+            flex: 1,
+            marginHorizontal: "7%"
+          }}
+        />
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          marginVertical: "10%",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <TouchableOpacity>
+          <Image
+            style={{
+              resizeMode: "contain",
+              width: 50,
+              height: 50,
+              marginHorizontal: 15
+            }}
+            source={require("../../../assets/images/login_signup/Google.png")}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image
+            style={{
+              resizeMode: "contain",
+              width: 50,
+              height: 50,
+              marginHorizontal: 15
+            }}
+            source={require("../../../assets/images/login_signup/Apple.png")}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image
+            style={{
+              resizeMode: "contain",
+              width: 50,
+              height: 50,
+              marginHorizontal: 15
+            }}
+            source={require("../../../assets/images/login_signup/Facebook.png")}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{ alignItems: "center", flex: 1, justifyContent: "flex-end", marginBottom: "10%"}}
+      >
+      <Button
+        btnWidth={width * 0.8}
+        backgroundColor={Colors.BUTTON_RED}
+        viewStyle={{
+          borderColor: Colors.facebook,
+          marginBottom: 2
+        }}
+        height={35}
+        textFontWeight={Typography.FONT_WEIGHT_600}
+        textStyle={{
+          color: Colors.white,
+          fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+          fontSize: Typography.FONT_SIZE_14
+        }}
+        // loading={props.loading}
+        onPress={() => {}}
+      >
+        SIGN UP
+      </Button>
+
+      <View style={{ flexDirection: "row", marginTop:"10%" }}>
+        <Text
+          style={{
+            color: Colors.WHITE,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontSize: Typography.FONT_SIZE_14,
+            fontWeight: Typography.FONT_WEIGHT_400
+          }}
+        >
+          Have an account?{" "}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.replace("LoginScreen")}>
+          <Text
+            style={{
+              color: Colors.PRIMARY_1,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            Sign In
+          </Text>
+        </TouchableOpacity>
+      </View>
+      </View>
     </KeyboardAvoidingView>
   )
 }

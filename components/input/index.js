@@ -10,7 +10,8 @@ const Input = props => {
     iconRight = null,
     error = "",
     iconHighlighted = null,
-    height = Mixins.scaleHeight(40)
+    height = Mixins.scaleHeight(40),
+    selectedBorderColor = Colors.WHITE
   } = props
   const large = !props.width ? width / 1.1 : props.width
   const [isFocused, setIsFocused] = useState(false)
@@ -32,7 +33,8 @@ const Input = props => {
           borderRightWidth: isFocused ? 1 : 1,
           borderLeftWidth: isFocused ? 1 : 1,
           borderBottomWidth: 1,
-          borderColor: isFocused ? Colors.WHITE :  Colors.BORDER
+          borderColor: isFocused ? selectedBorderColor : Colors.BORDER,
+
           // ...Mixins.boxShadow(Colors.GRAY_MEDIUM)
         }}
       >

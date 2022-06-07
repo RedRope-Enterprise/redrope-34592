@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native"
 import React, { useEffect } from "react"
 import { View, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native"
 
-const NEXT_SCREEN_NAME = "Onboarding"
+const NEXT_SCREEN_NAME = "Profile"
 
 const Splash = ({}) => {
   const navigation = useNavigation()

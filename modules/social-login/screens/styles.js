@@ -8,6 +8,8 @@ const guidelineBaseHeight = 680
 const scale = size => (width / guidelineBaseWidth) * size
 const scaleVertical = size => (height / guidelineBaseHeight) * size
 
+import { Typography } from "../../../styles"
+
 export const Color = {
   malibu: "#46E1FD",
   white: "#fff",
@@ -53,7 +55,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginVertical: scaleVertical(25),
     fontSize: 20,
-    fontFamily: "Roboto-Bold",
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
     color: "#707070"
   },
   actionButon: {
@@ -93,7 +95,7 @@ export const styles = StyleSheet.create({
     color: "#707070",
     fontSize: 14,
     marginVertical: scaleVertical(5),
-    fontFamily: "Roboto-Regular"
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
   },
   boldText: {
     fontWeight: "bold"
