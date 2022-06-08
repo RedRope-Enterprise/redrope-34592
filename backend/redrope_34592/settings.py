@@ -67,9 +67,10 @@ INSTALLED_APPS = [
     "django.contrib.sites",
 ]
 LOCAL_APPS = [
-    "home",
+    "home.apps.HomeConfig",
     "users.apps.UsersConfig",
     "events.apps.EventsConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -230,6 +231,7 @@ EMAIL_HOST_PASSWORD = env.str("SENDGRID_PASSWORD", "")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+DEFAULT_FROM_EMAIL = "info@plusyouapp.com"
 
 # AWS S3 config
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
@@ -253,6 +255,8 @@ if USE_S3:
     DEFAULT_FILE_STORAGE = env.str(
         "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"
     )
+    AWS_QUERYSTRING_AUTH = False
+
     MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
@@ -283,6 +287,9 @@ FACEBOOK_CLIENT_ID = env.str("FACEBOOK_CLIENT_ID", "")
 FACEBOOK_SECRET_KEY = env.str("FACEBOOK_SECRET_KEY", "")
 GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", "")
 GOOGLE_SECRET_KEY = env.str("GOOGLE_SECRET_KEY", "")
+APPLE_CLIENT_ID = env.str("APPLE_CLIENT_ID", "")
+APPLE_SECRET = env.str("APPLE_SECRET", "")
+APPLE_KEY = env.str("APPLE_KEY", "")
 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -301,19 +308,21 @@ SOCIALACCOUNT_PROVIDERS = {
     "apple": {
         "APP": {
             # Your service identifier.
-            "client_id": "your.service.id",
+            "client_id": APPLE_CLIENT_ID,
             # The Key ID (visible in the "View Key Details" page).
-            "secret": "KEYID",
+            "secret": APPLE_SECRET,
             # Member ID/App ID Prefix -- you can find it below your name
             # at the top right corner of the page, or it’s your App ID
             # Prefix in your App ID.
-            "key": "MEMAPPIDPREFIX",
+            "key": APPLE_KEY,
             # The certificate you downloaded when generating the key.
-            "certificate_key": """-----BEGIN PRIVATE KEY-----
-            s3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr
-            3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3cr3ts3
-            c3ts3cr3t
-            -----END PRIVATE KEY-----
+            "certificate_key": """
+                -----BEGIN PRIVATE KEY-----
+                MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgYKFF90qJqvacSJ1e
+                nsL84otHzDPLWG3crRHhM88VPoygCgYIKoZIzj0DAQehRANCAASfWrHWYActyciX
+                Ih5Mjes91Uwh0rFLU+eiKfbsG5HWtJmR93aTFmapXiJtv+1g+vYrGVmgpSPw+/ry
+                BDZPBu0J
+                -----END PRIVATE KEY-----
             """,
         }
     },

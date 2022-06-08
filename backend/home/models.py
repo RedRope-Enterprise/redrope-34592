@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class BaseModel(models.Model):
@@ -9,6 +12,37 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Notification(BaseModel):
+
+    target = models.ForeignKey(
+        "users.User", related_name="my_notification", on_delete=models.CASCADE
+    )  # Who the notification is sent to
+
+    # The notification was triggered by.
+    from_user = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="from_user",
+    )
+    redirect_url = models.URLField(_("Redirect URL"), null=True, max_length=200)
+    # statement describing the notification (ex: "You have a new service request")
+    verb = models.CharField(max_length=255, unique=False, blank=True, null=True)
+
+    # Some notifications can be marked as "read". (I used "read" instead of "active". I think its more appropriate)
+    read = models.BooleanField(default=False)
+
+    # A generic type that can refer to a FriendRequest, Unread Message, or any other type of "Notification"
+    # See article: https://simpleisbetterthancomplex.com/tutorial/2016/10/13/how-to-use-generic-relations.html
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+    def __str__(self):
+        return self.verb
 
 
 class Event(BaseModel):
@@ -52,3 +86,19 @@ class EventImage(BaseModel):
         on_delete=models.CASCADE,
     )
     image = models.FileField(_("Event image"), upload_to="", max_length=1000)
+
+
+class UserEventRegistration(BaseModel):
+    event = models.ForeignKey(
+        "home.Event",
+        verbose_name=_("Event"),
+        related_name="going",
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        "users.User",
+        verbose_name=_("User"),
+        related_name="going_event",
+        on_delete=models.CASCADE,
+    )
+    notification = GenericRelation(Notification)
