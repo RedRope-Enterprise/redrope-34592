@@ -56,7 +56,7 @@ def filter_queryset_with_distance(
     return queryset
 
 
-def filter_activities_with_get_param(queryset, request):
+def filter_events_with_get_param(queryset, request):
     distance = request.query_params.get("distance", None)
     current_latitude = request.query_params.get("current_latitude", None)
     current_longitude = request.query_params.get("current_longitude", None)
