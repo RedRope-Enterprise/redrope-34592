@@ -9,7 +9,8 @@ import {
   SafeAreaView,
   StatusBar,
   TextInput,
-  FlatList
+  FlatList,
+  ImageBackground
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, HomeEventItem } from "../../components"
@@ -30,12 +31,59 @@ const { width, height } = Dimensions.get("window")
 const HomeScreen = () => {
   const navigation = useNavigation()
   const [events, setEvents] = useState([])
+  const [eventCategories, setEventCategories] = useState([])
+
   const [searchValue, setSearchValue] = useState("")
 
   useEffect(async () => {
     const events = data.getEvents()
+    const eventCategory = data.getEventCategories()
     setEvents(events)
+    setEventCategories(eventCategory)
   }, [])
+
+  const CategoryRender = ({ event }) => (
+    <TouchableOpacity
+      style={{
+        height: 190,
+        width: 160,
+        marginHorizontal: 5,
+        flex: 1,
+        alignItems: "flex-end"
+      }}
+    >
+      <ImageBackground
+        imageStyle={{
+          borderRadius: 10,
+          backgroundColor: Colors.NETURAL_3
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          // height: Mixins.scaleHeight(120),
+          borderRadius: 30,
+          backgroundColor: Colors.NETURAL_3
+        }}
+        resizeMode="cover"
+        source={event.image}
+      >
+        <Text
+          style={{
+            position: "absolute",
+            bottom: 20,
+            marginLeft: 10,
+            marginRight: 20,
+            color: Colors.WHITE,
+            fontSize: Typography.FONT_SIZE_14,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontWeight: Typography.FONT_WEIGHT_BOLD,
+          }}
+        >
+          {event.text}
+        </Text>
+      </ImageBackground>
+    </TouchableOpacity>
+  )
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -86,6 +134,34 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
 
+      <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
+        <Text
+          style={{
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontSize: Typography.FONT_SIZE_14,
+            fontWeight: Typography.FONT_WEIGHT_600,
+            color: Colors.PRIMARY_1,
+            marginVertical: "5%"
+          }}
+        >
+          Categories
+        </Text>
+
+        <FlatList
+          style={
+            {
+              // paddingLeft: Mixins.scaleWidth(10),
+              // marginTop: "5%"
+            }
+          }
+          horizontal={true}
+          data={eventCategories}
+          extraData={eventCategories}
+          renderItem={({ item }) => <CategoryRender event={item} />}
+          keyExtractor={(item, index) => index}
+        />
+      </View>
+
       {events?.length > 0 && (
         <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
           <Text
@@ -104,7 +180,7 @@ const HomeScreen = () => {
             <FlatList
               style={{
                 // paddingLeft: Mixins.scaleWidth(10),
-                marginBottom: 250,
+                marginBottom: width  + 100
                 // marginTop: "5%"
               }}
               contentContainerStyle={{ paddingRight: 10 }}

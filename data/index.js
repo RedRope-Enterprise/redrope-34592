@@ -1,5 +1,6 @@
 import inviteUsers from "./raw/inviteUsers"
 import events from "./raw/events"
+import eventCategory from "./raw/eventCategory"
 
 class DataProvider {
   getInviteUsers() {
@@ -7,6 +8,10 @@ class DataProvider {
   }
   getEvents() {
     return events
+  }
+
+  getEventCategories(){
+    return eventCategory
   }
 }
 
