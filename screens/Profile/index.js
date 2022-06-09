@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Image,
   Alert,
@@ -13,18 +13,47 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
+import { useNavigation } from "@react-navigation/native"
+import {
+  getDataStorage,
+  setDataStorage,
+  clearStorage
+} from "../../utils/storage"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
-
 const { width, height } = Dimensions.get("window")
 
 const ProfileScreen = () => {
+  const navigation = useNavigation()
+
   const [isModalVisible, setIsModalVisible] = useState(true)
   const [name, setName] = useState("true")
   const [about, setAbout] = useState("")
+  const [userInterests, setUserInterests] = useState()
 
-  const intrests = ["Music", "Food", "Cinema", "Music"]
+  useEffect(() => {
+    getAllInterests()
+  }, [userInterests])
+
+  const getAllInterests = async () => {
+    // await clearStorage()
+    const data = await getDataStorage("@user_interests")
+    if (!data) {
+      await setDataStorage("@user_interests", [
+        { title: "Music", isEnabled: true, updatedAt: Date.now() },
+        { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
+        { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
+        { title: "Art", isEnabled: false, updatedAt: Date.now() },
+        { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
+        { title: "Food", isEnabled: false, updatedAt: Date.now() },
+        { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
+        { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
+      ])
+    } else {
+      setUserInterests(data)
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <StatusBar
@@ -59,11 +88,17 @@ Please setup your profile`}
             justifyContent: "center",
             backgroundColor: Colors.NETURAL_4,
             marginVertical: "10%"
+            // overflow: "hidden",
           }}
         >
           <Image
-            style={{ resizeMode: "contain", width: "100%", height: "100%" }}
-            source={require("../../assets/images/splash.png")}
+            style={{
+              resizeMode: "cover",
+              width: "100%",
+              height: "100%",
+              borderRadius: 1000
+            }}
+            source={require("../../assets/images/userImage.png")}
           />
           <TouchableOpacity style={{ position: "absolute" }}>
             <Image
@@ -129,7 +164,7 @@ Please setup your profile`}
               Select Interest
             </Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Interests")}>
               <Text
                 style={{
                   fontSize: Typography.FONT_SIZE_24,
@@ -142,53 +177,61 @@ Please setup your profile`}
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: "row" }}>
-            {intrests.map((element, i) => (
-              <View
-                style={{
-                  alignItems: "center",
-                  marginHorizontal: 10,
-                  backgroundColor: "#423a28",
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: Colors.PRIMARY_1,
-                  marginBottom: 10
-                }}
-              >
-                <Text
-                  style={{
-                    margin: 10,
-                    fontSize: Typography.FONT_SIZE_14,
-                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                    color: Colors.PRIMARY_1
-                  }}
-                >
-                  {element}
-                </Text>
-              </View>
-            ))}
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            {userInterests?.map(
+              (element, i) =>
+                element.isEnabled && (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      marginHorizontal: 10,
+                      backgroundColor: "#423a28",
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      borderColor: Colors.PRIMARY_1,
+                      marginBottom: 10
+                    }}
+                  >
+                    <Text
+                      style={{
+                        margin: 10,
+                        fontSize: Typography.FONT_SIZE_14,
+                        fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                        color: Colors.PRIMARY_1
+                      }}
+                    >
+                      {element.title}
+                    </Text>
+                  </View>
+                )
+            )}
           </View>
         </View>
       </KeyboardAwareScrollView>
-      <Button
-        btnWidth={width * 0.8}
-        backgroundColor={Colors.BUTTON_RED}
-        viewStyle={{
-          borderColor: Colors.facebook,
-          marginBottom: 2
-        }}
-        height={35}
-        textFontWeight={Typography.FONT_WEIGHT_600}
-        textStyle={{
-          color: Colors.white,
-          fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-          fontSize: Typography.FONT_SIZE_14
-        }}
-        // loading={props.loading}
-        onPress={() => {}}
-      >
-        SAVE
-      </Button>
+      <View style={{ alignItems: "center" }}>
+        <Button
+          btnWidth={width * 0.8}
+          backgroundColor={Colors.BUTTON_RED}
+          viewStyle={{
+            borderColor: Colors.facebook,
+            marginBottom: 2
+          }}
+          height={35}
+          textFontWeight={Typography.FONT_WEIGHT_600}
+          textStyle={{
+            color: Colors.white,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontSize: Typography.FONT_SIZE_14
+          }}
+          // loading={props.loading}
+          onPress={() => {
+        navigation.navigate("Dashboard")
+
+          }}
+        >
+          SAVE
+        </Button>
+      </View>
     </SafeAreaView>
   )
 }
