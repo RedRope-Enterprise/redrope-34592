@@ -219,7 +219,7 @@ const SignupScreen = ({}) => {
           fontSize: Typography.FONT_SIZE_14
         }}
         // loading={props.loading}
-        onPress={() => {}}
+        onPress={() => {navigation.navigate("Profile")}}
       >
         SIGN UP
       </Button>

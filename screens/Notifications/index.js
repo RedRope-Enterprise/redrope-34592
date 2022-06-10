@@ -23,10 +23,11 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
+import { SwipeListView } from "react-native-swipe-list-view"
 
 const NotificationScreen = () => {
   const navigation = useNavigation()
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([{ key: 20, tex: "2222" }])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -68,6 +69,36 @@ const NotificationScreen = () => {
             eiusmod tempor
           </Text>
         </View>
+      )}
+
+      {notifications.length > 0 && (
+        <SwipeListView
+        style={{marginTop: 20}}
+          data={notifications}
+          renderItem={(data, rowMap) => (
+            <TouchableOpacity>
+              <View style={{}}>
+                <Text style={{ color: Colors.WHITE }}>
+                  I am {data.item.text} in a SwipeListView
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          renderHiddenItem={(data, rowMap) => (
+            <View style={{}}>
+              <Text style={{color: Colors.WHITE}}>Left</Text>
+              <Text style={{color: Colors.WHITE}}>Right</Text>
+            </View>
+          )}
+          leftOpenValue={0}
+          initialRightActionState={true}
+          rightOpenValue={-100}
+          stopLeftSwipe={10}
+          // disableLeftSwipe={true}
+          disableRightSwipe={false}
+          previewFirstRow={true}
+          onRightAction={value => console.log(value)}
+        />
       )}
     </SafeAreaView>
   )
