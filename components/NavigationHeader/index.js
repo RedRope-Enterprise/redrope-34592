@@ -20,7 +20,11 @@ const NavigationHeader = ({
   allowSkip = false,
   onSkip,
   headerText = "",
-  hideBackButton = false
+  hideBackButton = false,
+  showLeftBtn1 = false,
+  showLeftBtn2 = false,
+  onLeftBtn1,
+  onLeftBtn2
 }) => {
   const navigation = useNavigation()
 
@@ -33,7 +37,7 @@ const NavigationHeader = ({
           }}
         >
           <View style={{ marginLeft: width * 0.03 }}>
-            <Image style={{ width: 24, height: 24 }} source={ArrowLeft} />
+            <Image style={styles.icon} source={ArrowLeft} />
           </View>
         </Pressable>
       )}
@@ -50,11 +54,35 @@ const NavigationHeader = ({
       >
         {headerText}
       </Text>
-      <Pressable onPress={onSkip} style={{ marginRight: width * 0.03 }}>
-        <View>
-          <Text style={styles.skipText}>{allowSkip ? "SKIP" : ""}</Text>
-        </View>
-      </Pressable>
+      <View style={{ right: 0, flexDirection: "row" }}>
+        <Pressable onPress={onSkip} style={{ marginRight: width * 0.03 }}>
+          <View>
+            <Text style={styles.skipText}>{allowSkip ? "SKIP" : ""}</Text>
+          </View>
+        </Pressable>
+        {showLeftBtn1 && (
+          <Pressable
+            onPress={() => {
+              onLeftBtn1
+            }}
+          >
+            <View style={styles.leftBtn}>
+              <Image style={styles.icon} source={ArrowLeft} />
+            </View>
+          </Pressable>
+        )}
+        {showLeftBtn2 && (
+          <Pressable
+            onPress={() => {
+              onLeftBtn2
+            }}
+          >
+            <View style={styles.leftBtn}>
+              <Image style={styles.icon} source={ArrowLeft} />
+            </View>
+          </Pressable>
+        )}
+      </View>
     </SafeAreaView>
   )
 }
@@ -62,7 +90,7 @@ const NavigationHeader = ({
 const styles = StyleSheet.create({
   header: {
     position: "absolute",
-    top: Platform.os === "android"? 25:  40,
+    top: Platform.os === "android" ? 25 : 40,
     zIndex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -82,6 +110,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "center",
     textAlign: "center"
+  },
+  icon: { width: 24, height: 24 },
+  leftBtn: {
+    marginRight: 20
   }
 })
 export default NavigationHeader

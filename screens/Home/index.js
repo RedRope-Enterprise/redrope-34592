@@ -7,7 +7,8 @@ import {
   Text,
   Dimensions,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  StyleSheet
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
@@ -29,9 +30,25 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-        <Text>HOME</Text>
+      
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate("TableSelectScreen")
+        }}
+      >
+        <Text>Navigate to next</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
 
 export default HomeScreen
+
+let styles = StyleSheet.create({
+  button: {
+    width: 100,
+    height: 50,
+    backgroundColor: "red"
+  }
+})
