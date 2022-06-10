@@ -253,6 +253,8 @@ PODS:
     - React
   - react-native-get-random-values (1.8.0):
     - React-Core
+  - react-native-pager-view (5.4.24):
+    - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
   - React-perflogger (0.64.0)
@@ -411,6 +413,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -493,6 +496,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fbsdk"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -573,6 +578,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
