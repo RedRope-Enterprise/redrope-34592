@@ -14,10 +14,11 @@ import LinearGradient from "react-native-linear-gradient"
 const { width, height } = Dimensions.get("window")
 
 const HomeEventItem = props => {
-  const { event } = props
+  const { event, onPress } = props
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         marginBottom: "2%",
         backgroundColor: Colors.NETURAL_3
@@ -122,7 +123,7 @@ const HomeEventItem = props => {
           </View>
         </LinearGradient>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   )
 }
 

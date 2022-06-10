@@ -76,7 +76,7 @@ const HomeScreen = () => {
             color: Colors.WHITE,
             fontSize: Typography.FONT_SIZE_14,
             fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-            fontWeight: Typography.FONT_WEIGHT_BOLD,
+            fontWeight: Typography.FONT_WEIGHT_BOLD
           }}
         >
           {event.text}
@@ -180,14 +180,21 @@ const HomeScreen = () => {
             <FlatList
               style={{
                 // paddingLeft: Mixins.scaleWidth(10),
-                marginBottom: width  + 100
+                marginBottom: width + 100
                 // marginTop: "5%"
               }}
               contentContainerStyle={{ paddingRight: 10 }}
               numColumns={1}
               data={events}
               extraData={events}
-              renderItem={({ item }) => <HomeEventItem event={item} />}
+              renderItem={({ item }) => (
+                <HomeEventItem
+                  event={item}
+                  onPress={() =>
+                    navigation.navigate("EventDetails", { event: item })
+                  }
+                />
+              )}
               keyExtractor={(item, index) => index}
             />
           </View>

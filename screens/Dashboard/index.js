@@ -132,7 +132,7 @@ const Dashboard = () => {
         }}
       />
 
-<Tab.Screen
+      <Tab.Screen
         name="Notifications"
         component={NotificationScreen}
         tabBarLabelStyle={{
@@ -199,7 +199,6 @@ const Dashboard = () => {
           )
         }}
       />
-
     </Tab.Navigator>
   )
 }
