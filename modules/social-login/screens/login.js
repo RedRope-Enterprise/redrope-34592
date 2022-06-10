@@ -197,7 +197,7 @@ const LoginScreen = ({}) => {
             fontSize: Typography.FONT_SIZE_14
           }}
           // loading={props.loading}
-          onPress={() => {}}
+          onPress={() => {navigation.navigate("Dashboard")}}
         >
           SIGN IN
         </Button>
