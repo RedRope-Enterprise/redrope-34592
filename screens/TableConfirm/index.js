@@ -21,6 +21,7 @@ import {
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
+import { useRoute } from "@react-navigation/native"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
@@ -35,19 +36,22 @@ const { width, height } = Dimensions.get("window")
 
 const TableConfirmScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
+
   const [data, setData] = useState([])
+  const { event } = route?.params
 
   useEffect(() => {
     let arr = []
     arr.push({
-      title: "14 December, 2022",
-      desc: "Tuesday, 4:00PM - 9:00PM",
+      title: event?.fullDate,
+      desc: event?.fullTime,
       image: CalendarImg
     })
 
     arr.push({
-      title: "Atlanta airport Entrence-B",
-      desc: "6000 North Terminal Parkway Suite 4000",
+      title: event?.location,
+      desc: event?.location,
       image: LocationImg
     })
 
@@ -67,7 +71,11 @@ const TableConfirmScreen = () => {
           <View style={styles.itemImgContainer}>
             <Image style={styles.itemIcon} source={item.image}></Image>
           </View>
-          <View>
+          <View
+            style={{
+              flex:1
+            }}
+          >
             <Text style={[styles.desc, { color: Colors.WHITE }]}>
               {item.title}
             </Text>
@@ -90,7 +98,7 @@ const TableConfirmScreen = () => {
         <Text style={[styles.title, { color: Colors.WHITE }]}>Disclaimer</Text>
       </View>
       <View style={styles.banner}>
-        <Image style={styles.full} source={DummyBanner} />
+        <Image style={styles.full} source={event?.image} />
       </View>
       <View style={[styles.flex1, { marginBottom: "4%", marginTop: "4%" }]}>
         <FlatList

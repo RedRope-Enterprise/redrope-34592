@@ -25,10 +25,15 @@ import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import CustomTable from "../../components/CustomTable"
 const { width, height } = Dimensions.get("window")
+import { useRoute } from "@react-navigation/native"
 
 const TableSelectScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
+
   const [datasource, setDatasource] = useState([1])
+
+  const { event } = route?.params
 
   const increaseCircleCount = () => {
     setDatasource([...datasource, 1])
@@ -50,13 +55,13 @@ const TableSelectScreen = () => {
           PartySlate
         </Text>
         <Text style={[styles.title, { color: Colors.WHITE }]}>
-          Big Flight Party
+          {event?.name}
         </Text>
         <Text style={[styles.desc, { color: Colors.WHITE }]}>
-          Atlanta airport Entrence-B
+          {event?.location}
         </Text>
         <Text style={[styles.desc2, { color: Colors.NETURAL_2 }]}>
-          6000 North Terminal Parkway Suite 4000
+          {event?.location}
         </Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
@@ -110,7 +115,7 @@ const TableSelectScreen = () => {
                 3 Person
               </Text>
               <Text style={[styles.pricenperson, { color: Colors.NETURAL_2 }]}>
-                $80
+                {`$${event?.price}`}
               </Text>
             </View>
 
@@ -148,7 +153,7 @@ const TableSelectScreen = () => {
             fontSize: Typography.FONT_SIZE_14
           }}
           onPress={() => {
-            navigation.navigate("TableConfirm")
+            navigation.navigate("TableConfirm",{event})
           }}
         >
           NEXT

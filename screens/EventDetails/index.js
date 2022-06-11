@@ -36,7 +36,10 @@ const EventDetailsScreen = () => {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-      <NavigationHeader></NavigationHeader>
+      <NavigationHeader
+        showLeftBtn1={true}
+        showLeftBtn2={true}
+      ></NavigationHeader>
 
       <Image
         style={{ width: "100%", height: height * 0.3 }}
@@ -229,7 +232,7 @@ const EventDetailsScreen = () => {
 
         <View
           style={{
-              width: width * 0.3,
+            width: width * 0.3,
             alignItems: "center",
             // marginHorizontal: 10,
             backgroundColor: "#3f3720",
@@ -280,7 +283,7 @@ const EventDetailsScreen = () => {
             flexDirection: "row",
             backgroundColor: Colors.BUTTON_RED,
             alignItems: "center",
-            marginTop: "5%", 
+            marginTop: "5%",
             borderRadius: 10
           }}
         >
@@ -292,10 +295,10 @@ const EventDetailsScreen = () => {
               color: Colors.WHITE,
               marginHorizontal: "5%",
               marginVertical: "5%",
-              flex:1
+              flex: 1
             }}
           >
-            Tickets
+            Interested
           </Text>
           <Text
             style={{
@@ -303,7 +306,7 @@ const EventDetailsScreen = () => {
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
               fontWeight: Typography.FONT_WEIGHT_600,
               color: Colors.WHITE,
-              marginHorizontal: "5%",
+              marginHorizontal: "5%"
             }}
           >
             {">"}
@@ -311,12 +314,12 @@ const EventDetailsScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-        onPress={() => navigation.navigate("TableSelect")}
+          onPress={() => navigation.navigate("TableSelect", { event })}
           style={{
             flexDirection: "row",
             backgroundColor: Colors.BUTTON_RED,
             alignItems: "center",
-            marginTop: "5%", 
+            marginTop: "5%",
             borderRadius: 10
           }}
         >
@@ -328,10 +331,10 @@ const EventDetailsScreen = () => {
               color: Colors.WHITE,
               marginHorizontal: "5%",
               marginVertical: "5%",
-              flex:1
+              flex: 1
             }}
           >
-            Bottle Service
+            Reserve
           </Text>
           <Text
             style={{
@@ -339,7 +342,7 @@ const EventDetailsScreen = () => {
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
               fontWeight: Typography.FONT_WEIGHT_600,
               color: Colors.WHITE,
-              marginHorizontal: "5%",
+              marginHorizontal: "5%"
             }}
           >
             {">"}
