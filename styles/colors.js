@@ -1,5 +1,6 @@
 export const PRIMARY_1 = "#F6D365"
 export const PRIMARY_1_OPACITY_20 = "rgba(246, 211, 101, 0.2)"
+export const PRIMARY_1_OPACITY_10 = "rgba(246, 211, 101, 0.1)"
 export const PRIMARY_2 = "#FF4150"
 export const BUTTON_RED = "#FF0000"
 

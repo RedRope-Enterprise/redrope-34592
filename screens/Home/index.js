@@ -8,7 +8,7 @@ import {
   Dimensions,
   SafeAreaView,
   StatusBar,
-  StyleSheet
+  StyleSheet,
   TextInput,
   FlatList,
   ImageBackground

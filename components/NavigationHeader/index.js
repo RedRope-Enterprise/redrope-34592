@@ -12,6 +12,8 @@ import {
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import ArrowLeft from "./../../assets/images/ArrowLeft.png"
+import ShareImg from "../../assets/naviigation/share.png"
+import HeartImg from "../../assets/naviigation/heart.png"
 
 const { width, height } = Dimensions.get("window")
 
@@ -67,7 +69,7 @@ const NavigationHeader = ({
             }}
           >
             <View style={styles.leftBtn}>
-              <Image style={styles.icon} source={ArrowLeft} />
+              <Image style={styles.icon} source={ShareImg} />
             </View>
           </Pressable>
         )}
@@ -78,7 +80,7 @@ const NavigationHeader = ({
             }}
           >
             <View style={styles.leftBtn}>
-              <Image style={styles.icon} source={ArrowLeft} />
+              <Image style={styles.icon} source={HeartImg} />
             </View>
           </Pressable>
         )}
