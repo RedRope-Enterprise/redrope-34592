@@ -138,8 +138,7 @@ let styles = StyleSheet.create({
     fontWeight: Typography.FONT_WEIGHT_BOLD,
     lineHeight: Typography.LINE_HEIGHT_36,
     fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-    textAlign: "center",
-    marginBottom: "2%"
+    textAlign: "center"
   },
   desc: {
     fontSize: Typography.FONT_SIZE_16,
