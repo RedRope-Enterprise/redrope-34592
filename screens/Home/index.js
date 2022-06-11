@@ -11,7 +11,8 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
-  ImageBackground
+  ImageBackground,
+  ScrollView
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, HomeEventItem } from "../../components"
@@ -95,75 +96,47 @@ const HomeScreen = () => {
         />
       </TouchableOpacity>
 
-      <View
-        style={{
-          flexDirection: "row",
-          borderRadius: 10,
-          marginHorizontal: "5%",
-          backgroundColor: Colors.NETURAL_4,
-          marginTop: "5%"
-        }}
-      >
-        <TouchableOpacity>
-          <Image
-            style={{ width: 24, height: 24, margin: 15 }}
-            source={require("../../assets/dashboard/search-on.png")}
-          />
-        </TouchableOpacity>
-
-        <TextInput
+      <ScrollView>
+        <View
           style={{
-            color: Colors.WHITE,
-
-            flex: 1,
-            height: "100%",
-            fontSize: Typography.FONT_SIZE_16,
-            fontWeight: Typography.FONT_WEIGHT_REGULAR,
-            fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT
-          }}
-          placeholder={"What do you want to experience "}
-          placeholderTextColor={Colors.NETURAL_2}
-          value={searchValue}
-          onChangeText={value => setSearchValue(value)}
-        />
-
-        <TouchableOpacity>
-          <Image
-            style={{ width: 24, height: 24, margin: 15 }}
-            source={require("../../assets/images/home/Adjust.png")}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
-        <Text
-          style={{
-            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-            fontSize: Typography.FONT_SIZE_14,
-            fontWeight: Typography.FONT_WEIGHT_600,
-            color: Colors.PRIMARY_1,
-            marginVertical: "5%"
+            flexDirection: "row",
+            borderRadius: 10,
+            marginHorizontal: "5%",
+            backgroundColor: Colors.NETURAL_4,
+            marginTop: "5%"
           }}
         >
-          Categories
-        </Text>
+          <TouchableOpacity>
+            <Image
+              style={{ width: 24, height: 24, margin: 15 }}
+              source={require("../../assets/dashboard/search-on.png")}
+            />
+          </TouchableOpacity>
 
-        <FlatList
-          style={
-            {
-              // paddingLeft: Mixins.scaleWidth(10),
-              // marginTop: "5%"
-            }
-          }
-          horizontal={true}
-          data={eventCategories}
-          extraData={eventCategories}
-          renderItem={({ item }) => <CategoryRender event={item} />}
-          keyExtractor={(item, index) => index}
-        />
-      </View>
+          <TextInput
+            style={{
+              color: Colors.WHITE,
 
-      {events?.length > 0 && (
+              flex: 1,
+              height: "100%",
+              fontSize: Typography.FONT_SIZE_16,
+              fontWeight: Typography.FONT_WEIGHT_REGULAR,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT
+            }}
+            placeholder={"What do you want to experience "}
+            placeholderTextColor={Colors.NETURAL_2}
+            value={searchValue}
+            onChangeText={value => setSearchValue(value)}
+          />
+
+          <TouchableOpacity>
+            <Image
+              style={{ width: 24, height: 24, margin: 15 }}
+              source={require("../../assets/images/home/Adjust.png")}
+            />
+          </TouchableOpacity>
+        </View>
+
         <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
           <Text
             style={{
@@ -174,33 +147,62 @@ const HomeScreen = () => {
               marginVertical: "5%"
             }}
           >
-            Events that match your interests
+            Categories
           </Text>
 
-          <View style={{}}>
-            <FlatList
-              style={{
+          <FlatList
+            style={
+              {
                 // paddingLeft: Mixins.scaleWidth(10),
-                marginBottom: width + 100
                 // marginTop: "5%"
-              }}
-              contentContainerStyle={{ paddingRight: 10 }}
-              numColumns={1}
-              data={events}
-              extraData={events}
-              renderItem={({ item }) => (
-                <HomeEventItem
-                  event={item}
-                  onPress={() =>
-                    navigation.navigate("EventDetails", { event: item })
-                  }
-                />
-              )}
-              keyExtractor={(item, index) => index}
-            />
-          </View>
+              }
+            }
+            horizontal={true}
+            data={eventCategories}
+            extraData={eventCategories}
+            renderItem={({ item }) => <CategoryRender event={item} />}
+            keyExtractor={(item, index) => index}
+          />
         </View>
-      )}
+
+        {events?.length > 0 && (
+          <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
+            <Text
+              style={{
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_14,
+                fontWeight: Typography.FONT_WEIGHT_600,
+                color: Colors.PRIMARY_1,
+                marginVertical: "5%"
+              }}
+            >
+              Events that match your interests
+            </Text>
+
+            <View style={{}}>
+              <FlatList
+                style={{
+                  // paddingLeft: Mixins.scaleWidth(10),
+                  // marginTop: "5%"
+                }}
+                contentContainerStyle={{ paddingRight: 10 }}
+                numColumns={1}
+                data={events}
+                extraData={events}
+                renderItem={({ item }) => (
+                  <HomeEventItem
+                    event={item}
+                    onPress={() =>
+                      navigation.navigate("EventDetails", { event: item })
+                    }
+                  />
+                )}
+                keyExtractor={(item, index) => index}
+              />
+            </View>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   )
 }
