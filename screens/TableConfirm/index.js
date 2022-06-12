@@ -122,7 +122,9 @@ const TableConfirmScreen = () => {
             fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
             fontSize: Typography.FONT_SIZE_14
           }}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate("PaymentScreen")
+          }}
         >
           NEXT
         </Button>

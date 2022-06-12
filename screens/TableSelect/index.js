@@ -153,7 +153,7 @@ const TableSelectScreen = () => {
             fontSize: Typography.FONT_SIZE_14
           }}
           onPress={() => {
-            navigation.navigate("TableConfirm",{event})
+            navigation.navigate("TableConfrimScreen", { event })
           }}
         >
           NEXT
