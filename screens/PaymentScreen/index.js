@@ -215,7 +215,8 @@ let styles = StyleSheet.create({
     alignContent: "center",
     height: undefined,
     width: "100%",
-    aspectRatio: 4.64
+    aspectRatio: 4.64,
+    marginTop: "10%"
   },
   subTitleContainer: {
     justifyContent: "center",
