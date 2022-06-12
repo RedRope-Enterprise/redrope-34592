@@ -14,7 +14,7 @@ import {
   ScrollView
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal } from "../../components"
+import { Button, Input, CustomModal, CustomImageModal } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -35,6 +35,7 @@ import AppleIcon from "../../assets/images/payment/apple.png"
 import CardBackImg from "../../assets/images/payment/card_back.png"
 import GoogleIcon from "../../assets/images/payment/google.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
+import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 
 import { data } from "../../data"
 
@@ -42,6 +43,7 @@ const { width, height } = Dimensions.get("window")
 
 const PaymentScreen = () => {
   const navigation = useNavigation()
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
   const renderPaymentMethod = (title, icon) => {
     return (
@@ -148,11 +150,19 @@ const PaymentScreen = () => {
             fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
             fontSize: Typography.FONT_SIZE_14
           }}
-          onPress={() => {}}
+          onPress={() => {
+            setIsModalVisible(true)
+          }}
         >
           PAY
         </Button>
       </View>
+      <CustomImageModal
+        isVisible={isModalVisible}
+        text={`We are going to notify you when all users from your group are paid and`}
+        image={SuccessPopupImg}
+        onClose={() => setIsModalVisible(false)}
+      ></CustomImageModal>
     </SafeAreaView>
   )
 }
