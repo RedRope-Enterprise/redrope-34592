@@ -40,7 +40,7 @@ const MyBookingsScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-      <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: "5%" }}>
+      <TouchableOpacity onPress={() => navigation.navigate("UserProfile")} style={{ alignSelf: "flex-end", marginRight: "5%" }}>
         <Image
           style={{ width: 30, height: 30, borderRadius: 1000 }}
           source={require("../../assets/images/userImage.png")}

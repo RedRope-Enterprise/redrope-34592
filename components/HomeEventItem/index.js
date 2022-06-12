@@ -28,7 +28,7 @@ const HomeEventItem = props => {
         imageStyle={{ borderRadius: 20, backgroundColor: Colors.NETURAL_3 }}
         style={{
           width: "100%",
-          height: Mixins.scaleHeight(220),
+          height: Mixins.scaleHeight(210),
           borderRadius: 30,
           backgroundColor: Colors.NETURAL_3
         }}

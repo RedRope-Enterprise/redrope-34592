@@ -89,7 +89,10 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-      <TouchableOpacity style={{ alignSelf: "flex-end", marginRight: "5%" }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("UserProfile")}
+        style={{ alignSelf: "flex-end", marginRight: "5%" }}
+      >
         <Image
           style={{ width: 30, height: 30, borderRadius: 1000 }}
           source={require("../../assets/images/userImage.png")}
@@ -181,10 +184,12 @@ const HomeScreen = () => {
 
             <View style={{}}>
               <FlatList
-                style={{
-                  // paddingLeft: Mixins.scaleWidth(10),
-                  // marginTop: "5%"
-                }}
+                style={
+                  {
+                    // paddingLeft: Mixins.scaleWidth(10),
+                    // marginTop: "5%"
+                  }
+                }
                 contentContainerStyle={{ paddingRight: 10 }}
                 numColumns={1}
                 data={events}
