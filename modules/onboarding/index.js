@@ -10,10 +10,15 @@ import {
 } from "react-native"
 import { slides } from "./slides"
 import AppIntroSlider from "react-native-app-intro-slider"
+import { useNavigation } from "@react-navigation/native"
 
-const REDIRECT_SCREEN_NAME = "LoginAndSignup177769"
+import {Typography} from "../../styles"
 
-const Onboarding = ({ navigation }) => {
+const REDIRECT_SCREEN_NAME = "login"
+
+const Onboarding = ( ) => {
+  const navigation = useNavigation()
+
   const renderItem = ({ item }) => {
     return (
       <ImageBackground style={styles.image} source={item.image}>
@@ -103,15 +108,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start"
   },
   text: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: "rgba(255, 255, 255, 1)",
     textAlign: "center",
-    fontSize: 16,
-    maxWidth: 270
+    fontSize: Typography.FONT_SIZE_16,
+    maxWidth: 270,
+    fontFamily : Typography.FONT_FAMILY_POPPINS_REGULAR
+
   },
   title: {
-    fontSize: 41,
+    fontSize: Typography.FONT_SIZE_50,
     color: "white",
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily : Typography.FONT_FAMILY_POPPINS_REGULAR
   },
   titleContainer: {
     marginTop: 37

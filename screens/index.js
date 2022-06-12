@@ -1,6 +1,7 @@
 import mods from "./*/index.js";
 
 export const screens = mods.map(mod => {
+  console.log("target 11")
   return Object.assign(mod, {
     value: {
       navigator: mod.value,

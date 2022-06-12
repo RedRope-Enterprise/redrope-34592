@@ -13,6 +13,8 @@ opts.map(opt => {
 export function getOptions(pakage) {
   let target = options[pakage] || {}
   let source = modulesOptions[pakage] || {}
+
+  console.log("target ", target)
   return Object.assign(target, source)
 }
 

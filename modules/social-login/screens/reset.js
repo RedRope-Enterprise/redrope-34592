@@ -5,18 +5,24 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Text
+  Text,
+  Dimensions
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { styles, textInputStyles } from "./styles"
-import { validateEmail, LOGO_URL } from "./constants.js"
+import { validateEmail, LOGO_URL } from "./constants"
 import { resetPassword } from "../auth"
+import NavigationHeader from "./../../../components/NavigationHeader"
+import { Colors, Typography } from "../../../styles"
+import { Input, Button } from "../../../components"
+
+const { width, height } = Dimensions.get("window")
 
 const PasswordRecover = ({ navigation }) => {
   const [email, setEmail] = useState("")
-  const { api } = useSelector(state => state.login)
+  // const { api } = useSelector(state => state.login)
   const dispatch = useDispatch()
 
   const handlePasswordReset = () => {
@@ -51,54 +57,87 @@ const PasswordRecover = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <KeyboardAwareScrollView contentContainerStyle={styles.screen}>
-        {renderImage()}
-        <Text style={styles.heading}>{"Password Recovery"}</Text>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            value={email}
-            onChangeText={value => setEmail(value)}
-            placeholder="eg: yourname@gmail.com"
-            size="small"
-            style={styles.input}
-            keyboardType="email-address"
-            textStyle={styles.text}
-            autoCapitalize="none"
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.NETURAL_3,
+        alignItems: "center"
+      }}
+    >
+      <NavigationHeader></NavigationHeader>
+      <Text
+        style={{
+          fontSize: Typography.FONT_SIZE_34,
+          color: Colors.WHITE,
+          marginTop: "25%",
+          marginBottom: "20%",
+          fontWeight: Typography.FONT_WEIGHT_BOLD
+        }}
+      >
+        Forget Password
+      </Text>
+
+      <Input
+        width={"90%"}
+        onChangeText={value => setEmail(value)}
+        value={email}
+        placeholder="Enter mail address"
+        iconLeft={
+          <Image
+            style={{ width: 24, height: 24, margin: 10 }}
+            source={require("../../../assets/images/login_signup/email.png")}
           />
-        </View>
-        {!!api.error && (
-          <Text
-            style={[textInputStyles.error, { marginBottom: 10, fontSize: 12 }]}
-          >
-            {api.error.message}
-          </Text>
-        )}
-        <TouchableOpacity
-          disabled={api.loading === "pending"}
-          activeOpacity={0.7}
-          style={[styles.actionButon]}
-          onPress={handlePasswordReset}
-        >
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 15
-            }}
-          >
-            Reset Password
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            navigation.goBack()
+        }
+        iconHighlighted={
+          <Image
+            style={{ width: 24, height: 24, margin: 10 }}
+            source={require("../../../assets/images/login_signup/email_active.png")}
+          />
+        }
+      />
+
+      <Text
+        style={{
+          marginTop: "20%",
+          marginHorizontal: "20%",
+          fontSize: Typography.FONT_SIZE_14,
+          color: Colors.WHITE,
+          fontWeight: Typography.FONT_WEIGHT_400,
+          fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+          textAlign: "center",
+        }}
+      >
+        {"We will send a verification code to your email"}
+      </Text>
+
+      <View
+        style={{
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "flex-end",
+          marginBottom: "10%"
+        }}
+      >
+        <Button
+          btnWidth={width * 0.8}
+          backgroundColor={Colors.BUTTON_RED}
+          viewStyle={{
+            borderColor: Colors.facebook,
+            marginBottom: 2
           }}
+          height={35}
+          textFontWeight={Typography.FONT_WEIGHT_600}
+          textStyle={{
+            color: Colors.white,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontSize: Typography.FONT_SIZE_14
+          }}
+          // loading={props.loading}
+          onPress={() => {}}
         >
-          <Text style={[styles.textRow]}>Back to login?</Text>
-        </TouchableOpacity>
-      </KeyboardAwareScrollView>
+          SEND
+        </Button>
+      </View>
     </View>
   )
 }

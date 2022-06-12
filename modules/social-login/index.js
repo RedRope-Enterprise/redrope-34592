@@ -20,7 +20,10 @@ import { BACKGROUND_URL, LOGO_URL } from "./screens/constants.js";
 import { slice } from "./auth";
 import { styles } from "./screens/styles";
 import { SignInTab, SignupTab } from "./screens/loginsignup";
-import PasswordReset from "./screens/reset";
+import ResetPasswordScreen from "./screens/reset";
+
+import LoginScreen from "./screens/login"
+import SignupScreen from "./screens/signup"
 
 const LoginTabBar = ({ navigation, state, descriptors }) => {
   const currentTab = state.routes[state.index];
@@ -114,34 +117,21 @@ function LoginSignupTabs({ initialRouteName, children, screenOptions }) {
 const createLoginNavigator = createNavigatorFactory(LoginSignupTabs);
 
 const LoginStack = createLoginNavigator();
-
-const LoginScreen = () => {
-  return (
-    <LoginStack.Navigator>
-      <LoginStack.Screen
-        name="SignIn"
-        component={SignInTab}
-        options={{ title: "Sign In" }}
-      />
-      <LoginStack.Screen
-        name="SignUp"
-        component={SignupTab}
-        options={{ title: "Sign Up" }}
-      />
-    </LoginStack.Navigator>
-  );
-};
-
 const Stack = createStackNavigator();
 
 const LoginSignup = () => {
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="PasswordReset" component={PasswordReset} />
+      <LoginStack.Screen name="SignupScreen" component={SignupScreen} />
+      <LoginStack.Screen name="LoginScreen" component={LoginScreen} />
+
+      <LoginStack.Screen
+        name="ResetPasswordScreen"
+        component={ResetPasswordScreen}
+      />
     </Stack.Navigator>
-  );
-};
+  )
+}
 
 export default {
   title: "login",

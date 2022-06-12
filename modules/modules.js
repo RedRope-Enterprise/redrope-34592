@@ -28,6 +28,8 @@ const addTitle = item => {
   let { name, value } = item;
 
   if (!(value && value.hasOwnProperty("title"))) {
+    if(!item.value)
+      return
     Object.assign(item.value, { title: humanizeName(name) })
   }
 
