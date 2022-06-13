@@ -5,14 +5,12 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import permissions
-from home.models import Category, AboutUs, PrivacyPolicy, TermsAndCondition, FAQ
+from home.models import Category, AboutUs, FAQ
 from home.api.v1.serializers import (
     SignupSerializer,
     UserSerializer,
     CategorySerializer,
     AboutUsSerializer,
-    PrivacyPolicySerializer,
-    TermsAndConditionSerializer,
     FAQSerializer,
 )
 
@@ -55,13 +53,13 @@ class AboutUsViewSet(ListModelMixin, GenericViewSet):
     queryset = AboutUs.objects.all()
 
 
-class PrivacyPolicyViewSet(ListModelMixin, GenericViewSet):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = PrivacyPolicySerializer
-    queryset = PrivacyPolicy.objects.all()
+# class PrivacyPolicyViewSet(ListModelMixin, GenericViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = PrivacyPolicySerializer
+#     queryset = PrivacyPolicy.objects.all()
 
 
-class TermsAndConditionViewSet(ListModelMixin, GenericViewSet):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = TermsAndConditionSerializer
-    queryset = TermsAndCondition.objects.all()
+# class TermsAndConditionViewSet(ListModelMixin, GenericViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = TermsAndConditionSerializer
+#     queryset = TermsAndCondition.objects.all()

@@ -8,7 +8,7 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
-from home.models import Category, AboutUs, PrivacyPolicy, TermsAndCondition, FAQ
+from home.models import Category, AboutUs, FAQ
 from rest_auth.registration.serializers import SocialLoginSerializer
 
 User = get_user_model()
@@ -26,16 +26,16 @@ class AboutUsSerializer(serializers.ModelSerializer):
         fields = ("body",)
 
 
-class PrivacyPolicySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PrivacyPolicy
-        fields = ("body",)
+# class PrivacyPolicySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PrivacyPolicy
+#         fields = ("body",)
 
 
-class TermsAndConditionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TermsAndCondition
-        fields = ("body",)
+# class TermsAndConditionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = TermsAndCondition
+#         fields = ("body",)
 
 
 class FAQSerializer(serializers.ModelSerializer):
@@ -93,15 +93,15 @@ class SignupSerializer(serializers.ModelSerializer):
                     }
                 )
 
-        if attrs["password"] != attrs["password2"]:
+        if attrs.get("password") != attrs.get("password2"):
             raise serializers.ValidationError({"password": "Password didn't match."})
 
-        if not attrs["accept_tc"]:
+        if not attrs.get("accept_tc"):
             raise serializers.ValidationError(
                 {"accept_tc": "Please accept terms and conditions"}
             )
-        if attrs["event_planner"]:
-            if not attrs["business_name"] or not attrs["business_reg_no"]:
+        if attrs.get("event_planner"):
+            if not attrs.get("business_name") or not attrs.get("business_reg_no"):
                 raise serializers.ValidationError(
                     "Please provide your business name and business registration number"
                 )
