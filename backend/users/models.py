@@ -37,6 +37,13 @@ class User(AbstractUser):
     accept_tc = models.BooleanField(_("Accept Terms and Conditions"), default=False)
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
+    event_planner = models.BooleanField(_("Event planner"), default=False)
+    business_name = models.CharField(
+        _("Business name"), max_length=100, blank=True, null=True
+    )
+    business_reg_no = models.CharField(
+        _("Business registration number"), max_length=100, blank=True, null=True
+    )
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

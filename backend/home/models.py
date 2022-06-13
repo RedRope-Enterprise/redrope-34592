@@ -62,7 +62,8 @@ class Event(BaseModel):
     )
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
-    date = models.DateField(_("Event date"))
+    start_date = models.DateField(_("Event start date"))
+    end_date = models.DateField(_("Event end date"))
 
 
 class Category(BaseModel):
@@ -101,4 +102,6 @@ class UserEventRegistration(BaseModel):
         related_name="going_event",
         on_delete=models.CASCADE,
     )
+    attendee = models.PositiveIntegerField(_("Number of attendees"), default=1)
+
     notification = GenericRelation(Notification)
