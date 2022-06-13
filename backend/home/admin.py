@@ -5,8 +5,6 @@ from home.models import (
     UserEventRegistration,
     Notification,
     AboutUs,
-    PrivacyPolicy,
-    TermsAndCondition,
     FAQ,
 )
 
@@ -17,6 +15,4 @@ admin.site.register(Event)
 admin.site.register(Category)
 admin.site.register(UserEventRegistration)
 admin.site.register(AboutUs)
-admin.site.register(PrivacyPolicy)
-admin.site.register(TermsAndCondition)
 admin.site.register(FAQ)
