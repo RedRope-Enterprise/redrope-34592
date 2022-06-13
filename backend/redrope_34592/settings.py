@@ -222,6 +222,9 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
+STRIPE_API_KEY = env.str("STRIPE_API_KEY", "")
+STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", "")
+
 # Custom user model
 AUTH_USER_MODEL = "users.User"
 

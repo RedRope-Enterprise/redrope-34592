@@ -62,15 +62,22 @@ def filter_events_with_get_param(queryset, request):
     current_longitude = request.query_params.get("current_longitude", None)
     min_cost = request.query_params.get("min_cost", None)
     max_cost = request.query_params.get("max_cost", None)
-    categories = request.query_params.get("categories", None)
+    categories = request.query_params.getlist("categories", None)
     location = request.query_params.get("location", None)
-    date = request.query_params.get("date", None)
+    start_date = request.query_params.get("start_date", None)
+    end_date = request.query_params.get("end_date", None)
 
     if min_cost and max_cost:
         queryset = queryset.filter(price__range=(min_cost, max_cost))
 
-    # if desired_days:
-    #     queryset = queryset.filter(start_date__week_day__icontains=desired_days)
+    if categories:
+        queryset = queryset.filter(categories__name__in=categories)
+
+    if location:
+        queryset = queryset.filter(location__icontains=location)
+
+    if start_date and end_date:
+        queryset = queryset.filter(start_date=start_date, end_date=end_date)
 
     if distance:
         origin_latitude = ""

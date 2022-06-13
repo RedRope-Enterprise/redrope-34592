@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from home.models import Event, EventImage
+from home.models import Event, EventImage, UserEventRegistration
 from home.api.v1.serializers import CategorySerializer, UserSerializer
 
 
@@ -83,3 +83,9 @@ class EventDetailsSerializer(serializers.ModelSerializer):
             return UserSerializer(
                 obj.going.values_list("user", flat=True), many=True
             ).data
+
+
+class RegisterEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserEventRegistration
+        fields = "__all__"

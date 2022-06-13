@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from events.serializers import EventListSerializer, EventDetailsSerializer
+from events.serializers import (
+    EventListSerializer,
+    EventDetailsSerializer,
+    RegisterEventSerializer,
+)
 from home.models import Event
 from rest_framework import status
 from rest_framework import filters
@@ -8,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import CreateModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from utils.custom_permissions import IsOwnerAndReadOnly
 from rest_framework.permissions import IsAuthenticated
@@ -63,3 +68,7 @@ class EventViewset(ModelViewSet):
             return Response(serializer.data)
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RegisterEventViewset(CreateModelMixin, GenericViewSet):
+    serializer_class = RegisterEventSerializer

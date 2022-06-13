@@ -27,7 +27,17 @@ class SignupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "name", "email", "password", "password2", "accept_tc")
+        fields = (
+            "id",
+            "name",
+            "email",
+            "password",
+            "password2",
+            "event_planner",
+            "business_name",
+            "business_reg_no",
+            "accept_tc",
+        )
         extra_kwargs = {
             "password": {"write_only": True, "style": {"input_type": "password"}},
             "password2": {"write_only": True, "style": {"input_type": "password"}},
@@ -66,6 +76,11 @@ class SignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"accept_tc": "Please accept terms and conditions"}
             )
+        if attrs["event_planner"]:
+            if not attrs["business_name"] or not attrs["business_reg_no"]:
+                raise serializers.ValidationError(
+                    "Please provide your business name and business registration number"
+                )
         return attrs
 
     def create(self, validated_data):
@@ -116,12 +131,13 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "profile_picture",
             "email",
             "interests",
+            "event_planner",
             "address_longitude",
             "address_latitude",
             "phone",
             "website",
         )
-        read_only_fields = ("email",)
+        read_only_fields = ("email", "event_planner")
 
         extra_kwargs = {
             "username": {
@@ -129,6 +145,17 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
                 "allow_blank": False,
             }
         }
+
+    def __init__(self, *args, **kwargs):
+        # initialize fields
+        super(CustomUserDetailSerializer, self).__init__(*args, **kwargs)
+
+        if self.context["request"].user.event_planner:
+            # now modify the fields
+            self.Meta.fields += (
+                "business_name",
+                "business_reg_no",
+            )
 
 
 class AppleLoginSerializer(SocialLoginSerializer):
