@@ -14,6 +14,35 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class AboutUs(BaseModel):
+    # heading = models.CharField(_("Content Heading"), max_length=300, blank=True, null=True)
+    body = models.TextField(_("Content Body"))
+
+    class Meta:
+        verbose_name_plural = "About us"
+
+
+class FAQ(BaseModel):
+    question = models.CharField(_("Question"), max_length=400, blank=True, null=True)
+    response = models.TextField(_("Response"))
+
+    class Meta:
+        verbose_name_plural = "FAQs"
+
+
+class PrivacyPolicy(BaseModel):
+    # heading = models.CharField(_("Content Heading"), max_length=300, blank=True, null=True)
+    body = models.TextField(_("Content Body"))
+
+    class Meta:
+        verbose_name_plural = "Privacy policies"
+
+
+class TermsAndCondition(BaseModel):
+    # heading = models.CharField(_("Content Heading"), max_length=300, blank=True, null=True)
+    body = models.TextField(_("Content Body"))
+
+
 class Notification(BaseModel):
 
     target = models.ForeignKey(
