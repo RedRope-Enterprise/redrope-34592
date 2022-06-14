@@ -11,20 +11,155 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
-  useWindowDimensions
+  useWindowDimensions,
+  Platform
 } from "react-native"
+import { unwrapResult } from "@reduxjs/toolkit"
 import { useNavigation } from "@react-navigation/native"
 import { Colors, Typography } from "../../../styles"
 import { Input, Button } from "../../../components"
 import { TabView, SceneMap, TabBar } from "react-native-tab-view"
+import { LoginManager, AccessToken } from "react-native-fbsdk"
+import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "../auth/utils"
+import { appleForAndroid, appleForiOS } from "../auth/apple"
+import {
+  loginRequest,
+  signupRequest,
+  facebookLogin,
+  googleLogin,
+  appleLogin
+} from "../auth"
+import {
+  GoogleSigninButton,
+  GoogleSignin,
+  statusCodes
+} from "@react-native-google-signin/google-signin"
 
 const { width, height } = Dimensions.get("window")
 
 const SignupScreen = ({}) => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const [validationError, setValidationError] = useState({
+    email: "",
+    password: "",
+    username: ""
+  })
+
+  // const { api } = useSelector(state => state.Login)
+
+
   const layout = useWindowDimensions()
 
- 
+  const onSignupPress = async () => {
+    // setValidationError({ email: "", password: "", username: "" })
+    // if (!fullName) {
+    //   setValidationError({
+    //     username: "Please enter your name"
+    //   })
+    // }
+    // if (!validateEmail.test(email))
+    //   setValidationError({
+    //     ...validationError,
+    //     email: "Please enter a valid email address."
+    //   })
+
+    // if (!password)
+    //   setValidationError({
+    //     ...validationError,
+    //     password: "Please enter a valid password"
+    //   })
+
+    // if (password !== confirmPassword)
+    //   setValidationError({
+    //     ...validationError,
+    //     password: "Confirm password and password do not match."
+    //   })
+
+    // console.log("validationError ", validationError)
+    // if (
+    //   validationError.email != "" ||
+    //   validationError.password != "" ||
+    //   validationError.username != ""
+    // )
+    //   return validationError
+
+    dispatch(
+      signupRequest({ name: "TA", email: "ta@gmail.com", password: "123456", password2: "123456", event_planner: false})
+    )
+      .then(unwrapResult)
+      .then(() => {
+        Alert.alert(
+          "Signup Success",
+          "Registration Successful. A confirmation will be sent to your e-mail address."
+        )
+      })
+      .catch(err => {
+        // SHOW ERROR FROM SERVER
+        console.log("error > ", err)
+      })
+  }
+
+  const onFacebookConnect = async dispatch => {
+    try {
+      const fb_result = await LoginManager.logInWithPermissions([
+        "public_profile",
+        "email"
+      ])
+      if (!fb_result.isCancelled) {
+        const data = await AccessToken.getCurrentAccessToken()
+        dispatch(facebookLogin({ access_token: data.accessToken }))
+          .then(unwrapResult)
+          .then(res => {
+            if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+          })
+      }
+    } catch (err) {
+      console.log("Facebook Login Failed: ", JSON.stringify(err))
+    }
+  }
+
+  const onGoogleConnect = async dispatch => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      forceCodeForRefreshToken: false,
+      iosClientId: GOOGLE_IOS_CLIENT_ID
+    })
+    try {
+      await GoogleSignin.hasPlayServices()
+      await GoogleSignin.signIn()
+      const tokens = await GoogleSignin.getTokens()
+      dispatch(googleLogin({ access_token: tokens.accessToken }))
+        .then(unwrapResult)
+        .then(res => {
+          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        })
+    } catch (err) {
+      if (err.code === statusCodes.SIGN_IN_CANCELLED) {
+        Alert.alert("Error", "The user canceled the signin request.")
+      }
+    }
+  }
+
+  const onAppleConnect = async dispatch => {
+    try {
+      const signinFunction = Platform.select({
+        ios: appleForiOS,
+        android: appleForAndroid
+      })
+      const result = await signinFunction()
+      dispatch(
+        appleLogin({ id_token: result.id_token, access_token: result.code })
+      )
+        .then(unwrapResult)
+        .then(res => {
+          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        })
+    } catch (err) {
+      console.log(JSON.stringify(err))
+    }
+  }
 
   const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
@@ -41,7 +176,7 @@ const SignupScreen = ({}) => {
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          marginTop:"5%",
+          marginTop: "5%",
           backgroundColor: Colors.NETURAL_3,
           alignItems: "center"
         }}
@@ -168,7 +303,7 @@ const SignupScreen = ({}) => {
             alignItems: "center"
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onGoogleConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -180,7 +315,7 @@ const SignupScreen = ({}) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -192,7 +327,7 @@ const SignupScreen = ({}) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -229,7 +364,7 @@ const SignupScreen = ({}) => {
             }}
             // loading={props.loading}
             onPress={() => {
-              navigation.navigate("Profile")
+              onSignupPress()
             }}
           >
             SIGN UP
@@ -273,7 +408,7 @@ const SignupScreen = ({}) => {
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          marginTop:"5%",
+          marginTop: "5%",
           backgroundColor: Colors.NETURAL_3,
           alignItems: "center"
         }}
@@ -400,7 +535,7 @@ const SignupScreen = ({}) => {
             alignItems: "center"
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onGoogleConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -412,7 +547,7 @@ const SignupScreen = ({}) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -424,7 +559,7 @@ const SignupScreen = ({}) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
             <Image
               style={{
                 resizeMode: "contain",
@@ -502,16 +637,24 @@ const SignupScreen = ({}) => {
   })
 
   _renderTabBar = props => {
-    return <TabBar
-      {...props}
-      inactiveColor={Colors.text}
-      activeColor={Colors.PRIMARY_2}
-      indicatorStyle={{ backgroundColor: Colors.PRIMARY_2, width: width *0.50, alignSelf: "center" }}
-      style={{ backgroundColor: null,  }}
-      labelStyle={{fontSize: Typography.FONT_SIZE_14, fontWeight: Typography.FONT_WEIGHT_600}}
-    />
-    
-  };
+    return (
+      <TabBar
+        {...props}
+        inactiveColor={Colors.text}
+        activeColor={Colors.PRIMARY_2}
+        indicatorStyle={{
+          backgroundColor: Colors.PRIMARY_2,
+          width: width * 0.5,
+          alignSelf: "center"
+        }}
+        style={{ backgroundColor: null }}
+        labelStyle={{
+          fontSize: Typography.FONT_SIZE_14,
+          fontWeight: Typography.FONT_WEIGHT_600
+        }}
+      />
+    )
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -528,8 +671,8 @@ const SignupScreen = ({}) => {
         Sign Up
       </Text>
       <TabView
-      renderTabBar={_renderTabBar}
-        style={{ flex: 1}}
+        renderTabBar={_renderTabBar}
+        style={{ flex: 1 }}
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
