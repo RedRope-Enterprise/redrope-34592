@@ -34,8 +34,10 @@ import {
   GoogleSignin,
   statusCodes
 } from "@react-native-google-signin/google-signin"
+import { setDataStorage } from "../../../utils/storage"
 
 const { width, height } = Dimensions.get("window")
+import { mapErrorMessage } from "../auth/utils"
 
 const SignupScreen = ({}) => {
   const navigation = useNavigation()
@@ -46,12 +48,11 @@ const SignupScreen = ({}) => {
     username: ""
   })
 
-  // const { api } = useSelector(state => state.Login)
-
-
+  const state = useSelector(state => state)
+  console.log("state", state)
   const layout = useWindowDimensions()
 
-  const onSignupPress = async () => {
+  const onSignupPress = async payload => {
     // setValidationError({ email: "", password: "", username: "" })
     // if (!fullName) {
     //   setValidationError({
@@ -84,19 +85,23 @@ const SignupScreen = ({}) => {
     // )
     //   return validationError
 
-    dispatch(
-      signupRequest({ name: "TA", email: "ta@gmail.com", password: "123456", password2: "123456", event_planner: false})
-    )
+    dispatch(signupRequest(payload))
       .then(unwrapResult)
-      .then(() => {
-        Alert.alert(
-          "Signup Success",
-          "Registration Successful. A confirmation will be sent to your e-mail address."
-        )
+      .then(res => {
+        console.log("login data ", res)
+        setDataStorage("@user", res?.user)
+        setDataStorage("@profile", res?.profile)
+        setDataStorage("@key", res?.key)
+        Alert.alert("", "Signup success!")
+        navigation.replace("Dashboard")
       })
       .catch(err => {
-        // SHOW ERROR FROM SERVER
-        console.log("error > ", err)
+        let error = mapErrorMessage(err)
+        if (error.code == "403") {
+          Alert.alert("INFO", "Email already in use!")
+        } else {
+          Alert.alert("INFO", error.message)
+        }
       })
   }
 
@@ -364,7 +369,14 @@ const SignupScreen = ({}) => {
             }}
             // loading={props.loading}
             onPress={() => {
-              onSignupPress()
+              onSignupPress({
+                name: name,
+                email: email,
+                password: password,
+                password2: repassword,
+                event_planner: false,
+                accept_tc: true
+              })
             }}
           >
             SIGN UP

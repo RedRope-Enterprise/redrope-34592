@@ -12,17 +12,51 @@ import {
   Alert,
   StyleSheet
 } from "react-native"
+import { unwrapResult } from "@reduxjs/toolkit"
+
 import { useNavigation } from "@react-navigation/native"
 import { Colors, Typography } from "../../../styles"
 import { Input, Button } from "../../../components"
-
+import {
+  loginRequest,
+  signupRequest,
+  facebookLogin,
+  googleLogin,
+  appleLogin
+} from "../auth"
 const { width, height } = Dimensions.get("window")
+import { setDataStorage } from "../../../utils/storage"
+import { mapErrorMessage } from "../auth/utils"
+
 
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const onLoginPressed = () => {
+
+    dispatch(loginRequest({email, password}))
+      .then(unwrapResult)
+      .then(res => {
+        console.log("login data ", res)
+        setDataStorage("@user", res?.user)
+        setDataStorage("@profile", res?.profile)
+        setDataStorage("@key", res?.key)
+        Alert.alert("", "Signup success!")
+        navigation.replace("Dashboard")
+      })
+      .catch(err => {
+        let error = mapErrorMessage(err)
+        if (error.code == "403") {
+          Alert.alert("INFO", "Email already in use!")
+        } else {
+          Alert.alert("INFO", error.message)
+        }
+      })
+  }
 
   return (
     <KeyboardAvoidingView
@@ -197,7 +231,9 @@ const LoginScreen = ({}) => {
             fontSize: Typography.FONT_SIZE_14
           }}
           // loading={props.loading}
-          onPress={() => {navigation.navigate("Dashboard")}}
+          // onPress={() => onLoginPressed()}
+          onPress={() => navigation.navigate("Dashboard")}
+
         >
           SIGN IN
         </Button>

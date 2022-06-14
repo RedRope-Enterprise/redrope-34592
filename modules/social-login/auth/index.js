@@ -69,7 +69,7 @@ const initialState = {
   user: {},
   api: { loading: "idle", error: null }
 }
-export const slice = createSlice({
+export const loginReducer = createSlice({
   name: "login",
   initialState: initialState,
   reducers: {},

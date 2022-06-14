@@ -7,11 +7,12 @@ console.log("BASE_URL ", BASE_URL)
 
 const authAPI = axios.create({
   baseURL: BASE_URL,
-  headers: { Accept: "application/json", "Content-Type": "application/json" }
+  headers: { Accept: "application/json", "Content-Type": "application/json", "X-CSRF-Token": "7zzH5KGrSxZ5YhlwEBb5F1YmzUXyQpeDyawOTsnchzSXMpEUVH91Swv75Ct06Hcr" }
 })
 
 function apiLoginRequest(payload) {
-  return authAPI.post(`/api/v1/login/`, payload)
+  console.log("/rest-auth/login/ ", payload)
+  return authAPI.post(`/rest-auth/login/`, payload)
 }
 
 function apiSignupRequest(payload) {
