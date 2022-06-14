@@ -143,7 +143,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
     User model w/o password
     """
 
-    interests = CategorySerializer(read_only=True, many=True)
+    likes = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -152,6 +152,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "username",
             "name",
             "bio",
+            "likes",
             "profile_picture",
             "email",
             "interests",
@@ -167,7 +168,8 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "username": {
                 "required": False,
                 "allow_blank": False,
-            }
+            },
+            "interests": {"write_only": True},
         }
 
     def __init__(self, *args, **kwargs):
@@ -180,6 +182,9 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
                 "business_name",
                 "business_reg_no",
             )
+
+    def get_likes(self, obj):
+        return CategorySerializer(obj.interests, many=True).data
 
 
 class AppleLoginSerializer(SocialLoginSerializer):
