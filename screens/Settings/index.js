@@ -7,7 +7,9 @@ import {
   Text,
   Dimensions,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  ScrollView
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
@@ -27,11 +29,168 @@ const { width, height } = Dimensions.get("window")
 const SettingsScreen = () => {
   const navigation = useNavigation()
 
+  const onProfileSettingsPress = () => {
+    console.log("onProfileSettingsPress")
+  }
+  const settingsMenu = [
+    { key: 0, text: "Profile Settings", onPress: onProfileSettingsPress },
+    { key: 1, text: "Payment Settings", onPress: onProfileSettingsPress },
+    { key: 2, text: "FAQ", onPress: onProfileSettingsPress },
+    { key: 1, text: "Feedback & Support", onPress: onProfileSettingsPress },
+    {
+      key: 1,
+      text: "Terms and Conditions",
+      onPress: () =>
+        navigation.navigate("CustomWebView", {
+          url: "https://app.termly.io/document/terms-of-use-for-ecommerce/21ad8bdf-5126-4329-8d36-79003b7d996a"
+        })
+    },
+    {
+      key: 1,
+      text: "Privacy Policy",
+      onPress: () =>
+        navigation.navigate("CustomWebView", {
+          url: "https://app.termly.io/document/privacy-policy/ffe5e1d0-ab91-4d33-956c-57bdbdd99d59"
+        })
+    },
+    { key: 1, text: "About us", onPress: onProfileSettingsPress }
+  ]
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-        <Text>Settings</Text>
+    <SafeAreaView style={[styles.flex1, { backgroundColor: Colors.NETURAL_3 }]}>
+      {/* <NavigationHeader></NavigationHeader> */}
+      <ScrollView>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "5%"
+          }}
+        >
+          <View style={styles.userImageContainer}>
+            <Image
+              style={styles.userImage}
+              source={require("../../assets/images/onboarding/1.png")}
+            />
+          </View>
+          <Text style={styles.nameText}>Jonny Wilson</Text>
+        </View>
+
+        {settingsMenu.map(menuItem => {
+          return (
+            <TouchableOpacity
+              style={styles.menuItem}
+              key={menuItem.key}
+              onPress={menuItem.onPress}
+            >
+              <Text style={styles.menuItemText}>{menuItem.text}</Text>
+              <Text style={styles.menuItemTextArrow}>{">"}</Text>
+            </TouchableOpacity>
+          )
+        })}
+
+        <View style={{ alignSelf: "center", marginTop: "5%" }}>
+          <Button
+            btnWidth={width * 0.8}
+            backgroundColor={Colors.BUTTON_RED}
+            viewStyle={{
+              borderColor: Colors.facebook,
+              marginBottom: 2,
+              alignSelf: "center"
+            }}
+            height={35}
+            textFontWeight={Typography.FONT_WEIGHT_600}
+            textStyle={{
+              color: Colors.white,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14
+            }}
+            // loading={props.loading}
+            onPress={() => {}}
+          >
+            LOGOUT
+          </Button>
+        </View>
+
+        <View style={{ alignSelf: "center", marginTop: "5%" }}>
+          <Button
+            btnWidth={width * 0.8}
+            backgroundColor={Colors.NETURAL_3}
+            borderColor={Colors.BUTTON_RED}
+            borderType={"outlined"}
+            textColor={Colors.BUTTON_RED}
+            viewStyle={{
+              borderColor: Colors.BUTTON_RED,
+              marginBottom: 2,
+              alignSelf: "center"
+            }}
+            height={35}
+            textFontWeight={Typography.FONT_WEIGHT_600}
+            textStyle={{
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14
+            }}
+            onPress={() => {}}
+          >
+            DELETE ACCOUNT
+          </Button>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 export default SettingsScreen
+
+let styles = StyleSheet.create({
+  center: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  flex1: {
+    flex: 1
+  },
+  userImageContainer: {
+    borderRadius: 1000,
+    overflow: "hidden",
+    width: 140,
+    height: 140
+  },
+  userImage: {
+    width: "100%",
+    height: "100%"
+  },
+  nameText: {
+    fontSize: Typography.FONT_SIZE_16,
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+    fontWeight: Typography.FONT_WEIGHT_500,
+    color: Colors.WHITE,
+    marginVertical: "5%"
+  },
+  menuItem: {
+    flexDirection: "row",
+    backgroundColor: Colors.NETURAL_4,
+    marginVertical: "2%",
+    marginHorizontal: "5%",
+    borderRadius: 10,
+    alignItems: "center"
+  },
+  menuItemText: {
+    fontSize: Typography.FONT_SIZE_16,
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+    fontWeight: Typography.FONT_WEIGHT_400,
+    color: Colors.WHITE,
+    marginVertical: "4%",
+    marginHorizontal: "5%",
+    flex: 1
+  },
+  menuItemTextArrow: {
+    fontSize: Typography.FONT_SIZE_24,
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+    fontWeight: Typography.FONT_WEIGHT_400,
+    color: Colors.NETURAL_2,
+    textAlignVertical: "center",
+    alignSelf: "center",
+    marginRight: "5%"
+  }
+})

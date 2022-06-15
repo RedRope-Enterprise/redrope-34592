@@ -112,10 +112,10 @@ const TableSelectScreen = () => {
 
             <View>
               <Text style={[styles.pricenperson, { color: Colors.WHITE }]}>
-                3 Person
+                {`${datasource.length} person`}
               </Text>
               <Text style={[styles.pricenperson, { color: Colors.NETURAL_2 }]}>
-                {`$${event?.price}`}
+                {`$${event?.price * datasource.length}`}
               </Text>
             </View>
 

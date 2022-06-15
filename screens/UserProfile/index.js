@@ -40,7 +40,19 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view"
 const UserProfileScreen = () => {
   const navigation = useNavigation()
 
+  const [name, setName] = React.useState("")
+
+    useEffect(() => {
+      getUserName()
+    }, [])
+
+    const getUserName = async () => {
+      let name = await getDataStorage("userName")
+      setName(name)
+    }
+
   const [index, setIndex] = React.useState(0)
+
   const [routes] = React.useState([
     { key: "first", title: "About" },
     { key: "second", title: "Events" }
@@ -67,6 +79,7 @@ const UserProfileScreen = () => {
 
   const AboutSection = () => {
     const [userInterests, setUserInterests] = useState()
+
     useEffect(() => {
       getAllInterests()
     }, [userInterests])
@@ -144,12 +157,12 @@ const UserProfileScreen = () => {
     }, [])
 
     return (
-      <View style={{  }}>
+      <View style={{}}>
         <FlatList
           style={{
             marginTop: "5%"
           }}
-          contentContainerStyle={{ marginHorizontal: "5%"}}
+          contentContainerStyle={{ marginHorizontal: "5%" }}
           numColumns={1}
           data={events}
           extraData={events}
@@ -189,7 +202,7 @@ const UserProfileScreen = () => {
             source={require("../../assets/images/onboarding/1.png")}
           />
         </View>
-        <Text style={styles.nameText}>Jonny Wilson</Text>
+        <Text style={styles.nameText}>{name}</Text>
       </View>
 
       <TabView

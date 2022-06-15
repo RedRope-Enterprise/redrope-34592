@@ -35,6 +35,8 @@ const HomeScreen = () => {
   const [events, setEvents] = useState([])
   const [eventCategories, setEventCategories] = useState([])
 
+  const [searchedEvents, setSearchedEvents] = useState([])
+
   const [searchValue, setSearchValue] = useState("")
 
   useEffect(async () => {
@@ -43,6 +45,22 @@ const HomeScreen = () => {
     setEvents(events)
     setEventCategories(eventCategory)
   }, [])
+
+  SearchForEvent = value => {
+    setSearchValue(value)
+    let searchResult = []
+    if (value.length >= 3) {
+      events.forEach(event => {
+        if (event.name.toLowerCase().includes(value.toLowerCase())) {
+          searchResult.push(event)
+        }
+      })
+
+      setSearchedEvents(searchResult)
+    } else {
+      setSearchedEvents([])
+    }
+  }
 
   const CategoryRender = ({ event }) => (
     <TouchableOpacity
@@ -129,7 +147,7 @@ const HomeScreen = () => {
             placeholder={"What do you want to experience "}
             placeholderTextColor={Colors.NETURAL_2}
             value={searchValue}
-            onChangeText={value => setSearchValue(value)}
+            onChangeText={value => SearchForEvent(value)}
           />
 
           <TouchableOpacity>
@@ -192,8 +210,8 @@ const HomeScreen = () => {
                 }
                 contentContainerStyle={{ paddingRight: 10 }}
                 numColumns={1}
-                data={events}
-                extraData={events}
+                data={searchValue.length >= 3 ? searchedEvents : events}
+                extraData={searchedEvents}
                 renderItem={({ item }) => (
                   <HomeEventItem
                     event={item}

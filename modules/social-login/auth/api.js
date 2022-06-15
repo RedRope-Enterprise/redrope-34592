@@ -1,6 +1,9 @@
 import axios from "axios"
+import { getGlobalOptions } from "@options";
 
-const BASE_URL = "https://your-app-backend.botics.co" // your app back-end url
+const global = getGlobalOptions(); 
+const BASE_URL = global.url;
+console.log("BASE_URL ", BASE_URL)
 
 const authAPI = axios.create({
   baseURL: BASE_URL,
@@ -8,11 +11,12 @@ const authAPI = axios.create({
 })
 
 function apiLoginRequest(payload) {
-  return authAPI.post(`/api/v1/login/`, payload)
+  console.log("/rest-auth/login/ ", payload)
+  return authAPI.post(`/rest-auth/login/`, payload)
 }
 
 function apiSignupRequest(payload) {
-  return authAPI.post(`/api/v1/signup/`, payload)
+  return authAPI.post(`/rest-auth/registration/`, payload)
 }
 
 function apiLogoutRequest(payload) {
