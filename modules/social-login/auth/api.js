@@ -7,7 +7,7 @@ console.log("BASE_URL ", BASE_URL)
 
 const authAPI = axios.create({
   baseURL: BASE_URL,
-  headers: { Accept: "application/json", "Content-Type": "application/json", "X-CSRF-Token": "7zzH5KGrSxZ5YhlwEBb5F1YmzUXyQpeDyawOTsnchzSXMpEUVH91Swv75Ct06Hcr" }
+  headers: { Accept: "application/json", "Content-Type": "application/json" }
 })
 
 function apiLoginRequest(payload) {

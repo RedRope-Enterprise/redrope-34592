@@ -40,9 +40,19 @@ const SettingsScreen = () => {
     {
       key: 1,
       text: "Terms and Conditions",
-      onPress: onProfileSettingsPress
+      onPress: () =>
+        navigation.navigate("CustomWebView", {
+          url: "https://app.termly.io/document/terms-of-use-for-ecommerce/21ad8bdf-5126-4329-8d36-79003b7d996a"
+        })
     },
-    { key: 1, text: "Privacy Policy", onPress: onProfileSettingsPress },
+    {
+      key: 1,
+      text: "Privacy Policy",
+      onPress: () =>
+        navigation.navigate("CustomWebView", {
+          url: "https://app.termly.io/document/privacy-policy/ffe5e1d0-ab91-4d33-956c-57bdbdd99d59"
+        })
+    },
     { key: 1, text: "About us", onPress: onProfileSettingsPress }
   ]
 

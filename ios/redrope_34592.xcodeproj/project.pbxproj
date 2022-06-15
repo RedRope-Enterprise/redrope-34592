@@ -13,6 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		13CDF7B6DF104F8394A3C265 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D23CDA33BF58421E9B30E797 /* Poppins-Regular.ttf */; };
 		305EEB7528467E5400650B2C /* Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EEB7428467E5400650B2C /* Fix.swift */; };
+		30F58C34285A4CF4004022F4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		47F7D3948B804BBB9792B3D6 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 215F8AC67136489BA31AE305 /* Poppins-Medium.ttf */; };
 		59F75262CF4749A8A0E02DCF /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5F1E124CA5487DB38C2B93 /* Poppins-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -87,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30F58C34285A4CF4004022F4 /* JavaScriptCore.framework in Frameworks */,
 				9BF7948790C194914444C48D /* libPods-redrope_34592.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

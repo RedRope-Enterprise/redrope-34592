@@ -28,7 +28,6 @@ const { width, height } = Dimensions.get("window")
 import { setDataStorage } from "../../../utils/storage"
 import { mapErrorMessage } from "../auth/utils"
 
-
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -37,8 +36,7 @@ const LoginScreen = ({}) => {
   const [password, setPassword] = useState("")
 
   const onLoginPressed = () => {
-
-    dispatch(loginRequest({email, password}))
+    dispatch(loginRequest({ email, password }))
       .then(unwrapResult)
       .then(res => {
         console.log("login data ", res)
@@ -214,7 +212,12 @@ const LoginScreen = ({}) => {
       </View>
 
       <View
-        style={{ alignItems: "center", flex: 1, justifyContent: "flex-end", marginBottom: "10%"}}
+        style={{
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "flex-end",
+          marginBottom: "10%"
+        }}
       >
         <Button
           btnWidth={width * 0.8}
@@ -232,8 +235,9 @@ const LoginScreen = ({}) => {
           }}
           // loading={props.loading}
           // onPress={() => onLoginPressed()}
-          onPress={() => navigation.navigate("Dashboard")}
-
+          onPress={async() => {
+            navigation.navigate("Dashboard")
+          }}
         >
           SIGN IN
         </Button>

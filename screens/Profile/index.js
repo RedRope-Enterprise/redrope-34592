@@ -28,13 +28,19 @@ const ProfileScreen = () => {
   const navigation = useNavigation()
 
   const [isModalVisible, setIsModalVisible] = useState(true)
-  const [name, setName] = useState("true")
+  const [name, setName] = useState("")
   const [about, setAbout] = useState("")
   const [userInterests, setUserInterests] = useState()
 
   useEffect(() => {
     getAllInterests()
+    getUserName()
   }, [userInterests])
+
+  const getUserName = async () => {
+    let name = await getDataStorage("userName")
+    setName(name)
+  }
 
   const getAllInterests = async () => {
     // await clearStorage()
@@ -225,8 +231,7 @@ Please setup your profile`}
           }}
           // loading={props.loading}
           onPress={() => {
-        navigation.navigate("Dashboard")
-
+            navigation.navigate("Dashboard")
           }}
         >
           SAVE

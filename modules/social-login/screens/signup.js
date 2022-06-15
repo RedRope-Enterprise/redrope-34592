@@ -85,6 +85,11 @@ const SignupScreen = ({}) => {
     // )
     //   return validationError
 
+    await setDataStorage("userName", payload.name)
+    navigation.navigate("Profile")
+
+    return
+
     dispatch(signupRequest(payload))
       .then(unwrapResult)
       .then(res => {
