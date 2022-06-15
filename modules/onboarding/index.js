@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef, useState, useEffect } from "react"
 import {
   View,
   Image,
@@ -6,18 +6,28 @@ import {
   StyleSheet,
   StatusBar,
   ImageBackground,
-  Pressable
+  Pressable,
+  TouchableOpacity,
+  Dimensions
 } from "react-native"
 import { slides } from "./slides"
 import AppIntroSlider from "react-native-app-intro-slider"
 import { useNavigation } from "@react-navigation/native"
 
-import {Typography} from "../../styles"
+import { Colors, Typography } from "../../styles"
+import { Button } from "../../components"
 
 const REDIRECT_SCREEN_NAME = "login"
+const { width, height } = Dimensions.get("window")
 
-const Onboarding = ( ) => {
+const Onboarding = () => {
   const navigation = useNavigation()
+  const slideRef = useRef()
+  const [currentIndex , setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    slideRef?.current.goToSlide(currentIndex)
+  }, [])
 
   const renderItem = ({ item }) => {
     return (
@@ -38,44 +48,69 @@ const Onboarding = ( ) => {
   const onDone = () => {
     navigation.navigate(REDIRECT_SCREEN_NAME)
   }
-
   return (
     <View style={{ flex: 1 }}>
       <StatusBar hidden />
       <AppIntroSlider
+        ref={slideRef}
+        onSlideChange={a => setCurrentIndex(a)}
         showNextButton
-        showDoneButton
         renderItem={renderItem}
         data={slides}
         bottomButton
         showSkipButton
         onDone={onDone}
+        renderDoneButton={() => (
+          <View style={{ alignSelf: "center" }}>
+            <Button
+              btnWidth={width * 0.3}
+              borderedRadius={20}
+              bordered={true}
+              backgroundColor={Colors.BUTTON_RED}
+              viewStyle={{
+                borderColor: Colors.facebook,
+                marginBottom: 2
+              }}
+              height={35}
+              textFontWeight={Typography.FONT_WEIGHT_600}
+              textStyle={{
+                color: Colors.white,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_14
+              }}
+              // loading={props.loading}
+              onPress={onDone}
+            >
+              START
+            </Button>
+          </View>
+        )}
         renderNextButton={() => (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row"
-            }}
-          >
-            <Pressable>
-              {
-                <Text
-                  style={{
-                    fontSize: 14,
-                    paddingVertical: 10,
-                    paddingHorizontal: 40,
-                    backgroundColor: "#FF0000",
-                    borderRadius: 100,
-                    textAlign: "center",
-                    alignSelf: "flex-start",
-                    color: "white"
-                  }}
-                >
-                  {"NEXT"}
-                </Text>
-              }
-            </Pressable>
+          <View style={{ alignSelf: "center" }}>
+            <Button
+              btnWidth={width * 0.3}
+              borderedRadius={20}
+              bordered={true}
+              backgroundColor={Colors.BUTTON_RED}
+              viewStyle={{
+                borderColor: Colors.facebook,
+                marginBottom: 2
+              }}
+              height={35}
+              textFontWeight={Typography.FONT_WEIGHT_600}
+              textStyle={{
+                color: Colors.white,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_14
+              }}
+              // loading={props.loading}
+              onPress={() => {
+                slideRef?.current.goToSlide(currentIndex + 1)
+                setCurrentIndex(currentIndex + 1)
+              }}
+            >
+              NEXT
+            </Button>
           </View>
         )}
       />
@@ -112,14 +147,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: Typography.FONT_SIZE_16,
     maxWidth: 270,
-    fontFamily : Typography.FONT_FAMILY_POPPINS_REGULAR
-
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
   },
   title: {
     fontSize: Typography.FONT_SIZE_50,
     color: "white",
     textAlign: "center",
-    fontFamily : Typography.FONT_FAMILY_POPPINS_REGULAR
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
   },
   titleContainer: {
     marginTop: 37

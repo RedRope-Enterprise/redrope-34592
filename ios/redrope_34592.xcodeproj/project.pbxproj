@@ -14,6 +14,8 @@
 		13CDF7B6DF104F8394A3C265 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D23CDA33BF58421E9B30E797 /* Poppins-Regular.ttf */; };
 		305EEB7528467E5400650B2C /* Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305EEB7428467E5400650B2C /* Fix.swift */; };
 		30F58C34285A4CF4004022F4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
+		30F58C3B285A5847004022F4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F58C3A285A5846004022F4 /* File.swift */; };
+		30F58C3C285A5847004022F4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F58C3A285A5846004022F4 /* File.swift */; };
 		47F7D3948B804BBB9792B3D6 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 215F8AC67136489BA31AE305 /* Poppins-Medium.ttf */; };
 		59F75262CF4749A8A0E02DCF /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5F1E124CA5487DB38C2B93 /* Poppins-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -50,6 +52,8 @@
 		303E17722857C20A0042986F /* redrope_34592.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = redrope_34592.entitlements; path = redrope_34592/redrope_34592.entitlements; sourceTree = "<group>"; };
 		305EEB7328467E5300650B2C /* redrope_34592-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "redrope_34592-Bridging-Header.h"; sourceTree = "<group>"; };
 		305EEB7428467E5400650B2C /* Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fix.swift; sourceTree = "<group>"; };
+		30F58C39285A5846004022F4 /* redrope_34592Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "redrope_34592Tests-Bridging-Header.h"; sourceTree = "<group>"; };
+		30F58C3A285A5846004022F4 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		3A8B80E5B85E4793B5259030 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		484E4C18B32F0731E4513352 /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; sourceTree = "<group>"; };
 		4D1F6F1A8E8848D7A1888546 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				305EEB7428467E5400650B2C /* Fix.swift */,
+				30F58C3A285A5846004022F4 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* redrope_34592 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* redrope_34592Tests */,
@@ -183,6 +188,7 @@
 				2258F7339B3A4CCF9EF83196 /* Resources */,
 				B14B408FE9D2F7380BF4EEFC /* Pods */,
 				305EEB7328467E5300650B2C /* redrope_34592-Bridging-Header.h */,
+				30F58C39285A5846004022F4 /* redrope_34592Tests-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -263,6 +269,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1320;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -432,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* redrope_34592Tests.m in Sources */,
+				30F58C3C285A5847004022F4 /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				30F58C3B285A5847004022F4 /* File.swift in Sources */,
 				305EEB7528467E5400650B2C /* Fix.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -462,6 +471,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -480,6 +490,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "redrope_34592Tests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/redrope_34592.app/redrope_34592";
 			};
 			name = Debug;
@@ -490,6 +503,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = redrope_34592Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -505,6 +519,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "redrope_34592Tests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/redrope_34592.app/redrope_34592";
 			};
 			name = Release;

@@ -25,7 +25,7 @@ const Input = props => {
 
           flexDirection: "row",
           alignItems: "center",
-          height: height,
+          // height: height,
           width: large,
           backgroundColor: Colors.NETURAL_4,
           borderRadius: 5,
@@ -74,7 +74,8 @@ const Input = props => {
             height: "100%",
             fontSize: Typography.FONT_SIZE_16,
             fontWeight: Typography.FONT_WEIGHT_REGULAR,
-            fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT
+            fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
+            marginVertical: "4%"
           }}
           placeholderTextColor={Colors.NETURAL_2}
         />

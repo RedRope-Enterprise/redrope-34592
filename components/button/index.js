@@ -28,14 +28,15 @@ const Button = ({
   textStyle = null,
   size = "large",
   height = 45,
-  borderColor = Colors.BLACK
+  borderColor = Colors.BLACK,
+  borderedRadius = 10
 }) => {
   const large = btnWidth
   const small = width / 2
   const btnSize = size === "large" ? large : small
   const btnBgColor = type === "filled" ? backgroundColor : "transparent"
   const btnTextColor = type === "filled" ? textColor : Colors.BLACK
-  const btnBorderRadius = bordered ? 10 : 5
+  const btnBorderRadius = bordered ? borderedRadius : 5
 
   const containerCommonStyle = {
     justifyContent: "center",

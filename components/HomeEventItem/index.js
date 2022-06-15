@@ -111,14 +111,14 @@ const HomeEventItem = props => {
                 </Text>
               </View>
 
-              <Text
+              {/* <Text
                 style={{
                   fontSize: Typography.FONT_SIZE_18,
                   fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM,
                   fontWeight: Typography.FONT_WEIGHT_BOLD,
                   color: Colors.PRIMARY_1
                 }}
-              >{`$${event.price}`}</Text>
+              >{`$${event.price}`}</Text> */}
             </View>
           </View>
         </LinearGradient>
