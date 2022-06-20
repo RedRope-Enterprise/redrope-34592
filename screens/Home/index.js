@@ -28,6 +28,9 @@ import { data } from "../../data"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
+import { getUser } from "../../services/user"
+import { getCategories } from "../../services/events"
+
 const { width, height } = Dimensions.get("window")
 
 const HomeScreen = () => {
@@ -38,13 +41,30 @@ const HomeScreen = () => {
   const [searchedEvents, setSearchedEvents] = useState([])
 
   const [searchValue, setSearchValue] = useState("")
+  const [userImage, setUserImage] = useState("")
 
   useEffect(async () => {
     const events = data.getEvents()
-    const eventCategory = data.getEventCategories()
     setEvents(events)
-    setEventCategories(eventCategory)
+    getUser()
   }, [])
+
+  useEffect(async () => {
+    getEventCategories()
+  }, [])
+
+  const getEventCategories = async () => {
+    let resp = await getCategories()
+    setEventCategories(resp?.results)
+    console.log("resp ctegories ", resp.results)
+  }
+
+  const getUser = async () => {
+    const user = await getDataStorage("@user")
+    if (user) {
+      setUserImage(user?.profile_picture)
+    }
+  }
 
   SearchForEvent = value => {
     setSearchValue(value)
@@ -71,6 +91,7 @@ const HomeScreen = () => {
         flex: 1,
         alignItems: "flex-end"
       }}
+      key={event.id}
     >
       <ImageBackground
         imageStyle={{
@@ -85,7 +106,7 @@ const HomeScreen = () => {
           backgroundColor: Colors.NETURAL_3
         }}
         resizeMode="cover"
-        source={event.image}
+        source={{uri : event.image}}
       >
         <Text
           style={{
@@ -99,7 +120,7 @@ const HomeScreen = () => {
             fontWeight: Typography.FONT_WEIGHT_BOLD
           }}
         >
-          {event.text}
+          {event.name}
         </Text>
       </ImageBackground>
     </TouchableOpacity>
@@ -113,7 +134,7 @@ const HomeScreen = () => {
       >
         <Image
           style={{ width: 30, height: 30, borderRadius: 1000 }}
-          source={require("../../assets/images/userImage.png")}
+          source={{ uri: userImage }}
         />
       </TouchableOpacity>
 

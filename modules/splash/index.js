@@ -1,14 +1,22 @@
 import { useNavigation } from "@react-navigation/native"
 import React, { useEffect } from "react"
 import { View, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native"
+import { getDataStorage, clearStorage } from "../../utils/storage"
 
-const NEXT_SCREEN_NAME = "Onboarding"
+let NEXT_SCREEN_NAME = "Onboarding"
 
 const Splash = ({}) => {
   const navigation = useNavigation()
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate(NEXT_SCREEN_NAME)
+  useEffect(async () => {
+    
+
+    setTimeout(async() => {
+      let key = await getDataStorage("@key")
+      if (key) {
+        NEXT_SCREEN_NAME = "Dashboard"
+        navigation.replace(NEXT_SCREEN_NAME)
+      }else
+        navigation.navigate(NEXT_SCREEN_NAME)
     }, 3000)
   }, [])
 
@@ -43,7 +51,7 @@ const styles = StyleSheet.create({
     width: "75%",
     height: "100%",
     bottom: "25%",
-    
+
     alignSelf: "center"
   }
 })

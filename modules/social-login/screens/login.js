@@ -27,6 +27,7 @@ import {
 const { width, height } = Dimensions.get("window")
 import { setDataStorage } from "../../../utils/storage"
 import { mapErrorMessage } from "../auth/utils"
+import {getUser} from "../../../services/user"
 
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
@@ -38,13 +39,15 @@ const LoginScreen = ({}) => {
   const onLoginPressed = () => {
     dispatch(loginRequest({ email, password }))
       .then(unwrapResult)
-      .then(res => {
-        console.log("login data ", res)
-        setDataStorage("@user", res?.user)
-        setDataStorage("@profile", res?.profile)
+      .then(async res => {
         setDataStorage("@key", res?.key)
-        Alert.alert("", "Signup success!")
-        navigation.replace("Dashboard")
+
+          const user = await getUser()
+          if(user){
+            setDataStorage("@user", user)
+            navigation.replace("Dashboard")
+            // Alert.alert("", "Login success!")
+          }
       })
       .catch(err => {
         let error = mapErrorMessage(err)
@@ -234,10 +237,10 @@ const LoginScreen = ({}) => {
             fontSize: Typography.FONT_SIZE_14
           }}
           // loading={props.loading}
-          // onPress={() => onLoginPressed()}
-          onPress={async() => {
-            navigation.navigate("Dashboard")
-          }}
+          onPress={() => onLoginPressed()}
+          // onPress={async() => {
+          //   navigation.navigate("Dashboard")
+          // }}
         >
           SIGN IN
         </Button>

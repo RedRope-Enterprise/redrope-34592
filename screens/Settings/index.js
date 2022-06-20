@@ -106,7 +106,10 @@ const SettingsScreen = () => {
               fontSize: Typography.FONT_SIZE_14
             }}
             // loading={props.loading}
-            onPress={() => {}}
+            onPress={async() => {
+              await clearStorage()
+              navigation.replace("login")
+            }}
           >
             LOGOUT
           </Button>

@@ -75,7 +75,7 @@ const Input = props => {
             fontSize: Typography.FONT_SIZE_16,
             fontWeight: Typography.FONT_WEIGHT_REGULAR,
             fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
-            marginVertical: "4%"
+            marginVertical: "3%"
           }}
           placeholderTextColor={Colors.NETURAL_2}
         />

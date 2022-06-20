@@ -85,20 +85,12 @@ const SignupScreen = ({}) => {
     // )
     //   return validationError
 
-    await setDataStorage("userName", payload.name)
-    navigation.navigate("Profile")
-
-    return
-
     dispatch(signupRequest(payload))
       .then(unwrapResult)
       .then(res => {
-        console.log("login data ", res)
-        setDataStorage("@user", res?.user)
-        setDataStorage("@profile", res?.profile)
+        console.log("signup data ", res)
         setDataStorage("@key", res?.key)
-        Alert.alert("", "Signup success!")
-        navigation.replace("Dashboard")
+        navigation.navigate("Profile")
       })
       .catch(err => {
         let error = mapErrorMessage(err)
