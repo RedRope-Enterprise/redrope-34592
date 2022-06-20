@@ -41,14 +41,16 @@ const UserProfileScreen = () => {
   const navigation = useNavigation()
 
   const [name, setName] = React.useState("")
+  const [user, setUser] = React.useState("")
+
 
     useEffect(() => {
-      getUserName()
+      getUser()
     }, [])
 
-    const getUserName = async () => {
-      let name = await getDataStorage("userName")
-      setName(name)
+    const getUser = async () => {
+      let user = await getDataStorage("@user")
+      setUser(user)
     }
 
   const [index, setIndex] = React.useState(0)
@@ -106,11 +108,7 @@ const UserProfileScreen = () => {
     return (
       <View style={{ marginHorizontal: "5%" }}>
         <Text style={styles.aboutText}>
-          A ut duis lectus nunc, sed est quis vel. Nec commodo porttitor vivamus
-          tincidunt egestas id blandit arcu risus. Convallis morbi sagittis sit
-          aliquet. Senectus semper sem pulvinar turpis volutpat tellus libero
-          purus. Enim bibendum massa felis est orci sit ut duis. Mi faucibus
-          purus pulvinar.
+         {user?.bio || ""}
         </Text>
 
         <View>
@@ -199,10 +197,10 @@ const UserProfileScreen = () => {
         <View style={styles.userImageContainer}>
           <Image
             style={styles.userImage}
-            source={require("../../assets/images/onboarding/1.png")}
+            source={{uri : user?.profile_picture}}
           />
         </View>
-        <Text style={styles.nameText}>{name}</Text>
+        <Text style={styles.nameText}>{user?.name}</Text>
       </View>
 
       <TabView
@@ -228,6 +226,7 @@ let styles = StyleSheet.create({
     flex: 1
   },
   userImageContainer: {
+    borderWidth:1,
     borderRadius: 1000,
     overflow: "hidden",
     width: 140,

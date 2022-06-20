@@ -14,6 +14,8 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import ImagePicker from "react-native-image-crop-picker"
+import { updateUser } from "../../services/user"
 import {
   getDataStorage,
   setDataStorage,
@@ -30,16 +32,45 @@ const ProfileScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(true)
   const [name, setName] = useState("")
   const [about, setAbout] = useState("")
+  const [userImage, setUserImage] = useState("")
+
   const [userInterests, setUserInterests] = useState()
 
   useEffect(() => {
     getAllInterests()
-    getUserName()
   }, [userInterests])
 
   const getUserName = async () => {
     let name = await getDataStorage("userName")
     setName(name)
+  }
+
+  onPickImagePress = async () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      console.log(image)
+      setUserImage(image.path)
+    })
+  }
+
+  setupUserProfile = async () => {
+    const data = new FormData()
+    data.append("name", name)
+    data.append("bio", about)
+    data.append("profile_picture", {
+      uri: userImage,
+      type: "image/jpeg",
+      name: Date.now() + "photo.jpg"
+    })
+
+    const resp = await updateUser(data)
+    if(resp){
+      await setDataStorage("@user", resp)
+      navigation.navigate("Dashboard")
+    }
   }
 
   const getAllInterests = async () => {
@@ -104,9 +135,12 @@ Please setup your profile`}
               height: "100%",
               borderRadius: 1000
             }}
-            source={require("../../assets/images/userImage.png")}
+            source={{ uri: userImage }}
           />
-          <TouchableOpacity style={{ position: "absolute" }}>
+          <TouchableOpacity
+            style={{ position: "absolute" }}
+            onPress={() => onPickImagePress()}
+          >
             <Image
               style={{ resizeMode: "contain", width: 70, height: 70 }}
               source={require("../../assets/images/profile/Camera.png")}
@@ -231,7 +265,7 @@ Please setup your profile`}
           }}
           // loading={props.loading}
           onPress={() => {
-            navigation.navigate("Dashboard")
+            setupUserProfile()
           }}
         >
           SAVE

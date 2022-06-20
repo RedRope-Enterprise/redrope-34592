@@ -11,8 +11,9 @@ const api = axios.create({
 })
 
 const onRequest = async config => {
-  const key = await getDataStorage("@key")
+  let key = await getDataStorage("@key")
   console.log("kkey ", key)
+  key = "3af4e52b4bb4261c5aecccad145b06552e9f755d"
   if (key) {
     config.headers.authorization = `Token ${key}`
   }
