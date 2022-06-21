@@ -6,7 +6,8 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from "react-native"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
@@ -15,18 +16,23 @@ import { getFaqs } from "../../services/faq"
 
 const FaqScreen = () => {
   const [datasource, setDatasource] = useState([])
+  const [nextPage, setNextPage] = useState(null)
   const [reloadList, setReloadList] = useState(Date.now())
+  const [loading, setLoading] = useState(false)
+
+  async function getFaqData(params = "") {
+    setLoading(true)
+    let response = await getFaqs(params)
+    setLoading(false)
+    response.results.forEach(element => {
+      element.isExpanded = false
+    })
+    setDatasource([...datasource, ...response.results])
+    setNextPage(response.next)
+    setReloadList(Date.now())
+  }
 
   useEffect(() => {
-    async function getFaqData() {
-      let response = await getFaqs()
-      response.results.forEach(element => {
-        element.isExpanded = false
-      })
-      setDatasource(response.results)
-      setReloadList(Date.now())
-    }
-
     getFaqData()
   }, [])
 
@@ -97,6 +103,18 @@ const FaqScreen = () => {
     )
   }
 
+  const renderFooter = () => {
+    if (!loading) {
+      return null
+    } else {
+      return (
+        <View style={styles.footer}>
+          <ActivityIndicator color="white" />
+        </View>
+      )
+    }
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
@@ -113,6 +131,13 @@ const FaqScreen = () => {
           extraData={reloadList}
           renderItem={renderFaqItem}
           keyExtractor={(item, index) => index}
+          onEndReachedThreshold={1}
+          onEndReached={() => {
+            if (nextPage) {
+              getFaqData(nextPage.substring(nextPage.indexOf("?")))
+            }
+          }}
+          ListFooterComponent={renderFooter}
         />
       </View>
 
@@ -182,5 +207,11 @@ let styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: "5%"
+  },
+  footer: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row"
   }
 })
