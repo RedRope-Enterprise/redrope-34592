@@ -31,6 +31,7 @@ urlpatterns = [
     path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
     path("api/v1/events/", include("events.urls")),
+    path("api/v1/payments/", include("payment.urls")),
     path("admin/", admin.site.urls),
     path("api/v1/users/", include("users.urls", namespace="users")),
     path("rest-auth/", include("rest_auth.urls")),

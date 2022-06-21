@@ -44,6 +44,22 @@ class User(AbstractUser):
     business_reg_no = models.CharField(
         _("Business registration number"), max_length=100, blank=True, null=True
     )
+    stripe_customer_id = models.CharField(
+        _("Stripe ID"), blank=True, null=True, max_length=80
+    )
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
+
+
+# class StripeDetail(BaseModel):
+#     user = models.OneToOneField(
+#         "users.User",
+#         verbose_name=_("User"),
+#         related_name="stripe_detail",
+#         on_delete=models.CASCADE,
+#     )
+#     customer_id = models.CharField(_("Customer ID"), max_length=100)
+
+#     class Meta:
+#         verbose_name_plural = "Stripe Account Details"

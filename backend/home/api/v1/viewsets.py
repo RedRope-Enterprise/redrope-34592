@@ -1,17 +1,18 @@
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.viewsets import ModelViewSet, ViewSet
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import permissions
-from home.models import Category, AboutUs, FAQ
+from home.models import Category, AboutUs, FAQ, FeedBackSupport
 from home.api.v1.serializers import (
     SignupSerializer,
     UserSerializer,
     CategorySerializer,
     AboutUsSerializer,
     FAQSerializer,
+    FeedBackSupportSerializer,
 )
 
 
@@ -53,10 +54,10 @@ class AboutUsViewSet(ListModelMixin, GenericViewSet):
     queryset = AboutUs.objects.all()
 
 
-# class PrivacyPolicyViewSet(ListModelMixin, GenericViewSet):
-#     permission_classes = (permissions.AllowAny,)
-#     serializer_class = PrivacyPolicySerializer
-#     queryset = PrivacyPolicy.objects.all()
+class FeedBackSupportViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
+    # permission_classes = (permissions.AllowAny,)
+    serializer_class = FeedBackSupportSerializer
+    queryset = FeedBackSupport.objects.all()
 
 
 # class TermsAndConditionViewSet(ListModelMixin, GenericViewSet):
