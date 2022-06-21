@@ -7,6 +7,7 @@ from home.api.v1.viewsets import (
     CategoryViewSet,
     FAQViewSet,
     AboutUsViewSet,
+    FeedBackSupportViewSet,
 )
 
 router = DefaultRouter()
@@ -15,6 +16,9 @@ router.register("login", LoginViewSet, basename="login")
 router.register("categories", CategoryViewSet, basename="categories")
 router.register("about-us", AboutUsViewSet, basename="about_us")
 router.register("faqs", FAQViewSet, basename="faqs")
+router.register(
+    "feedback-support", FeedBackSupportViewSet, basename="feedback_and_support"
+)
 
 urlpatterns = [
     path("", include(router.urls)),
