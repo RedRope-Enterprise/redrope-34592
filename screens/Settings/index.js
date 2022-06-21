@@ -28,6 +28,7 @@ const { width, height } = Dimensions.get("window")
 
 const SettingsScreen = () => {
   const navigation = useNavigation()
+  const [user, setUser] = useState(global.user)
 
   const onProfileSettingsPress = () => {
     console.log("onProfileSettingsPress")
@@ -70,10 +71,10 @@ const SettingsScreen = () => {
           <View style={styles.userImageContainer}>
             <Image
               style={styles.userImage}
-              source={require("../../assets/images/onboarding/1.png")}
+              source={{uri: user?.profile_picture}}
             />
           </View>
-          <Text style={styles.nameText}>Jonny Wilson</Text>
+          <Text style={styles.nameText}>{user?.name}</Text>
         </View>
 
         {settingsMenu.map(menuItem => {

@@ -81,6 +81,7 @@ const ProfileScreen = () => {
     const resp = await updateUser(data)
     if(resp){
       await setDataStorage("@user", resp)
+      global.user = resp
       navigation.navigate("Dashboard")
     }
   }
