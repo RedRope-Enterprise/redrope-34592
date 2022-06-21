@@ -8,7 +8,7 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
-from home.models import Category, AboutUs, FAQ
+from home.models import Category, AboutUs, FAQ, FeedBackSupport
 from rest_auth.registration.serializers import SocialLoginSerializer
 
 User = get_user_model()
@@ -26,10 +26,10 @@ class AboutUsSerializer(serializers.ModelSerializer):
         fields = ("body",)
 
 
-# class PrivacyPolicySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PrivacyPolicy
-#         fields = ("body",)
+class FeedBackSupportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedBackSupport
+        fields = "__all__"
 
 
 # class TermsAndConditionSerializer(serializers.ModelSerializer):
@@ -159,6 +159,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "event_planner",
             "address_longitude",
             "address_latitude",
+            "stripe_customer_id",
             "phone",
             "website",
         )
