@@ -27,12 +27,24 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { SwipeListView } from "react-native-swipe-list-view"
 import { useRoute } from "@react-navigation/native"
+import {getEventDetails} from "../../services/events"
+
 
 const EventDetailsScreen = () => {
   const route = useRoute()
+  const [event, setEvent] = useState()
 
   const navigation = useNavigation()
-  const { event } = route?.params
+
+  useEffect(() => {
+    getEventData()
+  }, [])
+
+  const getEventData = async() => {
+    const resp = await getEventDetails(route?.params?.event?.id)
+    console.log("event details ", resp)
+    setEvent(resp)
+  } 
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -43,7 +55,7 @@ const EventDetailsScreen = () => {
 
       <Image
         style={{ width: "100%", height: height * 0.3 }}
-        source={event?.image}
+        source={{uri : event?.event_images? event?.event_images[0].image : ""}}
       />
       <View style={{ marginHorizontal: "5%" }}>
         <View style={{ flexDirection: "row", marginTop: "5%" }}>
@@ -56,7 +68,7 @@ const EventDetailsScreen = () => {
               flex: 1
             }}
           >
-            {event.name}
+            {event?.title}
           </Text>
           <Text
             style={{
@@ -65,11 +77,11 @@ const EventDetailsScreen = () => {
               fontWeight: Typography.FONT_WEIGHT_BOLD,
               color: Colors.PRIMARY_1
             }}
-          >{`$${event.price}`}</Text>
+          >{`$${event?.price}`}</Text>
         </View>
 
         <View style={{ flexDirection: "row", marginTop: "8%" }}>
-          <Image source={event.organizerImage} />
+          <Image source={{uri: event?.organizer?.profile_picture}} />
           <View style={{ marginLeft: "4%", justifyContent: "center" }}>
             <Text
               style={{
@@ -79,7 +91,7 @@ const EventDetailsScreen = () => {
                 color: Colors.WHITE
               }}
             >
-              {event.organizerName}
+              {event?.organizer?.name}
             </Text>
             <Text
               style={{
@@ -118,7 +130,7 @@ const EventDetailsScreen = () => {
             color: Colors.PRIMARY_1
           }}
         >
-          {"100+ going"}
+          {`${event?.going_count} going`}
         </Text>
       </View>
 
@@ -143,7 +155,7 @@ const EventDetailsScreen = () => {
               color: Colors.WHITE
             }}
           >
-            {event.fullDate}
+            {event?.fullDate}
           </Text>
           <Text
             style={{
@@ -153,7 +165,7 @@ const EventDetailsScreen = () => {
               color: Colors.GREY
             }}
           >
-            {event.fullTime}
+            {event?.start_date}
           </Text>
         </View>
       </View>
@@ -179,7 +191,7 @@ const EventDetailsScreen = () => {
               color: Colors.WHITE
             }}
           >
-            {event.location}
+            {event?.location}
           </Text>
           <Text
             style={{
@@ -189,7 +201,7 @@ const EventDetailsScreen = () => {
               color: Colors.GREY
             }}
           >
-            {event.location}
+            {event?.location}
           </Text>
         </View>
       </View>
@@ -227,7 +239,7 @@ const EventDetailsScreen = () => {
             color: Colors.WHITE
           }}
         >
-          {event.about}
+          {event?.desc}
         </Text>
 
         <View
@@ -246,10 +258,11 @@ const EventDetailsScreen = () => {
               margin: 10,
               fontSize: Typography.FONT_SIZE_14,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              color: Colors.PRIMARY_1
+              color: Colors.PRIMARY_1,
             }}
+            numberOfLines={1}
           >
-            {event.type}
+            {event?.event_categories? event?.event_categories[0].name : ""}
           </Text>
         </View>
       </View>

@@ -11,6 +11,7 @@ const Splash = ({}) => {
     
 
     setTimeout(async() => {
+      // await clearStorage()
       let key = await getDataStorage("@key")
       if (key) {
         NEXT_SCREEN_NAME = "Dashboard"

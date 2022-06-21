@@ -29,7 +29,7 @@ import { data } from "../../data"
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { getUser } from "../../services/user"
-import { getCategories } from "../../services/events"
+import { getCategories, getEvents} from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
@@ -50,13 +50,20 @@ const HomeScreen = () => {
   }, [])
 
   useEffect(async () => {
+    getEventsFromBackend()
     getEventCategories()
   }, [])
+
+
+  const getEventsFromBackend = async() => {
+    let resp = await getEvents()
+    console.log("events ", resp.results)
+    setEvents(resp.results)
+  }
 
   const getEventCategories = async () => {
     let resp = await getCategories()
     setEventCategories(resp?.results)
-    console.log("resp ctegories ", resp.results)
   }
 
   const getUser = async () => {
@@ -71,7 +78,7 @@ const HomeScreen = () => {
     let searchResult = []
     if (value.length >= 3) {
       events.forEach(event => {
-        if (event.name.toLowerCase().includes(value.toLowerCase())) {
+        if (event.title.toLowerCase().includes(value.toLowerCase())) {
           searchResult.push(event)
         }
       })

@@ -14,4 +14,11 @@ async function getEvents() {
   return response.data
 }
 
-export { getCategories, getEvents }
+async function getEventDetails(id) {
+  const response = await api.get(`/api/v1/events/${id}/`, {
+    params: {}
+  })
+  return response.data
+}
+
+export { getCategories, getEvents,getEventDetails }

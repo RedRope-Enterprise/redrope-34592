@@ -80,30 +80,7 @@ const UserProfileScreen = () => {
   }
 
   const AboutSection = () => {
-    const [userInterests, setUserInterests] = useState()
-
-    useEffect(() => {
-      getAllInterests()
-    }, [userInterests])
-
-    const getAllInterests = async () => {
-      // await clearStorage()
-      const data = await getDataStorage("@user_interests")
-      if (!data) {
-        await setDataStorage("@user_interests", [
-          { title: "Music", isEnabled: true, updatedAt: Date.now() },
-          { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
-          { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
-          { title: "Art", isEnabled: false, updatedAt: Date.now() },
-          { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
-          { title: "Food", isEnabled: false, updatedAt: Date.now() },
-          { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
-          { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
-        ])
-      } else {
-        setUserInterests(data)
-      }
-    }
+    const [userInterests, setUserInterests] = useState(user?.likes)
 
     return (
       <View style={{ marginHorizontal: "5%" }}>
@@ -116,7 +93,6 @@ const UserProfileScreen = () => {
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {userInterests?.map(
               (element, i) =>
-                element.isEnabled && (
                   <View
                     style={{
                       alignItems: "center",
@@ -136,11 +112,11 @@ const UserProfileScreen = () => {
                         color: Colors.PRIMARY_1
                       }}
                     >
-                      {element.title}
+                      {element.name}
                     </Text>
                   </View>
                 )
-            )}
+            }
           </View>
         </View>
       </View>

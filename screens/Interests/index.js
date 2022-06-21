@@ -19,6 +19,10 @@ import {
   clearStorage
 } from "../../utils/storage"
 
+import {getCategories} from "../../services/events"
+import {updateUser} from "../../services/user"
+
+
 const { width, height } = Dimensions.get("window")
 
 const InterestScreen = () => {
@@ -33,10 +37,21 @@ const InterestScreen = () => {
   }, [])
 
   const getUserInterests = async () => {
-    const data = await getDataStorage("@user_interests")
+    // const data = await getDataStorage("@user_interests")
+    const data = await getCategories()
     if (data) {
-      setUserInterests(data)
+      setUserInterests(data.results)
     }
+  }
+
+  const getInterestsIds = async () => {
+    let result = []
+    userInterests.forEach(element => {
+      if(element.isEnabled)
+        result.push(element.id)
+    });
+
+    return result
   }
 
   return (
@@ -88,7 +103,7 @@ const InterestScreen = () => {
                 color: element.isEnabled ? Colors.PRIMARY_1 : Colors.WHITE
               }}
             >
-              {element.title}
+              {element.name}
             </Text>
           </TouchableOpacity>
         ))}
@@ -128,7 +143,9 @@ const InterestScreen = () => {
             marginHorizontal: 15
           }}
           onPress={async() =>{  
-            await setDataStorage(userInterests)
+            const likes =  await getInterestsIds()
+            let resp = await updateUser({interests:likes})
+            await setDataStorage("@user", JSON.stringify(resp))
             navigation.goBack()
 
           }}
