@@ -25,12 +25,14 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
+import RangeSlider from "rn-range-slider"
 
 const FiltersScreen = () => {
   const navigation = useNavigation()
   const [user, setUser] = useState(global.user)
   const [selectedEvent, setSelectedEvent] = useState(1)
   const [dateTabSelection, setDateTabSelection] = useState(0)
+  const [selectedDuration, setSelectedDuration] = useState(0)
 
   const eventTypes = [
     { id: 1, type: "Yacht Parties" },
@@ -232,11 +234,86 @@ const FiltersScreen = () => {
     )
   }
 
+  const durationSection = () => {
+    return (
+      <View style={{ margin: "5%" }}>
+        <Text style={styles.heading}>{"Duration"}</Text>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <TouchableOpacity
+            onPress={() => setSelectedDuration(0)}
+            style={[
+                selectedDuration === 0
+                ? styles.selectedBoxStyle
+                : styles.unselectedBoxStyle,
+              {
+                borderRadius: 10,
+                borderWidth: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                width: "45%"
+              }
+            ]}
+          >
+            <Text
+              style={[
+                selectedDuration === 0
+                  ? styles.selectedTextColor
+                  : styles.unselectedTextColor,
+                {
+                  fontSize: Typography.FONT_SIZE_14,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
+                }
+              ]}
+            >
+              {"Half Day(4 hours)"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setSelectedDuration(1)}
+            style={[
+                selectedDuration === 1
+                ? styles.selectedBoxStyle
+                : styles.unselectedBoxStyle,
+              {
+                borderRadius: 10,
+                borderWidth: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                width: "45%"
+              }
+            ]}
+          >
+            <Text
+              style={[
+                selectedDuration === 1
+                  ? styles.selectedTextColor
+                  : styles.unselectedTextColor,
+                {
+                  marginVertical: "10%",
+                  fontSize: Typography.FONT_SIZE_14,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
+                }
+              ]}
+            >
+              {"Full Day (8 Hours)"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  const lengthSection = () => {
+      
+  }
+
   return (
     <SafeAreaView style={[styles.flex1, { backgroundColor: Colors.NETURAL_3 }]}>
       <NavigationHeader></NavigationHeader>
-      <ScrollView>
-        <View style={{ flexDirection: "row", flex: 1, marginHorizontal: "5%" }}>
+      <ScrollView style={{ }} contentContainerStyle={{}}>
+        <View style={{ flexDirection: "row",  marginHorizontal: "5%" }}>
           <TouchableOpacity
             onPress={() => setSelectedEvent(1)}
             style={[
@@ -334,14 +411,49 @@ const FiltersScreen = () => {
               }
             ]}
           >
-            {eventTypes[0].type}
+            {eventTypes[2].type}
           </Text>
         </TouchableOpacity>
 
         {timeDateSection()}
         {locationSection()}
+        {selectedEvent === 1 && durationSection()}
+        {selectedEvent === 1 && lengthSection()}
 
-        <View style={{ flexDirection: "row", marginVertical: "5%" }}>
+
+        <Text
+          style={[
+            styles.heading,
+            { marginHorizontal: "5%", marginTop: "5%", marginBottom: 0 }
+          ]}
+        >
+          {"Select price Range"}
+        </Text>
+
+        <RangeSlider
+          step={50}
+          style={{
+            width: "90%",
+            height: "10%",
+            alignSelf: "center"
+            // marginVertical: "5%"
+          }}
+          min={100}
+          max={1000}
+          initialLowValue={400}
+          initialHighValue={700}
+          selectionColor={Colors.PRIMARY_1}
+          thumbColor={Colors.PRIMARY_1}
+          thumbBorderColor={Colors.PRIMARY_1}
+          blankColor={Colors.GREY}
+          labelStyle={"bubble"}
+          onValueChanged={() => {}}
+          labelBackgroundColor={Colors.GREY}
+          labelTextColor={Colors.PRIMARY_1}
+          labelBorderColor={Colors.PRIMARY_1}
+        />
+
+        <View style={{ flexDirection: "row", marginVertical: "5%" , marginBottom : "30%"}}>
           <TouchableOpacity
             style={{
               borderWidth: 1,

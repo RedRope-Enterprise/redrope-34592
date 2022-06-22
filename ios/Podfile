@@ -16,6 +16,8 @@ target 'redrope_34592' do
 
   pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
 
+  pod 'rn-range-slider', :path => '../node_modules/rn-range-slider'
+
   target 'redrope_34592Tests' do
     inherit! :complete
     # Pods for testing
