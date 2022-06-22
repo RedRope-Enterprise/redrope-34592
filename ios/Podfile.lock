@@ -323,9 +323,9 @@ PODS:
     - React-cxxreact (= 0.64.0)
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
-  - RNAppleAuthentication (2.2.0):
+  - RNAppleAuthentication (2.2.1):
     - React-Core
-  - RNCAsyncStorage (1.17.5):
+  - RNCAsyncStorage (1.17.6):
     - React-Core
   - RNCCheckbox (0.5.12):
     - React-Core
@@ -565,7 +565,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: ec9d0c8a307e83f6456543023b021ceea7d7854b
+  FBReactNativeSpec: 355355d1456823f182bf58867033130764522317
   FBSDKCoreKit: e7dcac0aabcfb09d0166998edd95fe3b05a0ce5d
   FBSDKLoginKit: 1b0cf04df0370b37404213157b060d6666ede814
   FBSDKShareKit: abc29e1bb4f9f59f679adf1ae191006d68455f96
@@ -573,8 +573,8 @@ SPEC CHECKSUMS:
   GoogleSignIn: c90b5bec45e780f54c6a8e1e3c182a86e3dda69d
   GTMAppAuth: 987526d41b07efb1bedda5e936fe0cb718a03113
   GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
-  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
-  Permission-PhotoLibrary: ddb5a158725b29cb12e9e477e8a5f5151c66cc3c
+  Permission-Camera: 273b78e214eae8d734d1c497b67aa0030838c006
+  Permission-PhotoLibrary: 4b514739911744def3b903a5a48a20037cd01795
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 2f8cb5b7533219bf4218a045f92768129cf7050a
   RCTTypeSafety: 512728b73549e72ad7330b92f3d42936f2a4de5b
@@ -588,9 +588,9 @@ SPEC CHECKSUMS:
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
-  react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
-  react-native-webview: 159034a856a6e95995f5bf2eed40d70b103d6572
+  react-native-pager-view: 7d13a6fd573f856cfef9a5cb24d6c605b6135983
+  react-native-safe-area-context: 5b8a418400eb3d8364aa87300e865c0262cc17b9
+  react-native-webview: 82b5140bc71c8325f34cc47afd9c514177633a3a
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -603,19 +603,19 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0fd6b21751a33cb72fce1a4a33ab9678416d307a
   React-runtimeexecutor: cad74a1eaa53ee6e7a3620231939d8fe2c6afcf0
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
-  RNAppleAuthentication: cbe1ab5c0f398ce07a215e6b247048092bf4feb3
-  RNCAsyncStorage: 81187912cc9a5c2591ddb161e03e587688afb764
-  RNCCheckbox: ed1b4ca295475b41e7251ebae046360a703b6eb5
-  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
+  RNAppleAuthentication: dab41edef916715148ce94a7dd04041a01590ddc
+  RNCAsyncStorage: 86050d31a1cdc564876f68d8e342688b29f9b186
+  RNCCheckbox: 934e11d33abb6b0db105cfa5a22a42bd89dfb4b9
+  RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNGoogleSignin: d7f8368b82d94f1dec964785d496387ca7f19092
+  RNGoogleSignin: 7580e6618798be9d090524bb31538378f92ce746
   RNImageCropPicker: 35a3ceb837446fa11547704709bb22b5fac6d584
-  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNPermissions: 7ad8d93b004e6bc85c89e27a102afcde90e07efa
   RNReanimated: 7f3eef39b48facdb0b053873abdaafaa6a953b0d
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Stripe: f2bed8369154c35c8ec794704e042e05240d6f21
-  stripe-react-native: 2ba5ddd91db057546757ad88bea950d9bfd4cacc
+  stripe-react-native: 93063122415d8c677c61e44d6e1f13d30f8e794f
   StripeCore: 36571be19dae15e90c8ad47e1af45712aea93f5a
   StripeUICore: 1b32566d6a69581be786609a032872b0fb5a6823
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863

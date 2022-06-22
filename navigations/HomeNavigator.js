@@ -6,6 +6,7 @@ import EventDetailsScreen from "../screens/EventDetails"
 import TableConfirmScreen from "../screens/TableConfirm"
 import PaymentScreen from "../screens/PaymentScreen"
 import FaqScreen from "../screens/FAQ"
+import EventMenuScreen from "../screens/EventMenu"
 
 const Stack = createStackNavigator()
 
@@ -18,6 +19,7 @@ const HomeNavigator = () => {
       <Stack.Screen name="TableConfrimScreen" component={TableConfirmScreen} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="FaqScreen" component={FaqScreen} />
+      <Stack.Screen name="EventMenuScreen" component={EventMenuScreen} />
     </Stack.Navigator>
   )
 }
