@@ -35,6 +35,7 @@ import {
   statusCodes
 } from "@react-native-google-signin/google-signin"
 import { setDataStorage } from "../../../utils/storage"
+import CheckBox from "@react-native-community/checkbox"
 
 const { width, height } = Dimensions.get("window")
 import { mapErrorMessage } from "../auth/utils"
@@ -174,6 +175,8 @@ const SignupScreen = ({}) => {
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [repassword, setRepassword] = useState("")
+    const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
+      useState(false)
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -344,6 +347,35 @@ const SignupScreen = ({}) => {
           </View>
 
           <View
+            style={{ flexDirection: "row", margin: "5%", alignItems: "center" }}
+          >
+            <CheckBox
+              onCheckColor={"#000"}
+              onTintColor={Colors.PRIMARY_1}
+              boxType={"square"}
+              onFillColor={Colors.PRIMARY_1}
+              style={{ marginHorizontal: "2%", width: 20, height: 20 }}
+              disabled={false}
+              value={termsAndConditionsCheckBox}
+              onValueChange={newValue =>
+                setTermsAndConditionsCheckBox(newValue)
+              }
+            />
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_12,
+                color: Colors.WHITE,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
+                fontWeight: Typography.FONT_WEIGHT_400,
+                flex: 1
+              }}
+              multiline={true}
+            >
+              Consent to our email notifications and marketing communications
+            </Text>
+          </View>
+
+          <View
             style={{
               alignItems: "center",
               flex: 1,
@@ -367,13 +399,17 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
+                if(!termsAndConditionsCheckBox){
+                  Alert.alert("", "Please accept terms and conditions")
+                  return
+                }
                 onSignupPress({
                   name: name,
                   email: email,
                   password: password,
                   password2: repassword,
                   event_planner: false,
-                  accept_tc: true
+                  accept_tc: termsAndConditionsCheckBox
                 })
               }}
             >
@@ -417,6 +453,8 @@ const SignupScreen = ({}) => {
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [repassword, setRepassword] = useState("")
+    const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
+      useState(false)
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -584,6 +622,35 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/Facebook.png")}
               />
             </TouchableOpacity>
+          </View>
+
+          <View
+            style={{ flexDirection: "row", margin: "5%", alignItems: "center" }}
+          >
+            <CheckBox
+              onCheckColor={"#000"}
+              onTintColor={Colors.PRIMARY_1}
+              boxType={"square"}
+              onFillColor={Colors.PRIMARY_1}
+              style={{ marginHorizontal: "2%", width: 20, height: 20 }}
+              disabled={false}
+              value={termsAndConditionsCheckBox}
+              onValueChange={newValue =>
+                setTermsAndConditionsCheckBox(newValue)
+              }
+            />
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_12,
+                color: Colors.WHITE,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
+                fontWeight: Typography.FONT_WEIGHT_400,
+                flex: 1
+              }}
+              multiline={true}
+            >
+              Consent to our email notifications and marketing communications
+            </Text>
           </View>
 
           <View

@@ -34,9 +34,9 @@ const SettingsScreen = () => {
     console.log("onProfileSettingsPress")
   }
   const settingsMenu = [
-    { key: 0, text: "Profile Settings", onPress: onProfileSettingsPress },
+    { key: 0, text: "Profile Settings", onPress: () => navigation.navigate("Profile") },
     { key: 1, text: "Payment Settings", onPress: onProfileSettingsPress },
-    { key: 2, text: "FAQ", onPress: onProfileSettingsPress },
+    { key: 2, text: "FAQ", onPress: () => navigation.navigate("FAQ") },
     { key: 1, text: "Feedback & Support", onPress: onProfileSettingsPress },
     {
       key: 1,
@@ -71,7 +71,7 @@ const SettingsScreen = () => {
           <View style={styles.userImageContainer}>
             <Image
               style={styles.userImage}
-              source={{uri: user?.profile_picture}}
+              source={{ uri: user?.profile_picture }}
             />
           </View>
           <Text style={styles.nameText}>{user?.name}</Text>
@@ -107,7 +107,7 @@ const SettingsScreen = () => {
               fontSize: Typography.FONT_SIZE_14
             }}
             // loading={props.loading}
-            onPress={async() => {
+            onPress={async () => {
               await clearStorage()
               navigation.replace("login")
             }}

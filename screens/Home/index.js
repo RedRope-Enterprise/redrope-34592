@@ -179,7 +179,9 @@ const HomeScreen = () => {
             onChangeText={value => SearchForEvent(value)}
           />
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Filters")}
+          >
             <Image
               style={{ width: 24, height: 24, margin: 15 }}
               source={require("../../assets/images/home/Adjust.png")}

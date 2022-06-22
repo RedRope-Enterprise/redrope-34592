@@ -193,7 +193,8 @@ let styles = StyleSheet.create({
     fontSize: Typography.FONT_SIZE_14,
     fontWeight: Typography.FONT_WEIGHT_400,
     lineHeight: Typography.LINE_HEIGHT_20,
-    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+    flex:1
   },
   Font16: {
     fontSize: Typography.FONT_SIZE_16,
