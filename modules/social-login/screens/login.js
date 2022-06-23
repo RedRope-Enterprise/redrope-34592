@@ -44,7 +44,9 @@ const LoginScreen = ({}) => {
 
           const user = await getUser()
           if(user){
-            setDataStorage("@user", user)
+            await setDataStorage("@user", user)
+            global.user = user
+            
             navigation.replace("Dashboard")
             // Alert.alert("", "Login success!")
           }

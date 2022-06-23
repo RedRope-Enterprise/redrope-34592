@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window")
 
 const HomeEventItem = props => {
   const { event, onPress } = props
-
+  
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -33,7 +33,7 @@ const HomeEventItem = props => {
           backgroundColor: Colors.NETURAL_3
         }}
         resizeMode="cover"
-        source={event.image}
+        source={{uri : event?.event_images ? event?.event_images[0].image : ""}}
       >
         <LinearGradient
           colors={[
@@ -53,7 +53,7 @@ const HomeEventItem = props => {
                 marginTop: "5%"
               }}
             >
-              {event.name}
+              {event?.title}
             </Text>
 
             <View style={{ flexDirection: "row", marginTop: "2%", flex: 1 }}>
@@ -67,7 +67,7 @@ const HomeEventItem = props => {
                 }}
               >
                 <Text style={{ color: Colors.WHITE, margin: 5 }}>
-                  {event.type}
+                  {event?.event_categories? event?.event_categories[0].name : ""}
                 </Text>
               </View>
 
@@ -90,7 +90,7 @@ const HomeEventItem = props => {
                     margin: 5
                   }}
                 >
-                  {event.date}
+                  {event?.start_date}
                 </Text>
               </View>
             </View>
@@ -107,7 +107,7 @@ const HomeEventItem = props => {
                     marginLeft: 5
                   }}
                 >
-                  {event.location}
+                  {event?.location}
                 </Text>
               </View>
 

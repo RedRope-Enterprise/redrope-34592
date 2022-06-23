@@ -35,6 +35,18 @@ const ProfileScreen = () => {
   const [userImage, setUserImage] = useState("")
 
   const [userInterests, setUserInterests] = useState()
+  const [updateInterests, setUpdateInterests] = useState(Date.now())
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getAllInterests()
+      // The screen is focused
+      // Call any action
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     getAllInterests()
@@ -69,27 +81,34 @@ const ProfileScreen = () => {
     const resp = await updateUser(data)
     if(resp){
       await setDataStorage("@user", resp)
+      global.user = resp
       navigation.navigate("Dashboard")
     }
   }
 
   const getAllInterests = async () => {
     // await clearStorage()
-    const data = await getDataStorage("@user_interests")
-    if (!data) {
-      await setDataStorage("@user_interests", [
-        { title: "Music", isEnabled: true, updatedAt: Date.now() },
-        { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
-        { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
-        { title: "Art", isEnabled: false, updatedAt: Date.now() },
-        { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
-        { title: "Food", isEnabled: false, updatedAt: Date.now() },
-        { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
-        { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
-      ])
-    } else {
-      setUserInterests(data)
+    let data = await getDataStorage("@user")
+    data = JSON.parse(data)
+    console.log("data >>>> ", data)
+    if(data){
+      setUserInterests(data.likes)
+      setUpdateInterests(Date.now())
     }
+
+    // if (!data) {
+    //   await setDataStorage("@user_interests", [
+    //     { title: "Music", isEnabled: true, updatedAt: Date.now() },
+    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
+    //     { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
+    //     { title: "Art", isEnabled: false, updatedAt: Date.now() },
+    //     { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
+    //     { title: "Food", isEnabled: false, updatedAt: Date.now() },
+    //     { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
+    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
+    //   ])
+    // } else {
+    // }
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -217,10 +236,10 @@ Please setup your profile`}
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }} key={updateInterests}>
             {userInterests?.map(
               (element, i) =>
-                element.isEnabled && (
+                 (
                   <View
                     style={{
                       alignItems: "center",
@@ -231,6 +250,7 @@ Please setup your profile`}
                       borderColor: Colors.PRIMARY_1,
                       marginBottom: 10
                     }}
+                    key={element.id}
                   >
                     <Text
                       style={{
@@ -240,7 +260,7 @@ Please setup your profile`}
                         color: Colors.PRIMARY_1
                       }}
                     >
-                      {element.title}
+                      {element.name}
                     </Text>
                   </View>
                 )

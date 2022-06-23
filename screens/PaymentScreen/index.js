@@ -30,6 +30,7 @@ import DummyBanner from "../../assets/images/table_select/dummy.png"
 import LocationImg from "../../assets/images/table_select/location.png"
 import CalendarImg from "../../assets/images/table_select/calendar.png"
 import PersonImg from "../../assets/images/table_select/person.png"
+import { useRoute } from "@react-navigation/native"
 
 import AppleIcon from "../../assets/images/payment/apple.png"
 import CardBackImg from "../../assets/images/payment/card_back.png"
@@ -42,6 +43,9 @@ import { data } from "../../data"
 const { width, height } = Dimensions.get("window")
 
 const PaymentScreen = () => {
+  const route = useRoute()
+  const { price } = route?.params
+
   const navigation = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(false)
 
@@ -154,7 +158,7 @@ const PaymentScreen = () => {
             setIsModalVisible(true)
           }}
         >
-          PAY
+          {`PAY $${price}`}
         </Button>
       </View>
       <CustomImageModal
