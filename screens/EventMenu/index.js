@@ -174,9 +174,10 @@ const EventMenuScreen = () => {
           <View style={[styles.center, { width: "100%" }]}>
             <TouchableOpacity
               style={styles.dataHeaderContainer}
-              onPress={() => {
-                changeExpansion(index)
-              }}
+              onPress={() => 
+                navigation.navigate("TableSelect", { event : route.params?.event})
+                // changeExpansion(index)
+              }
             >
               <Text style={[styles.dataTitle, { color: Colors.PRIMARY_1 }]}>
                 {item.title}
@@ -200,7 +201,7 @@ const EventMenuScreen = () => {
           <View style={{ flexDirection: "row", marginBottom: '3%' }}>
             {renderMainDetails("10 Guest")}
             {renderMainDetails("$550.00 minimum")}
-            {renderMainDetails("SOLD OUT", Colors.PRIMARY_2, true)}
+            {item.isSoldOut && renderMainDetails("SOLD OUT", Colors.PRIMARY_2, true)}
           </View>
           <View>
             <Text style={[styles.Font14, { color: Colors.NETURAL_2 }]}>
@@ -213,7 +214,7 @@ const EventMenuScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
         <View style={styles.center}>
           <Carousel
@@ -255,7 +256,7 @@ const EventMenuScreen = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 

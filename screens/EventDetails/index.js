@@ -327,7 +327,7 @@ const EventDetailsScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("TableSelect", { event })}
+          onPress={() => navigation.navigate("EventMenu", { event })}
           style={{
             flexDirection: "row",
             backgroundColor: Colors.BUTTON_RED,

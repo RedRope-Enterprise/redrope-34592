@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.0",
+    "@miblanchard/react-native-slider": "^2.1.0",
     "@modules/camera": "file:./modules/camera",
     "@modules/onboarding": "file:./modules/onboarding/",
     "@modules/payments": "file:./modules/payments",
