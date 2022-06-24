@@ -30,14 +30,37 @@ const SettingsScreen = () => {
   const navigation = useNavigation()
   const [user, setUser] = useState(global.user)
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setUser(global.user)
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
   const onProfileSettingsPress = () => {
     console.log("onProfileSettingsPress")
   }
   const settingsMenu = [
-    { key: 0, text: "Profile Settings", onPress: () => navigation.navigate("Profile") },
-    { key: 1, text: "Payment Settings", onPress: onProfileSettingsPress },
+    {
+      key: 0,
+      text: "Profile Settings",
+      onPress: () => navigation.navigate("Profile")
+    },
+    {
+      key: 1,
+      text: "Payment Settings",
+      onPress: () => navigation.navigate("CardsScreen")
+    },
     { key: 2, text: "FAQ", onPress: () => navigation.navigate("FAQ") },
-    { key: 1, text: "Feedback & Support", onPress: () => navigation.navigate("FeedbackSupport")},
+    {
+      key: 1,
+      text: "Feedback & Support",
+      onPress: () => navigation.navigate("FeedbackSupport")
+    },
     {
       key: 1,
       text: "Terms and Conditions",

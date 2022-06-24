@@ -29,7 +29,7 @@ const { width, height } = Dimensions.get("window")
 const ProfileScreen = () => {
   const navigation = useNavigation()
 
-  const [isModalVisible, setIsModalVisible] = useState(true)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const [name, setName] = useState("")
   const [about, setAbout] = useState("")
   const [userImage, setUserImage] = useState("")
@@ -58,6 +58,9 @@ const ProfileScreen = () => {
   setInitialValues = async () => {
     let eUser = await global.user
     setExistingUser(eUser)
+    if(!eUser?.likes){
+      setIsModalVisible(true)
+    }
 
     console.log(" eUser.name ", eUser.name)
     setName(eUser.name)
@@ -120,7 +123,6 @@ const ProfileScreen = () => {
     // await clearStorage()
     let data = await getDataStorage("@user")
     data = JSON.parse(data)
-    console.log("data >>>> ", data)
     if (data) {
       setUserInterests(data.likes)
       setUpdateInterests(Date.now())
@@ -224,6 +226,7 @@ Please setup your profile`}
           placeholder="About"
           height={Mixins.scaleHeight(140)}
           selectedBorderColor={Colors.PRIMARY_1}
+          isMultiLine={true}
         />
 
         <View

@@ -11,7 +11,8 @@ const Input = props => {
     error = "",
     iconHighlighted = null,
     height = Mixins.scaleHeight(50),
-    selectedBorderColor = Colors.WHITE
+    selectedBorderColor = Colors.WHITE,
+    isMultiLine = false
   } = props
   const large = !props.width ? width / 1.1 : props.width
   const [isFocused, setIsFocused] = useState(false)
@@ -77,7 +78,7 @@ const Input = props => {
             marginVertical: "3%",
             alignSelf: "center"
           }}
-          // multiline={true}
+          multiline={isMultiLine}
           placeholderTextColor={Colors.NETURAL_2}
         />
         {iconRight && (

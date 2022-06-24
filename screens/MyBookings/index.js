@@ -44,6 +44,16 @@ const MyBookingsScreen = () => {
     setMyBookings(events)
   }, [])
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+
+      setUser(global.user)
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
   const getUser = async () =>{
     let u = global.user
     setUser(u)
