@@ -12,7 +12,8 @@ import {
   TextInput,
   FlatList,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  LogBox
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, HomeEventItem } from "../../components"
@@ -34,6 +35,8 @@ import { getCategories, getEvents} from "../../services/events"
 const { width, height } = Dimensions.get("window")
 
 const HomeScreen = () => {
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
   const navigation = useNavigation()
   const [events, setEvents] = useState([])
   const [eventCategories, setEventCategories] = useState([])
