@@ -25,7 +25,7 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
-import RangeSlider from "rn-range-slider"
+import { Slider } from "@miblanchard/react-native-slider"
 
 const FiltersScreen = () => {
   const navigation = useNavigation()
@@ -33,6 +33,7 @@ const FiltersScreen = () => {
   const [selectedEvent, setSelectedEvent] = useState(1)
   const [dateTabSelection, setDateTabSelection] = useState(0)
   const [selectedDuration, setSelectedDuration] = useState(0)
+  const [priceRangeValue, setPriceRangeValue] = useState([0, 1000])
 
   const eventTypes = [
     { id: 1, type: "Yacht Parties" },
@@ -243,7 +244,7 @@ const FiltersScreen = () => {
           <TouchableOpacity
             onPress={() => setSelectedDuration(0)}
             style={[
-                selectedDuration === 0
+              selectedDuration === 0
                 ? styles.selectedBoxStyle
                 : styles.unselectedBoxStyle,
               {
@@ -273,7 +274,7 @@ const FiltersScreen = () => {
           <TouchableOpacity
             onPress={() => setSelectedDuration(1)}
             style={[
-                selectedDuration === 1
+              selectedDuration === 1
                 ? styles.selectedBoxStyle
                 : styles.unselectedBoxStyle,
               {
@@ -305,15 +306,15 @@ const FiltersScreen = () => {
     )
   }
 
-  const lengthSection = () => {
-      
-  }
+  const lengthSection = () => {}
+
+  let thumbIndex = -1
 
   return (
     <SafeAreaView style={[styles.flex1, { backgroundColor: Colors.NETURAL_3 }]}>
       <NavigationHeader></NavigationHeader>
-      <ScrollView style={{ }} contentContainerStyle={{}}>
-        <View style={{ flexDirection: "row",  marginHorizontal: "5%" }}>
+      <ScrollView style={{}} contentContainerStyle={{}}>
+        <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
           <TouchableOpacity
             onPress={() => setSelectedEvent(1)}
             style={[
@@ -420,7 +421,6 @@ const FiltersScreen = () => {
         {selectedEvent === 1 && durationSection()}
         {selectedEvent === 1 && lengthSection()}
 
-
         <Text
           style={[
             styles.heading,
@@ -430,30 +430,67 @@ const FiltersScreen = () => {
           {"Select price Range"}
         </Text>
 
-        <RangeSlider
-          step={50}
+        <View
           style={{
+            flex: 1,
             width: "90%",
-            height: "10%",
+            marginVertical: "5%",
             alignSelf: "center"
-            // marginVertical: "5%"
           }}
-          min={100}
-          max={1000}
-          initialLowValue={400}
-          initialHighValue={700}
-          selectionColor={Colors.PRIMARY_1}
-          thumbColor={Colors.PRIMARY_1}
-          thumbBorderColor={Colors.PRIMARY_1}
-          blankColor={Colors.GREY}
-          labelStyle={"bubble"}
-          onValueChanged={() => {}}
-          labelBackgroundColor={Colors.GREY}
-          labelTextColor={Colors.PRIMARY_1}
-          labelBorderColor={Colors.PRIMARY_1}
-        />
+        >
+          <Slider
+            step={1}
+            maximumTrackTintColor={Colors.GREY}
+            thumbTintColor={Colors.PRIMARY_1}
+            animationType={"timing"}
+            thumbTouchSize={{ width: 40, height: 40 }}
+            minimumTrackTintColor={Colors.PRIMARY_1}
+            containerStyle={{ height: "100%", width: "100%", flex: 1 }}
+            value={priceRangeValue}
+            maximumValue={1000}
+            minimumValue={0}
+            onValueChange={value => {
+              setPriceRangeValue(value)
+            }}
+            renderAboveThumbComponent={index => {
+              console.log("index ", index)
+              return null
+            }}
+            renderThumbComponent={() => {
+              thumbIndex++
+              if (thumbIndex > 1) thumbIndex = 0
+              return (
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 20,
+                    borderColor: Colors.PRIMARY_1,
+                    backgroundColor: Colors.NETURAL_3
+                  }}
+                >
+                  <Text
+                    style={{
+                      margin: 10,
+                      color: Colors.PRIMARY_1,
+                      fontSize: Typography.FONT_SIZE_18,
+                      fontWeight: Typography.FONT_WEIGHT_BOLD
+                    }}
+                  >
+                    {`$${priceRangeValue[thumbIndex]}`}
+                  </Text>
+                </View>
+              )
+            }}
+          />
+        </View>
 
-        <View style={{ flexDirection: "row", marginVertical: "5%" , marginBottom : "30%"}}>
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: "5%",
+            marginBottom: "30%"
+          }}
+        >
           <TouchableOpacity
             style={{
               borderWidth: 1,

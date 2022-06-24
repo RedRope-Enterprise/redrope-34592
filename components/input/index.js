@@ -10,7 +10,7 @@ const Input = props => {
     iconRight = null,
     error = "",
     iconHighlighted = null,
-    height = Mixins.scaleHeight(40),
+    height = Mixins.scaleHeight(50),
     selectedBorderColor = Colors.WHITE
   } = props
   const large = !props.width ? width / 1.1 : props.width
@@ -25,7 +25,7 @@ const Input = props => {
 
           flexDirection: "row",
           alignItems: "center",
-          // height: height,
+          height: height,
           width: large,
           backgroundColor: Colors.NETURAL_4,
           borderRadius: 5,
@@ -71,12 +71,13 @@ const Input = props => {
             color: Colors.WHITE,
             paddingLeft: iconLeft ? 0 : 8,
             flex: iconLeft ? (iconRight ? 0.6 : 0.8) : 1,
-            height: "100%",
             fontSize: Typography.FONT_SIZE_16,
             fontWeight: Typography.FONT_WEIGHT_REGULAR,
             fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
-            marginVertical: "3%"
+            marginVertical: "3%",
+            alignSelf: "center"
           }}
+          // multiline={true}
           placeholderTextColor={Colors.NETURAL_2}
         />
         {iconRight && (

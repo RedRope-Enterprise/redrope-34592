@@ -68,6 +68,7 @@ const HomeScreen = () => {
 
   const getUser = async () => {
     const user = await getDataStorage("@user")
+    console.log("user ", user)
     if (user) {
       global.user = user
       setUserImage(user?.profile_picture)

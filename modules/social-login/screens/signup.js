@@ -91,6 +91,7 @@ const SignupScreen = ({}) => {
       .then(res => {
         console.log("signup data ", res)
         setDataStorage("@key", res?.key)
+        global.user ={name : payload.name}
         navigation.navigate("Profile")
       })
       .catch(err => {
