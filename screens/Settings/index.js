@@ -34,10 +34,22 @@ const SettingsScreen = () => {
     console.log("onProfileSettingsPress")
   }
   const settingsMenu = [
-    { key: 0, text: "Profile Settings", onPress: () => navigation.navigate("Profile") },
-    { key: 1, text: "Payment Settings", onPress: onProfileSettingsPress },
+    {
+      key: 0,
+      text: "Profile Settings",
+      onPress: () => navigation.navigate("Profile")
+    },
+    {
+      key: 1,
+      text: "Payment Settings",
+      onPress: () => navigation.navigate("CardsScreen")
+    },
     { key: 2, text: "FAQ", onPress: () => navigation.navigate("FAQ") },
-    { key: 1, text: "Feedback & Support", onPress: () => navigation.navigate("FeedbackSupport")},
+    {
+      key: 1,
+      text: "Feedback & Support",
+      onPress: () => navigation.navigate("FeedbackSupport")
+    },
     {
       key: 1,
       text: "Terms and Conditions",
