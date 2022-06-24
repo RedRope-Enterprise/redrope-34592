@@ -15,7 +15,7 @@ import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
 import ImagePicker from "react-native-image-crop-picker"
-import { updateUser } from "../../services/user"
+import { getUser, updateUser } from "../../services/user"
 import {
   getDataStorage,
   setDataStorage,
@@ -34,23 +34,37 @@ const ProfileScreen = () => {
   const [about, setAbout] = useState("")
   const [userImage, setUserImage] = useState("")
 
+  const [existingUser, setExistingUser] = useState()
+
   const [userInterests, setUserInterests] = useState()
   const [updateInterests, setUpdateInterests] = useState(Date.now())
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       getAllInterests()
       // The screen is focused
       // Call any action
-    });
+    })
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
+    return unsubscribe
+  }, [navigation])
 
   useEffect(() => {
     getAllInterests()
-  }, [userInterests])
+    setInitialValues()
+  }, [])
+
+  setInitialValues = async () => {
+    let eUser = await global.user
+    setExistingUser(eUser)
+
+    console.log(" eUser.name ", eUser.name)
+    setName(eUser.name)
+    setAbout(eUser.bio)
+    setUserInterests(eUser.likes)
+    setUserImage(eUser.profile_picture)
+  }
 
   const getUserName = async () => {
     let name = await getDataStorage("userName")
@@ -68,7 +82,18 @@ const ProfileScreen = () => {
     })
   }
 
+  const getInterestsIds = async () => {
+    let result = []
+    userInterests.forEach(element => {
+      element = JSON.parse(JSON.stringify(element))
+      result.push(element.id)
+    })
+
+    return result
+  }
+
   setupUserProfile = async () => {
+    let likes = await getInterestsIds()
     const data = new FormData()
     data.append("name", name)
     data.append("bio", about)
@@ -79,9 +104,14 @@ const ProfileScreen = () => {
     })
 
     const resp = await updateUser(data)
-    if(resp){
-      await setDataStorage("@user", resp)
-      global.user = resp
+    if (resp) {
+      let param = {
+        interests: likes
+      }
+      let finalResp = await updateUser(param)
+
+      await setDataStorage("@user", finalResp)
+      global.user = finalResp
       navigation.navigate("Dashboard")
     }
   }
@@ -91,7 +121,7 @@ const ProfileScreen = () => {
     let data = await getDataStorage("@user")
     data = JSON.parse(data)
     console.log("data >>>> ", data)
-    if(data){
+    if (data) {
       setUserInterests(data.likes)
       setUpdateInterests(Date.now())
     }
@@ -236,35 +266,35 @@ Please setup your profile`}
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }} key={updateInterests}>
-            {userInterests?.map(
-              (element, i) =>
-                 (
-                  <View
-                    style={{
-                      alignItems: "center",
-                      marginHorizontal: 10,
-                      backgroundColor: "#423a28",
-                      borderRadius: 10,
-                      borderWidth: 1,
-                      borderColor: Colors.PRIMARY_1,
-                      marginBottom: 10
-                    }}
-                    key={element.id}
-                  >
-                    <Text
-                      style={{
-                        margin: 10,
-                        fontSize: Typography.FONT_SIZE_14,
-                        fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                        color: Colors.PRIMARY_1
-                      }}
-                    >
-                      {element.name}
-                    </Text>
-                  </View>
-                )
-            )}
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap" }}
+            key={updateInterests}
+          >
+            {userInterests?.map((element, i) => (
+              <View
+                style={{
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                  backgroundColor: "#423a28",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: Colors.PRIMARY_1,
+                  marginBottom: 10
+                }}
+                key={element.id}
+              >
+                <Text
+                  style={{
+                    margin: 10,
+                    fontSize: Typography.FONT_SIZE_14,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    color: Colors.PRIMARY_1
+                  }}
+                >
+                  {element.name}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
       </KeyboardAwareScrollView>

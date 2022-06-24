@@ -26,6 +26,7 @@ import { data } from "../../data"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
+import { getUser } from "../../services/user"
 const { width, height } = Dimensions.get("window")
 
 const MyBookingsScreen = () => {
@@ -33,17 +34,27 @@ const MyBookingsScreen = () => {
   const [searchValue, setSearchValue] = useState("")
   const [myBookings, setMyBookings] = useState([])
 
+  const [user, setUser] = useState()
+
+
   useEffect(async () => {
     const events = data.getEvents()
+    getUser()
+
     setMyBookings(events)
   }, [])
+
+  const getUser = async () =>{
+    let u = global.user
+    setUser(u)
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <TouchableOpacity onPress={() => navigation.navigate("UserProfile")} style={{ alignSelf: "flex-end", marginRight: "5%" }}>
         <Image
           style={{ width: 30, height: 30, borderRadius: 1000 }}
-          source={require("../../assets/images/userImage.png")}
+          source={{uri : user?.profile_picture}}
         />
       </TouchableOpacity>
 
