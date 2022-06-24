@@ -119,7 +119,7 @@ const EventDetailsScreen = () => {
       />
 
       <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
-        <Image source={require("../../assets/eventDetails/Group.png")} />
+        {/* <Image source={require("../../assets/eventDetails/Group.png")} /> */}
         <Text
           style={{
             marginLeft: "5%",

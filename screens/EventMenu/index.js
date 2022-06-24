@@ -40,11 +40,13 @@ const EventMenuScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const carouselRef = useRef()
+  const {event} = route?.params
 
-  const [datasource, setDatasource] = useState([1, 2, 3, 4, 5])
+  const [datasource, setDatasource] = useState(event?.event_images)
   const [activeDatasourceIndex, setActiveDatasourceIndex] = useState(0)
   const [data, setData] = useState([])
   const [reloadList, setReloadList] = useState(Date.now())
+
 
   useEffect(() => {
     let arr = []
@@ -74,7 +76,7 @@ const EventMenuScreen = () => {
         <Image
           resizeMode="cover"
           style={{ width: "100%", height: "100%" }}
-          source={ImgSample}
+          source={{uri : item.image}}
         ></Image>
       </View>
     )
@@ -232,18 +234,18 @@ const EventMenuScreen = () => {
           {pagination()}
         </View>
         <View style={styles.container}>
-          <Text style={styles.title}>Big Flight Party</Text>
+          <Text style={styles.title}>{event?.title}</Text>
         </View>
         <View>
           {renderDetailItem({
             image: CalendarImg,
-            title: "14 December, 2022",
-            desc: "Tuesday, 4:00PM - 9:00PM"
+            title: event?.start_date,
+            desc: event?.start_date
           })}
           {renderDetailItem({
             image: LocationImg,
-            title: "Atlanta airport Entrence-B",
-            desc: "6000 North Terminal Parkway Suite 4000"
+            title: event?.location,
+            desc: event?.location
           })}
         </View>
         <View style={[styles.center, { flex: 1, marginTop: "6%" }]}>

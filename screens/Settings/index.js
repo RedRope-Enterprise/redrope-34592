@@ -30,6 +30,17 @@ const SettingsScreen = () => {
   const navigation = useNavigation()
   const [user, setUser] = useState(global.user)
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setUser(global.user)
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
   const onProfileSettingsPress = () => {
     console.log("onProfileSettingsPress")
   }

@@ -49,6 +49,20 @@ const HomeScreen = () => {
     getUser()
   }, [])
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+
+      let user = global.user
+      setUserImage(user?.profile_picture)
+      
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
   useEffect(async () => {
     getEventsFromBackend()
     getEventCategories()
