@@ -55,6 +55,7 @@ const FeedbackSupportScreen = () => {
         placeholder="Message"
         height={Mixins.scaleHeight(200)}
         selectedBorderColor={Colors.PRIMARY_1}
+        isMultiLine={true}
       />
       <View style={{ flex: 1 }}></View>
 

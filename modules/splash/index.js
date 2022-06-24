@@ -1,12 +1,15 @@
 import { useNavigation } from "@react-navigation/native"
 import React, { useEffect } from "react"
-import { View, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native"
+import { View, StyleSheet, Image, SafeAreaView, StatusBar, LogBox } from "react-native"
 import { getDataStorage, clearStorage } from "../../utils/storage"
 
 let NEXT_SCREEN_NAME = "Onboarding"
 
 const Splash = ({}) => {
   const navigation = useNavigation()
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
+  
   useEffect(async () => {
     
 

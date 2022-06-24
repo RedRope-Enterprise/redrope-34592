@@ -12,7 +12,8 @@ import {
   TextInput,
   FlatList,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  LogBox
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, HomeEventItem } from "../../components"
@@ -34,6 +35,8 @@ import { getCategories, getEvents} from "../../services/events"
 const { width, height } = Dimensions.get("window")
 
 const HomeScreen = () => {
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
   const navigation = useNavigation()
   const [events, setEvents] = useState([])
   const [eventCategories, setEventCategories] = useState([])
@@ -48,6 +51,20 @@ const HomeScreen = () => {
     setEvents(events)
     getUser()
   }, [])
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+
+      let user = global.user
+      setUserImage(user?.profile_picture)
+      
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
 
   useEffect(async () => {
     getEventsFromBackend()
