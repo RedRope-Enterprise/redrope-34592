@@ -30,7 +30,9 @@ import ImgUserIcon from "../../assets/images/payment/usericon.png"
 import ImgCardIcon from "../../assets/images/payment/cardicon.png"
 import ImgLock from "../../assets/images/payment/lock.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
+import DotsIcon from "../../assets/images/dots.png"
 import BigCardDesign from "../../components/BigCard"
+import { useRoute } from "@react-navigation/native"
 
 import { data } from "../../data"
 
@@ -39,10 +41,26 @@ const { width, height } = Dimensions.get("window")
 const AddNewCardScreen = () => {
   const navigation = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const route = useRoute()
+
   const [name, setName] = useState("")
   const [cardNo, setCardNo] = useState("")
   const [date, setDate] = useState("")
   const [cvv, setCvv] = useState("")
+  const [screenTitle, setScreenTitle] = useState("Add New Card")
+
+  // viewType: add, view, edit
+  const { viewType } = route?.params
+
+  useEffect(() => {
+    if (viewType == "view") {
+      setName("Daniel Austin")
+      setCardNo("3827 **** **** 9876")
+      setDate("02/30")
+      setCvv("123")
+      setScreenTitle("Card Details")
+    }
+  }, [])
 
   const renderItem = (icon, placeholder, stateFunc, state) => {
     return (
@@ -80,10 +98,14 @@ const AddNewCardScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-      <NavigationHeader></NavigationHeader>
+      <NavigationHeader
+        showLeftBtn1={viewType == "view" ? true : false}
+        onLeftBtn1={() => {}}
+        iconRight1={DotsIcon}
+      ></NavigationHeader>
       <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>
-          Add New Card
+          {screenTitle}
         </Text>
       </View>
       <ScrollView contentContainerStyle={styles.flex1} style={styles.flex1}>

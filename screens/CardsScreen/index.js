@@ -80,7 +80,9 @@ const CardsScreen = () => {
     return (
       <View style={styles.center}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("AddNewCardScreen")}
+          onPress={() =>
+            navigation.navigate("AddNewCardScreen", { viewType: "add" })
+          }
         >
           <View style={[styles.itemContainer, { justifyContent: "center" }]}>
             <View>
