@@ -31,18 +31,25 @@ import ImgCardIcon from "../../assets/images/payment/cardicon.png"
 import ImgLock from "../../assets/images/payment/lock.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import DotsIcon from "../../assets/images/dots.png"
+import EditIcon from "../../assets/images/edit.png"
+import DeleteIcon from "../../assets/images/delete.png"
 import BigCardDesign from "../../components/BigCard"
 import DeleteModal from "../../components/DeleteModal"
 import { useRoute } from "@react-navigation/native"
+import Popover, { Rect } from "react-native-popover-view"
 
 import { data } from "../../data"
 
 const { width, height } = Dimensions.get("window")
+const popoverWidth = width * 0.6
+const popoverYPos = height * 0.08
 
 const AddNewCardScreen = () => {
   const navigation = useNavigation()
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const route = useRoute()
+
+  const [showPopover, setShowPopover] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const [name, setName] = useState("")
   const [cardNo, setCardNo] = useState("")
@@ -97,11 +104,58 @@ const AddNewCardScreen = () => {
     )
   }
 
+  const renderPopoverItem = (title, icon, action) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          width: "100%"
+        }}
+      >
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => {
+            action()
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: Colors.NETURAL_5,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}
+          >
+            <Text
+              style={[
+                styles.FONT_16_2,
+                { marginHorizontal: "10%", marginVertical: "5%" }
+              ]}
+            >
+              {title}
+            </Text>
+            <Image
+              style={{
+                width: "10%",
+                height: undefined,
+                aspectRatio: 1,
+                marginRight: "5%"
+              }}
+              source={icon}
+            ></Image>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
         showLeftBtn1={viewType == "view" ? true : false}
-        onLeftBtn1={() => {}}
+        onLeftBtn1={() => {
+          setShowPopover(true)
+        }}
         iconRight1={DotsIcon}
       ></NavigationHeader>
       <View style={styles.titleContainer}>
@@ -141,11 +195,36 @@ const AddNewCardScreen = () => {
             {"ADD CARD"}
           </Button>
         </View>
+        <Popover
+          from={new Rect(width - 150, popoverYPos, 0, 0)}
+          isVisible={showPopover}
+          onRequestClose={() => setShowPopover(false)}
+          arrowSize={{ height: 0, width: 0 }}
+          arrowShift={1}
+        >
+          <View style={{ width: popoverWidth }}>
+            {renderPopoverItem("Edit Card", EditIcon, () => {
+              console.log("clicked")
+            })}
+            <View
+              style={{ backgroundColor: Colors.WHITE_OPACITY_50, height: 1 }}
+            ></View>
+            {renderPopoverItem("Delete Card", DeleteIcon, () => {
+              setShowPopover(false)
+              setTimeout(() => {
+                setShowDeleteModal(true)
+              }, 1000)
+            })}
+          </View>
+        </Popover>
         <DeleteModal
-          isVisible={false}
-          onClose={() => {}}
+          isVisible={showDeleteModal}
+          onClose={() => {
+            console.log("on close is called")
+            setShowDeleteModal(false)
+          }}
           onYes={() => {}}
-        ></DeleteModal>
+        />
       </ScrollView>
     </SafeAreaView>
   )
@@ -232,6 +311,13 @@ let styles = StyleSheet.create({
     lineHeight: Typography.LINE_HEIGHT_20,
     fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
     marginTop: "4%"
+  },
+  FONT_16_2: {
+    fontSize: Typography.FONT_SIZE_16,
+    fontWeight: Typography.FONT_WEIGHT_500,
+    lineHeight: Typography.LINE_HEIGHT_24,
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+    color: Colors.WHITE
   },
   FONT_12: {
     fontSize: Typography.FONT_SIZE_12,
