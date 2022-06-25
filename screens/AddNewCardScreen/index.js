@@ -32,6 +32,7 @@ import ImgLock from "../../assets/images/payment/lock.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import DotsIcon from "../../assets/images/dots.png"
 import BigCardDesign from "../../components/BigCard"
+import DeleteModal from "../../components/DeleteModal"
 import { useRoute } from "@react-navigation/native"
 
 import { data } from "../../data"
@@ -140,6 +141,11 @@ const AddNewCardScreen = () => {
             {"ADD CARD"}
           </Button>
         </View>
+        <DeleteModal
+          isVisible={false}
+          onClose={() => {}}
+          onYes={() => {}}
+        ></DeleteModal>
       </ScrollView>
     </SafeAreaView>
   )
