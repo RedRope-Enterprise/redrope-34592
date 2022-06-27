@@ -21,9 +21,9 @@ from notifications.serializers import NotificationSerializer
 from home.models import Event, Notification
 from home.api.v1.serializers import (
     AppleLoginSerializer,
-    UserSerializer,
     CustomUserDetailSerializer,
 )  # CustomSocialLoginSerializer
+from users.serializers import UserSerializer
 from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import EventDetailsSerializer
 

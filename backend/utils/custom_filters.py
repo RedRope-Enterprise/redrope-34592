@@ -1,6 +1,6 @@
 import json
 from decimal import Decimal
-
+from datetime import date, timedelta, time
 import requests
 from django.conf import settings
 from math import radians, cos, sin, asin, sqrt
@@ -63,6 +63,9 @@ def filter_events_with_get_param(queryset, request):
     min_cost = request.query_params.get("min_cost", None)
     max_cost = request.query_params.get("max_cost", None)
     categories = request.query_params.getlist("categories", None)
+    today = request.query_params.getlist("today", None)
+    tomorrow = request.query_params.getlist("tomorrow", None)
+    this_week = request.query_params.getlist("this_week", None)
     location = request.query_params.get("location", None)
     start_date = request.query_params.get("start_date", None)
     end_date = request.query_params.get("end_date", None)
@@ -71,7 +74,23 @@ def filter_events_with_get_param(queryset, request):
         queryset = queryset.filter(price__range=(min_cost, max_cost))
 
     if categories:
-        queryset = queryset.filter(categories__name__in=categories)
+        queryset = queryset.filter(
+            categories__name__iregex=r"(" + "|".join(categories) + ")"
+        )
+
+    if today:
+        today = date.today()
+        queryset = queryset.filter(start_date=today)
+
+    if tomorrow:
+        tomorrow = date.today() + timedelta(1)
+        queryset = queryset.filter(start_date=tomorrow)
+
+    if this_week:
+        week_start = date.today()
+        week_start -= timedelta(days=week_start.weekday())
+        week_end = week_start + timedelta(days=7)
+        queryset = queryset.filter(start_date__gte=week_start, start_date__lte=week_end)
 
     if location:
         queryset = queryset.filter(location__icontains=location)

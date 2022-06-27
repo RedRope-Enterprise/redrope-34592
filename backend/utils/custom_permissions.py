@@ -15,3 +15,10 @@ class IsUserOrReadOnly(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return obj.pk == request.user.pk
+
+
+class IsEventPlanner(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user.event_planner
