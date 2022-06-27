@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils.translation import ugettext_lazy as _
 from allauth.account import app_settings as allauth_settings
@@ -8,16 +7,53 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
-from home.models import Category, AboutUs, FAQ, FeedBackSupport
+from home.models import Category, AboutUs, FAQ, FeedBackSupport, Interest
 from rest_auth.registration.serializers import SocialLoginSerializer
+from events.serializers import InterestSerializer
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 
 User = get_user_model()
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
+class CustomAuthTokenSerializer(serializers.Serializer):
+    email = serializers.EmailField(label=_("Email"), write_only=True)
+    password = serializers.CharField(
+        label=_("Password"),
+        style={"input_type": "password"},
+        trim_whitespace=False,
+        write_only=True,
+    )
+    token = serializers.CharField(label=_("Token"), read_only=True)
+
+    def authenticate(self, email=None, password=None):
+        """Authenticate a user based on email address as the user name."""
+        try:
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                return user
+        except User.DoesNotExist:
+            return None
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        if email and password:
+            user = self.authenticate(email=email, password=password)
+
+            # The authenticate call simply returns None for is_active=False
+            # users. (Assuming the default ModelBackend authentication
+            # backend.)
+            if not user:
+                msg = _("Unable to log in with provided credentials.")
+                raise serializers.ValidationError(msg, code="authorization")
+        else:
+            msg = _('Must include "username" and "password".')
+            raise serializers.ValidationError(msg, code="authorization")
+
+        attrs["user"] = user
+        return attrs
 
 
 class AboutUsSerializer(serializers.ModelSerializer):
@@ -126,10 +162,10 @@ class SignupSerializer(serializers.ModelSerializer):
         return super().save()
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "email", "name", "profile_picture"]
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ["id", "email", "name", "profile_picture"]
 
 
 class PasswordSerializer(PasswordResetSerializer):
@@ -177,15 +213,21 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
         # initialize fields
         super(CustomUserDetailSerializer, self).__init__(*args, **kwargs)
 
-        if self.context["request"].user.event_planner:
+        if not self.context["request"].user.is_authenticated:
             # now modify the fields
+            if self.context["user"].event_planner:
+                self.Meta.fields += (
+                    "business_name",
+                    "business_reg_no",
+                )
+        elif self.context["request"].user.event_planner:
             self.Meta.fields += (
                 "business_name",
                 "business_reg_no",
             )
 
     def get_likes(self, obj):
-        return CategorySerializer(obj.interests, many=True).data
+        return InterestSerializer(obj.interests, many=True).data
 
 
 class AppleLoginSerializer(SocialLoginSerializer):

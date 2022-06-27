@@ -27,7 +27,7 @@ class User(AbstractUser):
         _("Profile Picture"), max_length=300, blank=True, null=True
     )
     interests = models.ManyToManyField(
-        "home.Category",
+        "home.Interest",
         verbose_name=_("Interest"),
         blank=True,
         related_name="interest_users",

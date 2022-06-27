@@ -83,16 +83,30 @@ class Event(BaseModel):
     location = models.CharField(
         _("Event location"), max_length=50, blank=True, null=True
     )
+    # primary_location = models.BooleanField(_("Use primary location"), default=False)
+    country = models.CharField(_("Country"), max_length=50, blank=True, null=True)
+    street = models.CharField(_("Street"), max_length=300, blank=True, null=True)
+    city = models.CharField(_("City"), max_length=50, blank=True, null=True)
+    zip_code = models.CharField(_("Zip code"), max_length=8, blank=True, null=True)
+    state = models.CharField(_("State"), max_length=50, blank=True, null=True)
     price = models.DecimalField(_("Event price"), max_digits=8, decimal_places=2)
     categories = models.ManyToManyField(
         "home.Category",
         verbose_name=_("Event category"),
         related_name="category_events",
     )
+    bottle_services = models.ManyToManyField(
+        "home.BottleService",
+        verbose_name=_("Bottle service"),
+        blank=True,
+        related_name="event",
+    )
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     start_date = models.DateField(_("Event start date"))
+    start_time = models.TimeField(_("Event start time"), blank=True, null=True)
     end_date = models.DateField(_("Event end date"))
+    end_time = models.TimeField(_("Event end time"), blank=True, null=True)
 
 
 class Category(BaseModel):
@@ -106,6 +120,13 @@ class Category(BaseModel):
 
     class Meta:
         verbose_name_plural = "Categories"
+
+
+class Interest(BaseModel):
+    name = models.CharField(_("Interest name"), max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 class EventImage(BaseModel):
@@ -132,5 +153,46 @@ class UserEventRegistration(BaseModel):
         on_delete=models.CASCADE,
     )
     attendee = models.PositiveIntegerField(_("Number of attendees"), default=1)
-
+    interested = models.BooleanField(_("Interested"), default=True)
+    reserved = models.BooleanField(_("Reserved"), default=False)
+    amount_paid = models.DecimalField(
+        _("Amount paid"), max_digits=8, default=0, decimal_places=2
+    )
+    amount_left = models.DecimalField(
+        _("Amount left"), max_digits=8, default=0, decimal_places=2
+    )
+    transaction_id = models.CharField(
+        _("Transaction ID"), max_length=50, blank=True, null=True
+    )
     notification = GenericRelation(Notification)
+
+    class Meta:
+        unique_together = ["user", "event"]
+
+
+class BottleService(BaseModel):
+    user = models.ForeignKey(
+        "users.User", verbose_name=_("Creator"), on_delete=models.CASCADE
+    )
+    name = models.CharField(_("Name"), max_length=50, blank=True, null=True)
+    price = models.DecimalField(_("Price"), max_digits=8, decimal_places=2)
+    person = models.PositiveIntegerField(_("Number of persons"), default=1)
+    desc = models.TextField(_("Description"), blank=True, null=True)
+
+
+class FavoriteEvent(BaseModel):
+    user = models.ForeignKey(
+        "users.User",
+        verbose_name=_("User"),
+        related_name="favorite_event",
+        on_delete=models.CASCADE,
+    )
+    event = models.ForeignKey(
+        "home.Event",
+        verbose_name=_("Event"),
+        related_name="favorited",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        unique_together = ["user", "event"]

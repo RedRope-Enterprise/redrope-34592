@@ -1,6 +1,20 @@
 from rest_framework import serializers
-from home.models import Event, EventImage, UserEventRegistration
-from home.api.v1.serializers import CategorySerializer, UserSerializer
+from home.models import (
+    Event,
+    EventImage,
+    UserEventRegistration,
+    BottleService,
+    FavoriteEvent,
+    Interest,
+    Category,
+)
+from users.serializers import UserSerializer
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 
 class EventImageSerializer(serializers.ModelSerializer):
@@ -14,6 +28,7 @@ class EventListSerializer(serializers.ModelSerializer):
     images = serializers.ImageField(write_only=True)
     event_categories = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
+    favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -26,9 +41,32 @@ class EventListSerializer(serializers.ModelSerializer):
             }
         }
 
+    def validate(self, attrs):
+        location_data = (
+            attrs.get("country")
+            and attrs.get("street")
+            and attrs.get("city")
+            and attrs.get("zip_code")
+        )
+
+        if not attrs.get("location") and not location_data:
+            raise serializers.ValidationError(
+                {
+                    "location": "Please select Location or provide Country, Street, City, and Zip code."
+                }
+            )
+
+        return attrs
+
     def get_event_images(self, obj):
         if hasattr(obj, "images"):
             return EventImageSerializer(obj.images, many=True).data
+
+    def get_favorite(self, obj):
+        user = self.context["request"].user
+        return FavoriteEventSerializer(
+            getattr(obj, "favorited").filter(user=user), many=True
+        ).data
 
     def get_event_categories(self, obj):
         if hasattr(obj, "categories"):
@@ -39,10 +77,12 @@ class EventListSerializer(serializers.ModelSerializer):
         images = self.context["request"].FILES.getlist("images")
         validated_data.pop("images")
         categories = validated_data.pop("categories")
+        bottle_services = validated_data.pop("bottle_services", [])
         instance = self.Meta.model._default_manager.create(
             **validated_data, **{"user": user}
         )
         instance.categories.add(*categories)
+        instance.bottle_services.add(*bottle_services)
 
         for img in images:
             image_serializer = EventImageSerializer(data={"image": img})
@@ -54,10 +94,12 @@ class EventListSerializer(serializers.ModelSerializer):
 class EventDetailsSerializer(serializers.ModelSerializer):
     images = serializers.ImageField(write_only=True)
     event_categories = serializers.SerializerMethodField()
+    bottle_services = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
     going_count = serializers.IntegerField(source="going.count")
     going = serializers.SerializerMethodField()
     organizer = UserSerializer(source="user")
+    favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -78,14 +120,103 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         if hasattr(obj, "categories"):
             return CategorySerializer(obj.categories, many=True).data
 
+    def get_bottle_services(self, obj):
+        if hasattr(obj, "bottle_services"):
+            return BottleServiceSerializer(obj.bottle_services, many=True).data
+
     def get_going(self, obj):
         if hasattr(obj, "going"):
             return UserSerializer(
                 obj.going.values_list("user", flat=True), many=True
             ).data
 
+    def get_favorite(self, obj):
+        user = self.context["request"].user
+        return FavoriteEventSerializer(
+            getattr(obj, "favorited").filter(user=user), many=True
+        ).data
+
+
+class MyEventSerializer(serializers.ModelSerializer):
+    event_categories = serializers.SerializerMethodField()
+    event_images = serializers.SerializerMethodField()
+    going_count = serializers.IntegerField(source="event.going.count")
+    event_price = serializers.CharField(source="event.price")
+    event_title = serializers.CharField(source="event.title")
+    location = serializers.CharField(source="event.location")
+    date = serializers.CharField(source="event.start_date")
+    going = serializers.SerializerMethodField()
+    organizer = UserSerializer(source="user")
+    favorite = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserEventRegistration
+        exclude = (
+            "user",
+            "attendee",
+            "interested",
+            "reserved",
+            "amount_paid",
+            "amount_left",
+            "transaction_id",
+            "event",
+        )
+        read_only_fields = ("id",)
+
+    def get_event_images(self, obj):
+        if hasattr(obj.event, "images"):
+            return EventImageSerializer(obj.event.images, many=True).data
+
+    def get_event_categories(self, obj):
+        if hasattr(obj.event, "categories"):
+            return CategorySerializer(obj.event.categories, many=True).data
+
+    def get_going(self, obj):
+        if hasattr(obj.event, "going"):
+            return UserSerializer(
+                obj.event.going.values_list("user", flat=True), many=True
+            ).data
+
+    def get_favorite(self, obj):
+        user = self.context["request"].user
+        return FavoriteEventSerializer(
+            getattr(obj.event, "favorited").filter(user=user), many=True
+        ).data
+
+    def get_status(self, obj):
+        return "reserved" if obj.reserved else "interested"
+
 
 class RegisterEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserEventRegistration
         fields = "__all__"
+        read_only_fields = (
+            "id",
+            "user",
+            "interested",
+            "reserved",
+            "amount_paid",
+            "amount_left",
+        )
+
+
+class FavoriteEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FavoriteEvent
+        fields = "__all__"
+        read_only_fields = ("id", "user")
+
+
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interest
+        fields = "__all__"
+
+
+class BottleServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BottleService
+        fields = "__all__"
+        read_only_fields = ("user",)
