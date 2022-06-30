@@ -39,6 +39,7 @@ import GoogleIcon from "../../assets/images/payment/google.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 import BigCardDesign from "../../components/BigCard"
+import { getCardsList } from "../../services/Payment"
 
 import { data } from "../../data"
 
@@ -47,6 +48,21 @@ const { width, height } = Dimensions.get("window")
 const CardsScreen = () => {
   const navigation = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [data, setData] = useState([])
+
+  async function getCardsData(params = "") {
+    // setLoading(true)
+    let response = await getCardsList(params)
+    console.log(response)
+    // setLoading(false)
+    // setDatasource([...data, ...response.results])
+    // setNextPage(response.next)
+    // setReloadList(Date.now())
+  }
+
+  useEffect(() => {
+    getCardsData()
+  }, [])
 
   const renderCard = (title, icon) => {
     return (
