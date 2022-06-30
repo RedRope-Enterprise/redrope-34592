@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window")
 
 const HomeEventItem = props => {
   const { event, onPress } = props
-  
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -33,7 +33,9 @@ const HomeEventItem = props => {
           backgroundColor: Colors.NETURAL_3
         }}
         resizeMode="cover"
-        source={{uri : event?.event_images ? event?.event_images[0].image : ""}}
+        source={{
+          uri: event?.event_images ? event?.event_images[0].image : ""
+        }}
       >
         <LinearGradient
           colors={[
@@ -67,7 +69,9 @@ const HomeEventItem = props => {
                 }}
               >
                 <Text style={{ color: Colors.WHITE, margin: 5 }}>
-                  {event?.event_categories? event?.event_categories[0].name : ""}
+                  {event?.event_categories?.length > 0
+                    ? event?.event_categories[0].name
+                    : ""}
                 </Text>
               </View>
 
@@ -95,9 +99,20 @@ const HomeEventItem = props => {
               </View>
             </View>
 
-            <View style={{ marginBottom: "5%", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-              <View style={{ flex: 1, flexDirection: "row", alignItems: "center"}}>
-                <Image source={require("../../assets/images/home/location.png")}/>
+            <View
+              style={{
+                marginBottom: "5%",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <View
+                style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+              >
+                <Image
+                  source={require("../../assets/images/home/location.png")}
+                />
                 <Text
                   style={{
                     fontSize: Typography.FONT_SIZE_12,
