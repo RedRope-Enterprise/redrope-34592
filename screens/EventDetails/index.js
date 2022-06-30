@@ -27,8 +27,7 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { SwipeListView } from "react-native-swipe-list-view"
 import { useRoute } from "@react-navigation/native"
-import {getEventDetails} from "../../services/events"
-
+import { getEventDetails } from "../../services/events"
 
 const EventDetailsScreen = () => {
   const route = useRoute()
@@ -40,11 +39,11 @@ const EventDetailsScreen = () => {
     getEventData()
   }, [])
 
-  const getEventData = async() => {
+  const getEventData = async () => {
     const resp = await getEventDetails(route?.params?.event?.id)
     console.log("event details ", resp)
     setEvent(resp)
-  } 
+  }
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -55,7 +54,9 @@ const EventDetailsScreen = () => {
 
       <Image
         style={{ width: "100%", height: height * 0.3 }}
-        source={{uri : event?.event_images? event?.event_images[0].image : ""}}
+        source={{
+          uri: event?.event_images ? event?.event_images[0].image : ""
+        }}
       />
       <View style={{ marginHorizontal: "5%" }}>
         <View style={{ flexDirection: "row", marginTop: "5%" }}>
@@ -81,7 +82,7 @@ const EventDetailsScreen = () => {
         </View>
 
         <View style={{ flexDirection: "row", marginTop: "8%" }}>
-          <Image source={{uri: event?.organizer?.profile_picture}} />
+          <Image source={{ uri: event?.organizer?.profile_picture }} />
           <View style={{ marginLeft: "4%", justifyContent: "center" }}>
             <Text
               style={{
@@ -258,11 +259,13 @@ const EventDetailsScreen = () => {
               margin: 10,
               fontSize: Typography.FONT_SIZE_14,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              color: Colors.PRIMARY_1,
+              color: Colors.PRIMARY_1
             }}
             numberOfLines={1}
           >
-            {event?.event_categories? event?.event_categories[0].name : ""}
+            {event?.event_categories?.length > 0
+              ? event?.event_categories[0].name
+              : ""}
           </Text>
         </View>
       </View>
