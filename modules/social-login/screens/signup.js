@@ -91,7 +91,8 @@ const SignupScreen = ({}) => {
       .then(res => {
         console.log("signup data ", res)
         setDataStorage("@key", res?.key)
-        global.user ={name : payload.name}
+        global.isEventPlanner = true
+        global.user = { name: payload.name }
         navigation.navigate("Profile")
       })
       .catch(err => {
@@ -400,7 +401,7 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
-                if(!termsAndConditionsCheckBox){
+                if (!termsAndConditionsCheckBox) {
                   Alert.alert("", "Please accept terms and conditions")
                   return
                 }
@@ -450,8 +451,9 @@ const SignupScreen = ({}) => {
   }
 
   const SecondRoute = () => {
+    const [businessName, setBusinessName] = useState("")
+    const [employerNumber, setEmployerNumber] = useState("")
     const [email, setEmail] = useState("")
-    const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [repassword, setRepassword] = useState("")
     const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
@@ -469,19 +471,38 @@ const SignupScreen = ({}) => {
         >
           <Input
             width={"90%"}
-            onChangeText={value => setName(value)}
-            value={name}
+            onChangeText={value => setBusinessName(value)}
+            value={businessName}
             placeholder="Business/ Venue Name"
             iconLeft={
               <Image
                 style={{ width: 24, height: 24, margin: 10 }}
-                source={require("../../../assets/images/login_signup/person.png")}
+                source={require("../../../assets/images/login_signup/suit.png")}
               />
             }
             iconHighlighted={
               <Image
                 style={{ width: 24, height: 24, margin: 10 }}
-                source={require("../../../assets/images/login_signup/person_active.png")}
+                source={require("../../../assets/images/login_signup/suit_active.png")}
+              />
+            }
+          />
+
+          <Input
+            width={"90%"}
+            onChangeText={value => setEmployerNumber(value)}
+            value={employerNumber}
+            placeholder="Employer Identification Number "
+            iconLeft={
+              <Image
+                style={{ width: 24, height: 24, margin: 10 }}
+                source={require("../../../assets/images/login_signup/codeBook.png")}
+              />
+            }
+            iconHighlighted={
+              <Image
+                style={{ width: 24, height: 24, margin: 10 }}
+                source={require("../../../assets/images/login_signup/codeBook_active.png")}
               />
             }
           />
@@ -678,7 +699,19 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
-                navigation.navigate("Profile")
+                if (!termsAndConditionsCheckBox) {
+                  Alert.alert("", "Please accept terms and conditions")
+                  return
+                }
+                onSignupPress({
+                  business_name: businessName,
+                  business_reg_no : employerNumber,
+                  email: email,
+                  password: password,
+                  password2: repassword,
+                  event_planner: true,
+                  accept_tc: termsAndConditionsCheckBox
+                })
               }}
             >
               SIGN UP

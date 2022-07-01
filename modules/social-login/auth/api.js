@@ -16,7 +16,7 @@ function apiLoginRequest(payload) {
 }
 
 function apiSignupRequest(payload) {
-  return authAPI.post(`/rest-auth/registration/`, payload)
+  return authAPI.post(`/api/v1/signup/`, payload)
 }
 
 function apiLogoutRequest(payload) {

@@ -48,7 +48,7 @@ const SettingsScreen = () => {
     {
       key: 0,
       text: "Profile Settings",
-      onPress: () => navigation.navigate("Profile")
+      onPress: () => global.isEventPlanner ? navigation.navigate("PlannerProfileEdit") :  navigation.navigate("Profile")
     },
     {
       key: 1,

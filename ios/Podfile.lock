@@ -237,6 +237,8 @@ PODS:
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
   - React-jsinspector (0.64.0)
+  - react-native-blur (0.8.0):
+    - React
   - react-native-fbsdk (1.1.2):
     - React
     - react-native-fbsdk/Core (= 1.1.2)
@@ -417,6 +419,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -501,6 +504,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-fbsdk:
     :path: "../node_modules/react-native-fbsdk"
   react-native-get-random-values:
@@ -591,6 +596,7 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
+  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
