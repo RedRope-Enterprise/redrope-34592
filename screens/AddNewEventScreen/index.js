@@ -129,29 +129,37 @@ const AddNewEventScreen = () => {
     )
   }
 
-  const renderGenericItem = (title, img) => {
+  const renderGenericItem = (title, img, isLocation = false) => {
     return (
       <View style={[styles.shortFieldContainer, { aspectRatio: 5.02 }]}>
-        <View style={styles.genericItemContainer}>
-          <Image
-            style={{ width: "8%", height: undefined, aspectRatio: 1 }}
-            source={img}
-          ></Image>
-          <Text
-            style={[
-              styles.FONT_16,
-              styles.flex1,
-              { color: Colors.NETURAL_2, marginHorizontal: "6%" }
-            ]}
-          >
-            {title}
-          </Text>
-          <Image
-            resizeMode="contain"
-            style={styles.imgArrow}
-            source={ImgArrow}
-          ></Image>
-        </View>
+        {/* AddNewLocationScreen */}
+        <TouchableOpacity
+          onPress={() => {
+            if (!isLocation) return
+            navigation.navigate("AddNewLocationScreen")
+          }}
+        >
+          <View style={styles.genericItemContainer}>
+            <Image
+              style={{ width: "8%", height: undefined, aspectRatio: 1 }}
+              source={img}
+            ></Image>
+            <Text
+              style={[
+                styles.FONT_16,
+                styles.flex1,
+                { color: Colors.NETURAL_2, marginHorizontal: "6%" }
+              ]}
+            >
+              {title}
+            </Text>
+            <Image
+              resizeMode="contain"
+              style={styles.imgArrow}
+              source={ImgArrow}
+            ></Image>
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -378,7 +386,7 @@ const AddNewEventScreen = () => {
             <Text style={[styles.FONT_16, { color: Colors.NETURAL_2 }]}>
               or select new location below
             </Text>
-            {renderGenericItem("New York, USA", ImgLocation)}
+            {renderGenericItem("New York, USA", ImgLocation, true)}
           </View>
 
           <View style={styles.nextBtnContainer}>

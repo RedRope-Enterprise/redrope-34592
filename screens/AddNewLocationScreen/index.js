@@ -24,13 +24,14 @@ import ImgArrow from "../../assets/images/arrow.png"
 
 const { width, height } = Dimensions.get("window")
 
-const AddNewBottleScreen = () => {
+const AddNewLocationScreen = () => {
   const navigation = useNavigation()
 
-  const [name, setName] = useState("")
-  const [price, setPrice] = useState("")
-  const [person, setPerson] = useState("")
-  const [description, setDescription] = useState("")
+  const [country, setCountry] = useState("")
+  const [street, setStreet] = useState("")
+  const [city, setCity] = useState("")
+  const [zip, setZip] = useState("")
+  const [state, setState] = useState("")
 
   return (
     <SafeAreaView
@@ -42,9 +43,7 @@ const AddNewBottleScreen = () => {
     >
       <NavigationHeader></NavigationHeader>
       <View style={styles.titleContainer}>
-        <Text style={[styles.title, { color: Colors.WHITE }]}>
-          Bottle Service
-        </Text>
+        <Text style={[styles.title, { color: Colors.WHITE }]}>Location</Text>
       </View>
       <KeyboardAwareScrollView
         enableOnAndroid={true}
@@ -55,78 +54,70 @@ const AddNewBottleScreen = () => {
       >
         <View style={styles.flex1}>
           <View style={styles.flex1}>
-            <View style={styles.shortFieldContainer}>
-              <TextInput
-                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
-                placeholder={"Name"}
-                placeholderTextColor={Colors.NETURAL_2}
-                onChangeText={newText => setName(newText)}
-                defaultValue={name}
-              />
-            </View>
-
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View style={styles.shortDividedFieldContainer}>
-                <TextInput
-                  style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
-                  placeholder={"Price"}
-                  placeholderTextColor={Colors.NETURAL_2}
-                  onChangeText={newText => setPrice(newText)}
-                  defaultValue={price}
-                />
-              </View>
-
-              <View
-                style={[
-                  styles.shortDividedFieldContainer,
-                  {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                  }
-                ]}
-              >
-                <TextInput
-                  style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
-                  placeholder={"Person"}
-                  placeholderTextColor={Colors.NETURAL_2}
-                  onChangeText={newText => setPerson(newText)}
-                  defaultValue={person}
-                />
-                <Image
-                  resizeMode="contain"
-                  style={styles.dropdownImage}
-                  source={ImgArrow}
-                ></Image>
-              </View>
-            </View>
-
             <View
               style={[
                 styles.shortFieldContainer,
-                { aspectRatio: 2.3, justifyContent: "flex-start" }
+                {
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }
               ]}
             >
               <TextInput
-                style={[
-                  styles.FONT_16_2,
-                  {
-                    marginHorizontal: "4%",
-                    marginVertical: "2%",
-                    textAlignVertical: "top"
-                  }
-                ]}
-                multiline={true}
-                placeholder={"Description"}
+                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+                placeholder={"Country"}
                 placeholderTextColor={Colors.NETURAL_2}
-                onChangeText={newText => setDescription(newText)}
-                defaultValue={description}
+                onChangeText={newText => setCountry(newText)}
+                defaultValue={country}
+              />
+              <Image
+                resizeMode="contain"
+                style={styles.dropdownImage}
+                source={ImgArrow}
+              ></Image>
+            </View>
+
+            <View style={styles.shortFieldContainer}>
+              <TextInput
+                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+                placeholder={"Enter Street"}
+                placeholderTextColor={Colors.NETURAL_2}
+                onChangeText={newText => setStreet(newText)}
+                defaultValue={street}
+              />
+            </View>
+
+            <View style={styles.shortFieldContainer}>
+              <TextInput
+                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+                placeholder={"City"}
+                placeholderTextColor={Colors.NETURAL_2}
+                onChangeText={newText => setCity(newText)}
+                defaultValue={city}
+              />
+            </View>
+
+            <View style={styles.shortFieldContainer}>
+              <TextInput
+                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+                placeholder={"Zip"}
+                placeholderTextColor={Colors.NETURAL_2}
+                onChangeText={newText => setZip(newText)}
+                defaultValue={zip}
+              />
+            </View>
+
+            <View style={styles.shortFieldContainer}>
+              <TextInput
+                style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+                placeholder={"State ( If applies ) "}
+                placeholderTextColor={Colors.NETURAL_2}
+                onChangeText={newText => setState(newText)}
+                defaultValue={state}
               />
             </View>
           </View>
-
           <View style={styles.nextBtnContainer}>
             <Button
               btnWidth={width * 0.8}
@@ -153,7 +144,7 @@ const AddNewBottleScreen = () => {
   )
 }
 
-export default AddNewBottleScreen
+export default AddNewLocationScreen
 
 let styles = StyleSheet.create({
   center: {
@@ -172,7 +163,7 @@ let styles = StyleSheet.create({
     marginTop: "4%"
   },
   dropdownImage: {
-    width: "10%",
+    width: "5%",
     height: undefined,
     aspectRatio: 1,
     marginRight: "6%"
