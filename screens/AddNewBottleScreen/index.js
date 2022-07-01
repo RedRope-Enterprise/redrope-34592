@@ -3,20 +3,15 @@ import {
   Image,
   Alert,
   View,
-  TouchableOpacity,
   Text,
   Dimensions,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  FlatList,
-  ImageBackground,
-  ScrollView,
   TextInput,
   Platform
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, CustomImageModal } from "../../components"
+import { Button } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -25,15 +20,7 @@ import {
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
-import ImagePicker from "react-native-image-crop-picker"
-import BouncyCheckbox from "react-native-bouncy-checkbox"
-
-import ImgCamera from "../../assets/images/profile/Camera.png"
-import ImgPlus from "../../assets/images/plus.png"
-import ImgBottle from "../../assets/images/bottle.png"
 import ImgArrow from "../../assets/images/arrow.png"
-import ImgLocation from "../../assets/images/location.png"
-import DateTimePickerModal from "react-native-modal-datetime-picker"
 
 const { width, height } = Dimensions.get("window")
 
