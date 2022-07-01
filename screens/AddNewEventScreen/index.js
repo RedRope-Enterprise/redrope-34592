@@ -316,15 +316,21 @@ const AddNewEventScreen = () => {
           </View>
 
           <View style={{ marginVertical: "4%" }}>
-            <View style={styles.goldenContainer}>
-              <Text style={[styles.FONT_16, { color: Colors.PRIMARY_1 }]}>
-                Bottle Services
-              </Text>
-              <Image
-                style={{ width: "5%", height: undefined, aspectRatio: 1 }}
-                source={ImgPlus}
-              ></Image>
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("AddNewBottleScreen")
+              }}
+            >
+              <View style={styles.goldenContainer}>
+                <Text style={[styles.FONT_16, { color: Colors.PRIMARY_1 }]}>
+                  Bottle Services
+                </Text>
+                <Image
+                  style={{ width: "5%", height: undefined, aspectRatio: 1 }}
+                  source={ImgPlus}
+                ></Image>
+              </View>
+            </TouchableOpacity>
 
             {renderGenericItem("Side Cabanas", ImgBottle)}
             {renderGenericItem("Garden Tables", ImgBottle)}

@@ -30,7 +30,6 @@ const CategoriesSelectionScreen = () => {
   useEffect(() => {
     if (categories.length > 0) {
       const total = categories.length
-      console.log(total % 2)
       if (total % 2 != 0) {
         setLastElement(categories[categories.length - 1])
         setRender(Date.now())
