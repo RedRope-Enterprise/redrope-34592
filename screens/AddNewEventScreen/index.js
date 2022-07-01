@@ -50,7 +50,7 @@ const AddNewEventScreen = () => {
   const [eventDate, setEventDate] = useState("_ _/__/_ _")
   const [eventDescription, setEventDescription] = useState("")
   const [checkBox, setCheckBox] = useState(false)
-  const [userInterests, setUserInterests] = useState([])
+  const [categories, setCategories] = useState([])
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
 
   const showDatePicker = () => {
@@ -69,8 +69,8 @@ const AddNewEventScreen = () => {
   }
 
   useEffect(() => {
-    if (userInterests.length == 0)
-      setUserInterests([
+    if (categories.length == 0)
+      setCategories([
         { name: "Music", isEnabled: true, id: Date.now() },
         { name: "Entertainment", isEnabled: false, id: Date.now() },
         { name: "Secret Party", isEnabled: true, id: Date.now() },
@@ -273,26 +273,32 @@ const AddNewEventScreen = () => {
           </View>
 
           <View style={[styles.boxContainer, { marginTop: "6%" }]}>
-            <View style={styles.catgContainer}>
-              <Text
-                style={[
-                  styles.FONT_16,
-                  {
-                    color: Colors.NETURAL_2,
-                    marginVertical: "4%"
-                  }
-                ]}
-              >
-                Select categories
-              </Text>
-              <Image
-                resizeMode="contain"
-                style={styles.imgArrow}
-                source={ImgArrow}
-              ></Image>
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("CategoriesSelectionScreen")
+              }}
+            >
+              <View style={styles.catgContainer}>
+                <Text
+                  style={[
+                    styles.FONT_16,
+                    {
+                      color: Colors.NETURAL_2,
+                      marginVertical: "4%"
+                    }
+                  ]}
+                >
+                  Select categories
+                </Text>
+                <Image
+                  resizeMode="contain"
+                  style={styles.imgArrow}
+                  source={ImgArrow}
+                ></Image>
+              </View>
+            </TouchableOpacity>
             <View style={styles.catItemParent}>
-              {userInterests?.map((element, i) => (
+              {categories?.map((element, i) => (
                 <View style={styles.catItem}>
                   <Text
                     style={{
