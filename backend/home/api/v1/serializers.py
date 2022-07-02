@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from rest_framework.authtoken.models import Token
 from django.utils.translation import ugettext_lazy as _
 from allauth.account import app_settings as allauth_settings
 from allauth.account.forms import ResetPasswordForm
@@ -12,6 +13,8 @@ from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import InterestSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from requests.exceptions import HTTPError
+from allauth.socialaccount.helpers import complete_social_login
 
 User = get_user_model()
 
@@ -85,9 +88,12 @@ class SignupSerializer(serializers.ModelSerializer):
         write_only=True, required=True, style={"input_type": "password"}
     )
 
+    token = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
+            "token",
             "id",
             "name",
             "email",
@@ -143,15 +149,20 @@ class SignupSerializer(serializers.ModelSerializer):
                 )
         return attrs
 
+    def get_token(self, instance):
+        token, created = Token.objects.get_or_create(user=instance)
+        return token.key
+
     def create(self, validated_data):
+        validated_data.pop("password2")
+        password = validated_data.pop("password")
         user = User(
-            email=validated_data.get("email"),
-            name=validated_data.get("name"),
+            **validated_data,
             username=generate_unique_username(
                 [validated_data.get("name"), validated_data.get("email"), "user"]
             ),
         )
-        user.set_password(validated_data.get("password"))
+        user.set_password(password)
         user.save()
         request = self._get_request()
         setup_user_email(request, user, [])
@@ -228,6 +239,42 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return InterestSerializer(obj.interests, many=True).data
+
+
+class CustomSocialLoginSerializer(SocialLoginSerializer):
+    event_planner = serializers.BooleanField(required=False)
+    accept_tc = serializers.BooleanField(required=False)
+    business_name = serializers.CharField(required=False)
+    business_reg_no = serializers.CharField(required=False)
+
+    def validate(self, attrs):
+
+        attrs = super().validate(attrs)
+        user = attrs["user"]
+
+        if not user.is_active:
+            raise serializers.ValidationError(_("User account is not active."))
+
+        if not user.accept_tc:
+            if not attrs.get("accept_tc"):
+                raise serializers.ValidationError(
+                    {"accept_tc": "Please accept terms and conditions"}
+                )
+            user.accept_tc = attrs.get("accept_tc")
+
+            if attrs.get("event_planner"):
+                if not attrs.get("business_name") or not attrs.get("business_reg_no"):
+                    raise serializers.ValidationError(
+                        _(
+                            "Please provide your business name and business registration number"
+                        )
+                    )
+                user.event_planner = attrs.get("event_planner")
+                user.business_name = attrs.get("business_name")
+                user.business_reg_no = attrs.get("business_reg_no")
+
+            user.save()
+        return attrs
 
 
 class AppleLoginSerializer(SocialLoginSerializer):

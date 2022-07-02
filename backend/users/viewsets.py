@@ -22,7 +22,8 @@ from home.models import Event, Notification
 from home.api.v1.serializers import (
     AppleLoginSerializer,
     CustomUserDetailSerializer,
-)  # CustomSocialLoginSerializer
+    CustomSocialLoginSerializer,
+)
 from users.serializers import UserSerializer
 from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import EventDetailsSerializer
@@ -68,7 +69,7 @@ user_redirect_view = UserRedirectView.as_view()
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
-    serializer_class = SocialLoginSerializer
+    serializer_class = CustomSocialLoginSerializer
     callback_url = "localhost:8000"
     client_class = OAuth2Client
 
@@ -80,7 +81,7 @@ class FacebookLogin(SocialLoginView):
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
-    serializer_class = SocialLoginSerializer
+    serializer_class = CustomSocialLoginSerializer
     callback_url = "localhost:8000"
     client_class = OAuth2Client
 
