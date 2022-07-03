@@ -34,6 +34,8 @@ import ImgBottle from "../../assets/images/bottle.png"
 import ImgArrow from "../../assets/images/arrow.png"
 import ImgLocation from "../../assets/images/location.png"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import { createEvent } from "../../services/events"
+import { data } from "../../data"
 
 const { width, height } = Dimensions.get("window")
 
@@ -51,7 +53,56 @@ const AddNewEventScreen = () => {
   const [eventDescription, setEventDescription] = useState("")
   const [checkBox, setCheckBox] = useState(false)
   const [categories, setCategories] = useState([])
+  const [bottleServices, setBottleServices] = useState([])
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+  const [refreshNow, setRefreshNow] = useState(Date.now())
+
+  const onCreateEventPress = async () => {
+    const fromData = new FormData()
+    fromData.append("price", price)
+    fromData.append("start_date", "2022-08-12")
+    fromData.append("end_date", "2022-08-17")
+
+    fromData.append("categories", 4)
+    fromData.append("title", eventTitle)
+    fromData.append("desc", eventDescription)
+    fromData.append("location", "Nigeria")
+    fromData.append("images", {
+      uri: eventImage,
+      type: "image/jpeg",
+      name: Date.now() + "photo.jpg"
+    })
+
+    bottleServices.forEach(element => {
+      fromData.append("bottle_services", element.id)
+    })
+
+    try {
+      const resp = await createEvent(fromData)
+      console.log("add event response ", resp)
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+
+        let key = Object.keys(error.response?.data)
+        if (key.length > 0)
+          Alert.alert(key[0], error.response?.data[key[0]]?.[0])
+
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+      }
+    }
+  }
 
   const showDatePicker = () => {
     setDatePickerVisibility(true)
@@ -71,16 +122,25 @@ const AddNewEventScreen = () => {
   useEffect(() => {
     if (categories.length == 0)
       setCategories([
-        { name: "Music", isEnabled: true, id: Date.now() },
-        { name: "Entertainment", isEnabled: false, id: Date.now() },
-        { name: "Secret Party", isEnabled: true, id: Date.now() },
-        { name: "Art", isEnabled: false, id: Date.now() },
-        { name: "Celebrities", isEnabled: false, id: Date.now() },
-        { name: "Food", isEnabled: false, id: Date.now() },
-        { name: "Cinema", isEnabled: true, id: Date.now() },
-        { name: "Entertainment", isEnabled: false, id: Date.now() }
+        { name: "Yatch Parties", isEnabled: true, id: 1 },
+        { name: "Bottle Services", isEnabled: true, id: 2 },
+        { name: "Pool Parties", isEnabled: true, id: 3 }
       ])
   }, [])
+
+  updateCategories = data => {
+    console.log("submit data ", data)
+    setCategories(data)
+    setRefreshNow(Date.now())
+  }
+
+  addNewBottleServices = data => {
+    let allBottleServices = bottleServices
+    allBottleServices.push(data)
+    setRefreshNow(Date.now())
+
+    setBottleServices(allBottleServices)
+  }
 
   const openImagePicker = async () => {
     await ImagePicker.openPicker({}).then(image => {
@@ -283,7 +343,9 @@ const AddNewEventScreen = () => {
           <View style={[styles.boxContainer, { marginTop: "6%" }]}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("CategoriesSelectionScreen")
+                navigation.navigate("CategoriesSelectionScreen", {
+                  onSubmit: updateCategories
+                })
               }}
             >
               <View style={styles.catgContainer}>
@@ -305,28 +367,33 @@ const AddNewEventScreen = () => {
                 ></Image>
               </View>
             </TouchableOpacity>
-            <View style={styles.catItemParent}>
-              {categories?.map((element, i) => (
-                <View style={styles.catItem}>
-                  <Text
-                    style={{
-                      margin: 10,
-                      fontSize: Typography.FONT_SIZE_14,
-                      fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                      color: Colors.PRIMARY_1
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                </View>
-              ))}
+            <View style={styles.catItemParent} key={refreshNow}>
+              {categories?.map(
+                (element, i) =>
+                  element.isEnabled && (
+                    <View style={styles.catItem} key={element.updatedAt}>
+                      <Text
+                        style={{
+                          margin: 10,
+                          fontSize: Typography.FONT_SIZE_14,
+                          fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                          color: Colors.PRIMARY_1
+                        }}
+                      >
+                        {element.name}
+                      </Text>
+                    </View>
+                  )
+              )}
             </View>
           </View>
 
           <View style={{ marginVertical: "4%" }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("AddNewBottleScreen")
+                navigation.navigate("AddNewBottleScreen", {
+                  onSubmit: addNewBottleServices
+                })
               }}
             >
               <View style={styles.goldenContainer}>
@@ -340,8 +407,12 @@ const AddNewEventScreen = () => {
               </View>
             </TouchableOpacity>
 
-            {renderGenericItem("Side Cabanas", ImgBottle)}
-            {renderGenericItem("Garden Tables", ImgBottle)}
+            {refreshNow &&
+              bottleServices.map(bottleService => {
+                return renderGenericItem(bottleService.name, ImgBottle)
+              })}
+            {/* {renderGenericItem("Empty Bottle Service", ImgBottle)} */}
+            {/* {renderGenericItem("Garden Tables", ImgBottle)} */}
           </View>
 
           <View style={{ marginVertical: "4%" }}>
@@ -404,7 +475,7 @@ const AddNewEventScreen = () => {
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_14
               }}
-              onPress={() => {}}
+              onPress={() => onCreateEventPress()}
             >
               Save
             </Button>

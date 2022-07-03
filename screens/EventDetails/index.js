@@ -48,8 +48,8 @@ const EventDetailsScreen = () => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
-        showLeftBtn1={true}
-        showLeftBtn2={true}
+        showLeftBtn1={!global?.user?.event_planner}
+        showLeftBtn2={!global?.user?.event_planner}
       ></NavigationHeader>
 
       <Image
@@ -282,89 +282,91 @@ const EventDetailsScreen = () => {
         }}
       />
 
-      <View style={{ marginBottom: "15%", marginHorizontal: "5%" }}>
-        <Text
-          style={{
-            fontSize: Typography.FONT_SIZE_14,
-            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-            fontWeight: Typography.FONT_WEIGHT_600,
-            color: Colors.PRIMARY_1
-          }}
-        >
-          Entry Options
-        </Text>
-
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            backgroundColor: Colors.BUTTON_RED,
-            alignItems: "center",
-            marginTop: "5%",
-            borderRadius: 10
-          }}
-        >
+      {!global?.user?.event_planner && (
+        <View style={{ marginBottom: "15%", marginHorizontal: "5%" }}>
           <Text
             style={{
-              fontSize: Typography.FONT_SIZE_16,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontWeight: Typography.FONT_WEIGHT_BOLD,
-              color: Colors.WHITE,
-              marginHorizontal: "5%",
-              marginVertical: "5%",
-              flex: 1
-            }}
-          >
-            Interested
-          </Text>
-          <Text
-            style={{
-              fontSize: Typography.FONT_SIZE_24,
+              fontSize: Typography.FONT_SIZE_14,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
               fontWeight: Typography.FONT_WEIGHT_600,
-              color: Colors.WHITE,
-              marginHorizontal: "5%"
+              color: Colors.PRIMARY_1
             }}
           >
-            {">"}
+            Entry Options
           </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("EventMenu", { event })}
-          style={{
-            flexDirection: "row",
-            backgroundColor: Colors.BUTTON_RED,
-            alignItems: "center",
-            marginTop: "5%",
-            borderRadius: 10
-          }}
-        >
-          <Text
+          <TouchableOpacity
             style={{
-              fontSize: Typography.FONT_SIZE_16,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontWeight: Typography.FONT_WEIGHT_BOLD,
-              color: Colors.WHITE,
-              marginHorizontal: "5%",
-              marginVertical: "5%",
-              flex: 1
+              flexDirection: "row",
+              backgroundColor: Colors.BUTTON_RED,
+              alignItems: "center",
+              marginTop: "5%",
+              borderRadius: 10
             }}
           >
-            Reserve
-          </Text>
-          <Text
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_16,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.WHITE,
+                marginHorizontal: "5%",
+                marginVertical: "5%",
+                flex: 1
+              }}
+            >
+              Interested
+            </Text>
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_24,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_600,
+                color: Colors.WHITE,
+                marginHorizontal: "5%"
+              }}
+            >
+              {">"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("EventMenu", { event })}
             style={{
-              fontSize: Typography.FONT_SIZE_24,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontWeight: Typography.FONT_WEIGHT_600,
-              color: Colors.WHITE,
-              marginHorizontal: "5%"
+              flexDirection: "row",
+              backgroundColor: Colors.BUTTON_RED,
+              alignItems: "center",
+              marginTop: "5%",
+              borderRadius: 10
             }}
           >
-            {">"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_16,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.WHITE,
+                marginHorizontal: "5%",
+                marginVertical: "5%",
+                flex: 1
+              }}
+            >
+              Reserve
+            </Text>
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_24,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_600,
+                color: Colors.WHITE,
+                marginHorizontal: "5%"
+              }}
+            >
+              {">"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </ScrollView>
   )
 }

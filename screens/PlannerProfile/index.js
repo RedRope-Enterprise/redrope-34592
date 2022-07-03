@@ -27,7 +27,6 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { useRoute } from "@react-navigation/native"
 
-
 const PlannerProfileScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
@@ -50,9 +49,9 @@ const PlannerProfileScreen = () => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getAllInterests()
       // The screen is focused
       // Call any action
+      setInitialValues()
     })
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -60,7 +59,6 @@ const PlannerProfileScreen = () => {
   }, [navigation])
 
   useEffect(() => {
-    getAllInterests()
     setInitialValues()
   }, [])
 
@@ -71,86 +69,16 @@ const PlannerProfileScreen = () => {
       setIsModalVisible(true)
     }
 
-    console.log(" eUser.name ", eUser.name)
+    setEmail(eUser.email)
     setName(eUser.name)
     setAbout(eUser.bio)
-    setUserInterests(eUser.likes)
+    setBName(eUser.business_name)
     setUserImage(eUser.profile_picture)
+    setPhone(eUser.phone)
+    setWebsite(eUser.website)
+    // setLocation()
   }
 
-  const getUserName = async () => {
-    let name = await getDataStorage("userName")
-    setName(name)
-  }
-
-  onPickImagePress = async () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true
-    }).then(image => {
-      console.log(image)
-      setUserImage(image.path)
-    })
-  }
-
-  const getInterestsIds = async () => {
-    let result = []
-    userInterests.forEach(element => {
-      element = JSON.parse(JSON.stringify(element))
-      result.push(element.id)
-    })
-
-    return result
-  }
-
-  setupUserProfile = async () => {
-    let likes = await getInterestsIds()
-    const data = new FormData()
-    data.append("name", name)
-    data.append("bio", about)
-    data.append("profile_picture", {
-      uri: userImage,
-      type: "image/jpeg",
-      name: Date.now() + "photo.jpg"
-    })
-
-    const resp = await updateUser(data)
-    if (resp) {
-      let param = {
-        interests: likes
-      }
-      let finalResp = await updateUser(param)
-
-      await setDataStorage("@user", finalResp)
-      global.user = finalResp
-      navigation.navigate("Dashboard")
-    }
-  }
-
-  const getAllInterests = async () => {
-    // await clearStorage()
-    let data = await getDataStorage("@user")
-    data = JSON.parse(data)
-    if (data) {
-      setUserInterests(data.likes)
-      setUpdateInterests(Date.now())
-    }
-
-    // if (!data) {
-    //   await setDataStorage("@user_interests", [
-    //     { title: "Music", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Art", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Food", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
-    //   ])
-    // } else {
-    // }
-  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <StatusBar
@@ -200,15 +128,17 @@ Please setup your profile`}
             }}
             source={{ uri: userImage }}
           />
-          {!profileView &&<TouchableOpacity
-            style={{ position: "absolute" }}
-            onPress={() => onPickImagePress()}
-          >
-            <Image
-              style={{ resizeMode: "contain", width: 70, height: 70 }}
-              source={require("../../assets/images/profile/Camera.png")}
-            />
-          </TouchableOpacity>}
+          {!profileView && (
+            <TouchableOpacity
+              style={{ position: "absolute" }}
+              onPress={() => onPickImagePress()}
+            >
+              <Image
+                style={{ resizeMode: "contain", width: 70, height: 70 }}
+                source={require("../../assets/images/profile/Camera.png")}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <Input
@@ -321,7 +251,11 @@ Please setup your profile`}
           >
             Location
           </Text>
-          <TouchableOpacity style={{ width: "90%" }} disabled={profileView} onPress={() => {}}>
+          <TouchableOpacity
+            style={{ width: "90%" }}
+            disabled={profileView}
+            onPress={() => {}}
+          >
             <Input
               editable={false}
               onChangeText={value => setLocation(value)}
@@ -336,11 +270,12 @@ Please setup your profile`}
                 />
               }
               iconRight={
-                !profileView &&
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/RightArrow.png")}
-                />
+                !profileView && (
+                  <Image
+                    style={{ width: 24, height: 24, margin: 10 }}
+                    source={require("../../assets/images/RightArrow.png")}
+                  />
+                )
               }
               iconHighlighted={
                 <Image
@@ -363,7 +298,11 @@ Please setup your profile`}
           >
             Connect Bank Account
           </Text>
-          <TouchableOpacity style={{ width: "90%" }} disabled={profileView}  onPress={() => {}}>
+          <TouchableOpacity
+            style={{ width: "90%" }}
+            disabled={profileView}
+            onPress={() => {}}
+          >
             <Input
               editable={false}
               onChangeText={value => setBAccount(value)}
@@ -378,11 +317,12 @@ Please setup your profile`}
                 />
               }
               iconRight={
-                !profileView &&
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/RightArrow.png")}
-                />
+                !profileView && (
+                  <Image
+                    style={{ width: 24, height: 24, margin: 10 }}
+                    source={require("../../assets/images/RightArrow.png")}
+                  />
+                )
               }
               iconHighlighted={
                 <Image
@@ -394,7 +334,7 @@ Please setup your profile`}
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
-      <View style={{ alignItems: "center", marginBottom: "5%" }}>
+      {/* <View style={{ alignItems: "center", marginBottom: "5%" }}>
         <Button
           btnWidth={width * 0.8}
           backgroundColor={Colors.BUTTON_RED}
@@ -416,7 +356,7 @@ Please setup your profile`}
         >
           SAVE
         </Button>
-      </View>
+      </View> */}
     </SafeAreaView>
   )
 }

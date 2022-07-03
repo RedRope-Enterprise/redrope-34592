@@ -59,7 +59,7 @@ const HomeEventItem = props => {
             </Text>
 
             <View style={{ flexDirection: "row", marginTop: "2%", flex: 1 }}>
-              <View
+              {event?.event_categories?.[0] && <View
                 style={{
                   borderWidth: 1,
                   borderColor: Colors.WHITE,
@@ -73,7 +73,7 @@ const HomeEventItem = props => {
                     ? event?.event_categories[0].name
                     : ""}
                 </Text>
-              </View>
+              </View>}
 
               <View
                 style={{

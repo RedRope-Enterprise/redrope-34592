@@ -90,10 +90,16 @@ const SignupScreen = ({}) => {
       .then(unwrapResult)
       .then(res => {
         console.log("signup data ", res)
-        setDataStorage("@key", res?.key)
-        global.isEventPlanner = true
-        global.user = { name: payload.name }
-        navigation.navigate("Profile")
+        setDataStorage("@key", res?.token)
+        setDataStorage("@user", res)
+
+        global.user = res
+        if(res.event_planner){
+          navigation.navigate("PlannerProfileEdit")
+        }else{
+          navigation.navigate("Profile")
+        }
+
       })
       .catch(err => {
         let error = mapErrorMessage(err)

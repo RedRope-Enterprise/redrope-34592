@@ -13,6 +13,8 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
+
 import {
   getDataStorage,
   setDataStorage,
@@ -23,6 +25,11 @@ const { width, height } = Dimensions.get("window")
 
 const CategoriesSelectionScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
+
+  const { onSubmit } = route?.params
+
+
   const [categories, setCategories] = useState([])
   const [reRender, setRender] = useState(Date.now())
   const [lastElement, setLastElement] = useState(null)
@@ -40,15 +47,9 @@ const CategoriesSelectionScreen = () => {
   useEffect(() => {
     if (categories.length == 0)
       setCategories([
-        { name: "Music", isSelected: true, id: 1 },
-        { name: "Entertainment", isSelected: false, id: 2 },
-        { name: "Secret Party", isSelected: true, id: 3 },
-        { name: "Art", isSelected: false, id: 4 },
-        { name: "Celebrities", isSelected: false, id: 5 },
-        { name: "Food", isSelected: false, id: 6 },
-        { name: "Cinema", isSelected: true, id: 7 },
-        { name: "Entertainment", isSelected: false, id: 8 },
-        { name: "Food Court", isSelected: false, id: 9 }
+        { name: "Yatch Parties", isEnabled: true, id: 1},
+        { name: "Bottle Services", isEnabled: true, id: 2 },
+        { name: "Pool Parties", isEnabled: true, id: 3 },
       ])
   }, [])
 
@@ -81,7 +82,7 @@ const CategoriesSelectionScreen = () => {
           <TouchableOpacity
             onPress={() => {
               let temp = categories
-              temp[i].isSelected = !temp[i].isSelected
+              temp[i].isEnabled = !temp[i].isEnabled
               temp[i].updatedAt = Date.now()
 
               setCategories(temp)
@@ -92,12 +93,12 @@ const CategoriesSelectionScreen = () => {
               width: categories[i].id == lastElement?.id ? "94%" : "44%",
               alignItems: "center",
               marginHorizontal: 10,
-              backgroundColor: element.isSelected
+              backgroundColor: element.isEnabled
                 ? "#3f3720"
                 : Colors.NETURAL_4,
               borderRadius: 10,
               borderWidth: 1,
-              borderColor: element.isSelected ? Colors.PRIMARY_1 : "#535252",
+              borderColor: element.isEnabled ? Colors.PRIMARY_1 : "#535252",
               marginBottom: 10
             }}
           >
@@ -106,7 +107,7 @@ const CategoriesSelectionScreen = () => {
                 margin: 10,
                 fontSize: Typography.FONT_SIZE_14,
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                color: element.isSelected ? Colors.PRIMARY_1 : Colors.WHITE
+                color: element.isEnabled ? Colors.PRIMARY_1 : Colors.WHITE
               }}
             >
               {element.name}
@@ -126,7 +127,7 @@ const CategoriesSelectionScreen = () => {
           }}
           onPress={() => {
             categories.forEach(catg => {
-              catg.isSelected = false
+              catg.isEnabled = false
             })
             setRender(Date.now())
           }}
@@ -155,6 +156,7 @@ const CategoriesSelectionScreen = () => {
             marginHorizontal: 15
           }}
           onPress={async () => {
+            onSubmit(categories)
             navigation.goBack()
           }}
         >

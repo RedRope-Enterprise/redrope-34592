@@ -27,7 +27,6 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { useRoute } from "@react-navigation/native"
 
-
 const PlannerProfileEditScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
@@ -43,14 +42,13 @@ const PlannerProfileEditScreen = () => {
   const [phone, setPhone] = useState("")
   const [website, setWebsite] = useState("")
   const [about, setAbout] = useState("")
-  const [location, setLocation] = useState("")
+  const [location, setLocation] = useState("New York, USA")
   const [bAccount, setBAccount] = useState("")
 
   const [profileView, setProfileView] = useState(false)
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getAllInterests()
       // The screen is focused
       // Call any action
     })
@@ -60,27 +58,18 @@ const PlannerProfileEditScreen = () => {
   }, [navigation])
 
   useEffect(() => {
-    getAllInterests()
     setInitialValues()
   }, [])
 
   setInitialValues = async () => {
     let eUser = await global.user
     setExistingUser(eUser)
-    if (!eUser?.likes) {
-      setIsModalVisible(true)
-    }
 
-    console.log(" eUser.name ", eUser.name)
+    setEmail(eUser.email)
     setName(eUser.name)
     setAbout(eUser.bio)
-    setUserInterests(eUser.likes)
+    setBName(eUser.business_name)
     setUserImage(eUser.profile_picture)
-  }
-
-  const getUserName = async () => {
-    let name = await getDataStorage("userName")
-    setName(name)
   }
 
   onPickImagePress = async () => {
@@ -94,18 +83,7 @@ const PlannerProfileEditScreen = () => {
     })
   }
 
-  const getInterestsIds = async () => {
-    let result = []
-    userInterests.forEach(element => {
-      element = JSON.parse(JSON.stringify(element))
-      result.push(element.id)
-    })
-
-    return result
-  }
-
   setupUserProfile = async () => {
-    let likes = await getInterestsIds()
     const data = new FormData()
     data.append("name", name)
     data.append("bio", about)
@@ -114,43 +92,44 @@ const PlannerProfileEditScreen = () => {
       type: "image/jpeg",
       name: Date.now() + "photo.jpg"
     })
+    data.append("website", website)
+    data.append("business_name", bName)
+    data.append("phone", phone)
+    data.append("address_longitude", "-73.935242"),
+    data.append("address_latitude", "40.730610")
 
-    const resp = await updateUser(data)
-    if (resp) {
-      let param = {
-        interests: likes
+    try {
+      const resp = await updateUser(data)
+      if (resp) {
+        console.log("user update resposne ", resp)
+        global.user = resp
+        
+        navigation.navigate("EventPlannerDashboard")
       }
-      let finalResp = await updateUser(param)
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
 
-      await setDataStorage("@user", finalResp)
-      global.user = finalResp
-      navigation.navigate("Dashboard")
+        let key = Object.keys(error.response?.data)
+        if(key.length > 0)
+          Alert.alert(key[0], error.response?.data[key[0]]?.[0])
+
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+      }
     }
   }
 
-  const getAllInterests = async () => {
-    // await clearStorage()
-    let data = await getDataStorage("@user")
-    data = JSON.parse(data)
-    if (data) {
-      setUserInterests(data.likes)
-      setUpdateInterests(Date.now())
-    }
-
-    // if (!data) {
-    //   await setDataStorage("@user_interests", [
-    //     { title: "Music", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Art", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Food", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
-    //   ])
-    // } else {
-    // }
-  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <StatusBar
@@ -200,15 +179,17 @@ Please setup your profile`}
             }}
             source={{ uri: userImage }}
           />
-          {!profileView &&<TouchableOpacity
-            style={{ position: "absolute" }}
-            onPress={() => onPickImagePress()}
-          >
-            <Image
-              style={{ resizeMode: "contain", width: 70, height: 70 }}
-              source={require("../../assets/images/profile/Camera.png")}
-            />
-          </TouchableOpacity>}
+          {!profileView && (
+            <TouchableOpacity
+              style={{ position: "absolute" }}
+              onPress={() => onPickImagePress()}
+            >
+              <Image
+                style={{ resizeMode: "contain", width: 70, height: 70 }}
+                source={require("../../assets/images/profile/Camera.png")}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <Input
@@ -321,7 +302,11 @@ Please setup your profile`}
           >
             Location
           </Text>
-          <TouchableOpacity style={{ width: "90%" }} disabled={profileView} onPress={() => {}}>
+          <TouchableOpacity
+            style={{ width: "90%" }}
+            disabled={profileView}
+            onPress={() => {}}
+          >
             <Input
               editable={false}
               onChangeText={value => setLocation(value)}
@@ -336,11 +321,12 @@ Please setup your profile`}
                 />
               }
               iconRight={
-                !profileView &&
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/RightArrow.png")}
-                />
+                !profileView && (
+                  <Image
+                    style={{ width: 24, height: 24, margin: 10 }}
+                    source={require("../../assets/images/RightArrow.png")}
+                  />
+                )
               }
               iconHighlighted={
                 <Image
@@ -352,7 +338,7 @@ Please setup your profile`}
           </TouchableOpacity>
         </View>
 
-        <View>
+        {/* <View>
           <Text
             style={{
               color: Colors.PRIMARY_1,
@@ -363,7 +349,11 @@ Please setup your profile`}
           >
             Connect Bank Account
           </Text>
-          <TouchableOpacity style={{ width: "90%" }} disabled={profileView}  onPress={() => {}}>
+          <TouchableOpacity
+            style={{ width: "90%" }}
+            disabled={profileView}
+            onPress={() => {}}
+          >
             <Input
               editable={false}
               onChangeText={value => setBAccount(value)}
@@ -378,11 +368,12 @@ Please setup your profile`}
                 />
               }
               iconRight={
-                !profileView &&
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/RightArrow.png")}
-                />
+                !profileView && (
+                  <Image
+                    style={{ width: 24, height: 24, margin: 10 }}
+                    source={require("../../assets/images/RightArrow.png")}
+                  />
+                )
               }
               iconHighlighted={
                 <Image
@@ -392,7 +383,7 @@ Please setup your profile`}
               }
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </KeyboardAwareScrollView>
       <View style={{ alignItems: "center", marginBottom: "5%" }}>
         <Button

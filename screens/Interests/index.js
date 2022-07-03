@@ -46,7 +46,7 @@ const InterestScreen = () => {
 
   const getInterestsIds = async () => {
     let result = []
-    userInterests.forEach(element => {
+    userInterests?.forEach(element => {
       if(element.isEnabled)
         result.push(element.id)
     });

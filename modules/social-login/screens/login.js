@@ -41,14 +41,12 @@ const LoginScreen = ({}) => {
       .then(unwrapResult)
       .then(async res => {
         setDataStorage("@key", res?.key)
-        global.isEventPlanner = true
 
         const user = await getUser()
         if (user) {
           await setDataStorage("@user", user)
           global.user = user
-
-          if(global.isEventPlanner){
+          if(global.user.isEventPlanner){
             navigation.replace("EventPlannerDashboard")
 
           }else

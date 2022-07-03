@@ -26,11 +26,7 @@ import {
   clearStorage
 } from "../../utils/storage"
 import { data } from "../../data"
-
-import { useSelector, useDispatch } from "react-redux"
-import { unwrapResult } from "@reduxjs/toolkit"
-import { getUser } from "../../services/user"
-import { getCategories, getEvents } from "../../services/events"
+import { getCategories, getEvents, getMyEvents } from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
@@ -45,6 +41,7 @@ const EventPlannerHomeScreen = () => {
 
   const [searchValue, setSearchValue] = useState("")
   const [userImage, setUserImage] = useState("")
+  const [user, setUser] = useState("")
 
   useEffect(async () => {
     const events = data.getEvents()
@@ -55,6 +52,7 @@ const EventPlannerHomeScreen = () => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       let user = global.user
+      setUser(user)
       setUserImage(user?.profile_picture)
 
       // The screen is focused
@@ -67,96 +65,87 @@ const EventPlannerHomeScreen = () => {
 
   useEffect(async () => {
     getEventsFromBackend()
-    getEventCategories()
   }, [])
 
   const getEventsFromBackend = async () => {
-    let resp = await getEvents()
+    let resp = await getMyEvents()
     console.log("events ", resp.results)
     setEvents(resp.results)
   }
 
-  const getEventCategories = async () => {
-    let resp = await getCategories()
-    setEventCategories(resp?.results)
-  }
-
   const getUser = async () => {
-    const user = await getDataStorage("@user")
+    const user = global.user
     console.log("user ", user)
     if (user) {
       global.user = user
+      setUser(user)
       setUserImage(user?.profile_picture)
     }
   }
 
-  SearchForEvent = value => {
-    setSearchValue(value)
-    let searchResult = []
-    if (value.length >= 3) {
-      events.forEach(event => {
-        if (event.title.toLowerCase().includes(value.toLowerCase())) {
-          searchResult.push(event)
-        }
-      })
-
-      setSearchedEvents(searchResult)
-    } else {
-      setSearchedEvents([])
-    }
-  }
-
-  const CategoryRender = ({ event }) => (
-    <TouchableOpacity
-      style={{
-        height: 190,
-        width: 160,
-        marginHorizontal: 5,
-        flex: 1,
-        alignItems: "flex-end"
-      }}
-      key={event.id}
-    >
-      <ImageBackground
-        imageStyle={{
-          borderRadius: 10,
-          backgroundColor: Colors.NETURAL_3
-        }}
-        style={{
-          width: "100%",
-          height: "100%",
-          // height: Mixins.scaleHeight(120),
-          borderRadius: 30,
-          backgroundColor: Colors.NETURAL_3
-        }}
-        resizeMode="cover"
-        source={{ uri: event.image }}
-      >
-        <Text
-          style={{
-            position: "absolute",
-            bottom: 20,
-            marginLeft: 10,
-            marginRight: 20,
-            color: Colors.WHITE,
-            fontSize: Typography.FONT_SIZE_14,
-            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-            fontWeight: Typography.FONT_WEIGHT_BOLD
-          }}
-        >
-          {event.name}
-        </Text>
-      </ImageBackground>
-    </TouchableOpacity>
-  )
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-
-
       <ScrollView>
+        <View style={{ flexDirection: "row", margin: "5%", justifyContent: "center"}}>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_24,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.WHITE
+              }}
+            >
+              Welcome
+            </Text>
+            <Text
+              style={{
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_24,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.PRIMARY_1
+              }}
+            >
+              {user?.business_name}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddNewEventScreen")}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: Colors.BUTTON_RED,
+              borderRadius: 100,
+              marginVertical: "2%"
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_14,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.WHITE,
+                marginHorizontal: "5%"
+              }}
+            >
+              ADD EVENT
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            alignSelf: "center",
+            marginVertical: "5%",
+            width: "100%",
+            borderBottomColor: Colors.GREY,
+            borderBottomWidth: 2,
+            opacity: 0.2
+          }}
+        />
+
         {events?.length > 0 && (
-          <View style={{ marginTop: "5%", marginHorizontal: "5%" }}>
+          <View style={{ marginHorizontal: "5%" }}>
             <Text
               style={{
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,

@@ -15,22 +15,62 @@ import { Button } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
+
 import {
   getDataStorage,
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
 import ImgArrow from "../../assets/images/arrow.png"
+import { addBottleService } from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
 const AddNewBottleScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
+
+  const { onSubmit } = route?.params
 
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [person, setPerson] = useState("")
   const [description, setDescription] = useState("")
+
+  const createNewBottleService = async () => {
+    if (!name || name.length === 0) {
+      Alert.alert("Missing Data", "Bottle Service name cannot be empty")
+      return
+    } else if (!price || price.length === 0 || price === 0) {
+      Alert.alert("Missing Data", "Bottle Service price cannot be empty")
+      return
+    } else if (!person || person.length === 0 || person === 0) {
+      Alert.alert(
+        "Missing Data",
+        "Persons in Bottle Service cannot be empty or 0"
+      )
+      return
+    } else if (!description || description.length === 0) {
+      Alert.alert("Missing Data", "Bottle Service description cannot be empty")
+      return
+    }
+
+    try {
+      const resp = await addBottleService({
+        name: name,
+        price: price,
+        person: parseInt(person),
+        desc: description
+      })
+
+      onSubmit(resp)
+      navigation.goBack()
+      console.log("add bottle service resp ", resp)
+    } catch (error) {
+      console.log("addBottleService error ", error)
+    }
+  }
 
   return (
     <SafeAreaView
@@ -71,6 +111,7 @@ const AddNewBottleScreen = () => {
               <View style={styles.shortDividedFieldContainer}>
                 <TextInput
                   style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
+                  keyboardType="number-pad"
                   placeholder={"Price"}
                   placeholderTextColor={Colors.NETURAL_2}
                   onChangeText={newText => setPrice(newText)}
@@ -89,17 +130,18 @@ const AddNewBottleScreen = () => {
                 ]}
               >
                 <TextInput
+                  keyboardType="number-pad"
                   style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
                   placeholder={"Person"}
                   placeholderTextColor={Colors.NETURAL_2}
                   onChangeText={newText => setPerson(newText)}
                   defaultValue={person}
                 />
-                <Image
+                {/* <Image
                   resizeMode="contain"
                   style={styles.dropdownImage}
                   source={ImgArrow}
-                ></Image>
+                ></Image> */}
               </View>
             </View>
 
@@ -142,7 +184,7 @@ const AddNewBottleScreen = () => {
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_14
               }}
-              onPress={() => {}}
+              onPress={() => createNewBottleService()}
             >
               Save
             </Button>

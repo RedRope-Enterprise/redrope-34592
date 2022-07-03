@@ -19,11 +19,12 @@ const Splash = ({}) => {
 
   useEffect(async () => {
     setTimeout(async () => {
-      // await clearStorage()
-      global.isEventPlanner = true
+      let user = await getDataStorage("@user")
+
+      // clearStorage()
       let key = await getDataStorage("@key")
       if (key) {
-        if (global.isEventPlanner) NEXT_SCREEN_NAME = "EventPlannerDashboard"
+        if (user.event_planner) NEXT_SCREEN_NAME = "EventPlannerDashboard"
         else NEXT_SCREEN_NAME = "Dashboard"
 
         navigation.replace(NEXT_SCREEN_NAME)
