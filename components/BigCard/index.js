@@ -9,8 +9,10 @@ import {
 } from "react-native"
 import { Colors, Typography } from "../../styles"
 import BigCardBackImg from "../../assets/images/card.png"
+import { useNavigation } from "@react-navigation/native"
 
 const BigCard = ({ cardNumber, icon }) => {
+  const navigation = useNavigation()
   const renderBigCardBottom = (label, value) => {
     return (
       <View style={{ marginTop: "5%", maxWidth: "50%", marginRight: "25%" }}>
@@ -27,7 +29,11 @@ const BigCard = ({ cardNumber, icon }) => {
 
   return (
     <View style={styles.center}>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("AddNewCardScreen", { viewType: "view" })
+        }}
+      >
         <View style={[styles.bigItemContainer]}>
           <ImageBackground
             style={[styles.full, styles.bigCardBackground]}

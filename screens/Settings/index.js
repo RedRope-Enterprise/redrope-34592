@@ -48,7 +48,7 @@ const SettingsScreen = () => {
     {
       key: 0,
       text: "Profile Settings",
-      onPress: () => navigation.navigate("Profile")
+      onPress: () => user.event_planner ? navigation.navigate("PlannerProfileEdit") :  navigation.navigate("Profile")
     },
     {
       key: 1,
@@ -97,7 +97,7 @@ const SettingsScreen = () => {
               source={{ uri: user?.profile_picture }}
             />
           </View>
-          <Text style={styles.nameText}>{user?.name}</Text>
+          <Text style={styles.nameText}>{user?.event_planner ? user?.business_name : user?.name}</Text>
         </View>
 
         {settingsMenu.map(menuItem => {

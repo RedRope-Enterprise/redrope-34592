@@ -87,7 +87,7 @@ const ProfileScreen = () => {
 
   const getInterestsIds = async () => {
     let result = []
-    userInterests.forEach(element => {
+    userInterests?.forEach(element => {
       element = JSON.parse(JSON.stringify(element))
       result.push(element.id)
     })

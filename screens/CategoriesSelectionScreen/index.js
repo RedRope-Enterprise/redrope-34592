@@ -13,46 +13,45 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
+
 import {
   getDataStorage,
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
 
-import {getCategories} from "../../services/events"
-import {updateUser} from "../../services/user"
-
-
 const { width, height } = Dimensions.get("window")
 
-const InterestScreen = () => {
+const CategoriesSelectionScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
 
-  const [about, setAbout] = useState("")
-  const [userInterests, setUserInterests] = useState([])
+  const { onSubmit } = route?.params
+
+
+  const [categories, setCategories] = useState([])
   const [reRender, setRender] = useState(Date.now())
+  const [lastElement, setLastElement] = useState(null)
 
   useEffect(() => {
-    getUserInterests()
-  }, [])
-
-  const getUserInterests = async () => {
-    // const data = await getDataStorage("@user_interests")
-    const data = await getCategories()
-    if (data) {
-      setUserInterests(data.results)
+    if (categories.length > 0) {
+      const total = categories.length
+      if (total % 2 != 0) {
+        setLastElement(categories[categories.length - 1])
+        setRender(Date.now())
+      }
     }
-  }
+  }, [categories])
 
-  const getInterestsIds = async () => {
-    let result = []
-    userInterests?.forEach(element => {
-      if(element.isEnabled)
-        result.push(element.id)
-    });
-
-    return result
-  }
+  useEffect(() => {
+    if (categories.length == 0)
+      setCategories([
+        { name: "Yatch Parties", isEnabled: true, id: 1},
+        { name: "Bottle Services", isEnabled: true, id: 2 },
+        { name: "Pool Parties", isEnabled: true, id: 3 },
+      ])
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -67,28 +66,36 @@ const InterestScreen = () => {
           fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM
         }}
       >
-        Interests
+        Categories
       </Text>
 
       <View
-        style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          flex: 1,
+          justifyContent: "center"
+        }}
         key={reRender}
       >
-        {userInterests?.map((element, i) => (
+        {categories?.map((element, i) => (
           <TouchableOpacity
             onPress={() => {
-              let temp = userInterests
+              let temp = categories
               temp[i].isEnabled = !temp[i].isEnabled
               temp[i].updatedAt = Date.now()
 
-              setUserInterests(temp)
+              setCategories(temp)
               setRender(Date.now())
             }}
             key={element.updatedAt}
             style={{
+              width: categories[i].id == lastElement?.id ? "94%" : "44%",
               alignItems: "center",
               marginHorizontal: 10,
-              backgroundColor: element.isEnabled ? "#3f3720" : Colors.NETURAL_4,
+              backgroundColor: element.isEnabled
+                ? "#3f3720"
+                : Colors.NETURAL_4,
               borderRadius: 10,
               borderWidth: 1,
               borderColor: element.isEnabled ? Colors.PRIMARY_1 : "#535252",
@@ -118,6 +125,12 @@ const InterestScreen = () => {
             flex: 1,
             marginHorizontal: 15
           }}
+          onPress={() => {
+            categories.forEach(catg => {
+              catg.isEnabled = false
+            })
+            setRender(Date.now())
+          }}
         >
           <Text
             style={{
@@ -142,12 +155,9 @@ const InterestScreen = () => {
             flex: 1,
             marginHorizontal: 15
           }}
-          onPress={async() =>{  
-            const likes =  await getInterestsIds()
-            let resp = await updateUser({interests:likes})
-            await setDataStorage("@user", JSON.stringify(resp))
+          onPress={async () => {
+            onSubmit(categories)
             navigation.goBack()
-
           }}
         >
           <Text
@@ -168,4 +178,4 @@ const InterestScreen = () => {
   )
 }
 
-export default InterestScreen
+export default CategoriesSelectionScreen

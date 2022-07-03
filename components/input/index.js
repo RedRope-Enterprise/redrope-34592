@@ -42,7 +42,7 @@ const Input = props => {
         {!isFocused && iconLeft && (
           <View
             style={{
-              flex: 0.2,
+              flex: 0.15,
               justifyContent: "center",
               alignItems: "center"
             }}
@@ -54,7 +54,7 @@ const Input = props => {
         {isFocused && iconHighlighted && (
           <View
             style={{
-              flex: 0.2,
+              flex: 0.15,
               justifyContent: "center",
               alignItems: "center"
             }}
@@ -70,8 +70,8 @@ const Input = props => {
           underlineColorAndroid="transparent"
           style={{
             color: Colors.WHITE,
-            paddingLeft: iconLeft ? 0 : 8,
-            flex: iconLeft ? (iconRight ? 0.6 : 0.8) : 1,
+            paddingLeft: iconLeft ? 0 : 6,
+            flex: iconLeft ? (iconRight ? 0.8 : 0.8) : 1,
             fontSize: Typography.FONT_SIZE_16,
             fontWeight: Typography.FONT_WEIGHT_REGULAR,
             fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,

@@ -26,7 +26,9 @@ const NavigationHeader = ({
   showLeftBtn1 = false,
   showLeftBtn2 = false,
   onLeftBtn1,
-  onLeftBtn2
+  onLeftBtn2,
+  iconRight1,
+  iconRight2
 }) => {
   const navigation = useNavigation()
 
@@ -65,22 +67,28 @@ const NavigationHeader = ({
         {showLeftBtn1 && (
           <Pressable
             onPress={() => {
-              onLeftBtn1
+              onLeftBtn1()
             }}
           >
             <View style={styles.leftBtn}>
-              <Image style={styles.icon} source={ShareImg} />
+              <Image
+                style={styles.icon}
+                source={iconRight1 ? iconRight1 : ShareImg}
+              />
             </View>
           </Pressable>
         )}
         {showLeftBtn2 && (
           <Pressable
             onPress={() => {
-              onLeftBtn2
+              onLeftBtn2()
             }}
           >
             <View style={styles.leftBtn}>
-              <Image style={styles.icon} source={HeartImg} />
+              <Image
+                style={styles.icon}
+                source={iconRight2 ? iconRight2 : HeartImg}
+              />
             </View>
           </Pressable>
         )}

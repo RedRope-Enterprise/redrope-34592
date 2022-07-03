@@ -27,7 +27,7 @@ import {
 const { width, height } = Dimensions.get("window")
 import { setDataStorage } from "../../../utils/storage"
 import { mapErrorMessage } from "../auth/utils"
-import {getUser} from "../../../services/user"
+import { getUser } from "../../../services/user"
 
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
@@ -42,14 +42,17 @@ const LoginScreen = ({}) => {
       .then(async res => {
         setDataStorage("@key", res?.key)
 
-          const user = await getUser()
-          if(user){
-            await setDataStorage("@user", user)
-            global.user = user
-            
+        const user = await getUser()
+        if (user) {
+          await setDataStorage("@user", user)
+          global.user = user
+          if(global.user.isEventPlanner){
+            navigation.replace("EventPlannerDashboard")
+
+          }else
             navigation.replace("Dashboard")
-            // Alert.alert("", "Login success!")
-          }
+          // Alert.alert("", "Login success!")
+        }
       })
       .catch(err => {
         let error = mapErrorMessage(err)

@@ -39,6 +39,7 @@ import GoogleIcon from "../../assets/images/payment/google.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 import BigCardDesign from "../../components/BigCard"
+import { getCardsList } from "../../services/Payment"
 
 import { data } from "../../data"
 
@@ -47,6 +48,21 @@ const { width, height } = Dimensions.get("window")
 const CardsScreen = () => {
   const navigation = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [data, setData] = useState([])
+
+  async function getCardsData(params = "") {
+    // setLoading(true)
+    let response = await getCardsList(params)
+    console.log(response)
+    // setLoading(false)
+    // setDatasource([...data, ...response.results])
+    // setNextPage(response.next)
+    // setReloadList(Date.now())
+  }
+
+  useEffect(() => {
+    getCardsData()
+  }, [])
 
   const renderCard = (title, icon) => {
     return (
@@ -79,7 +95,11 @@ const CardsScreen = () => {
   const renderAddCardButton = () => {
     return (
       <View style={styles.center}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("AddNewCardScreen", { viewType: "add" })
+          }
+        >
           <View style={[styles.itemContainer, { justifyContent: "center" }]}>
             <View>
               <Text style={[styles.desc, { color: Colors.WHITE }]}>
@@ -108,12 +128,6 @@ const CardsScreen = () => {
         <View style={styles.border}></View>
         {renderAddCardButton()}
       </ScrollView>
-      <CustomImageModal
-        isVisible={isModalVisible}
-        text={`We are going to notify you when all users from your group are paid and`}
-        image={SuccessPopupImg}
-        onClose={() => setIsModalVisible(false)}
-      ></CustomImageModal>
     </SafeAreaView>
   )
 }
@@ -192,48 +206,5 @@ let styles = StyleSheet.create({
     backgroundColor: Colors.NETURAL_5,
     marginBottom: "5%",
     alignSelf: "center"
-  },
-
-  bigItemContainer: {
-    flexDirection: "row",
-    width: "90%",
-    alignItems: "center",
-    backgroundColor: Colors.NETURAL_5,
-    aspectRatio: 1.598,
-    borderRadius: 20,
-    marginBottom: "5%",
-    overflow: "hidden"
-  },
-  bigCardBackground: {
-    // alignItems: "center",
-    // justifyContent: "center"
-  },
-  bigCardImage: {
-    width: "30%",
-    // justifyContent: "center",
-    marginRight: "5%",
-    alignItems: "center",
-    alignSelf: "flex-end"
-  },
-  FONT_24: {
-    fontSize: Typography.FONT_SIZE_24,
-    fontWeight: Typography.FONT_WEIGHT_BOLD,
-    lineHeight: Typography.LINE_HEIGHT_32,
-    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-    marginTop: "4%"
-  },
-  FONT_16: {
-    fontSize: Typography.FONT_SIZE_16,
-    fontWeight: Typography.FONT_WEIGHT_BOLD,
-    lineHeight: Typography.LINE_HEIGHT_22,
-    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-    marginTop: "4%"
-  },
-  FONT_12: {
-    fontSize: Typography.FONT_SIZE_12,
-    fontWeight: Typography.FONT_WEIGHT_400,
-    lineHeight: Typography.LINE_HEIGHT_16,
-    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-    marginTop: "4%"
   }
 })

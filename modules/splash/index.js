@@ -1,26 +1,34 @@
 import { useNavigation } from "@react-navigation/native"
 import React, { useEffect } from "react"
-import { View, StyleSheet, Image, SafeAreaView, StatusBar, LogBox } from "react-native"
+import {
+  View,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  LogBox
+} from "react-native"
 import { getDataStorage, clearStorage } from "../../utils/storage"
 
 let NEXT_SCREEN_NAME = "Onboarding"
 
 const Splash = ({}) => {
   const navigation = useNavigation()
-  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-  LogBox.ignoreAllLogs();
-  
-  useEffect(async () => {
-    
+  LogBox.ignoreLogs(["Warning: ..."]) // Ignore log notification by message
+  LogBox.ignoreAllLogs()
 
-    setTimeout(async() => {
-      // await clearStorage()
+  useEffect(async () => {
+    setTimeout(async () => {
+      let user = await getDataStorage("@user")
+
+      // clearStorage()
       let key = await getDataStorage("@key")
       if (key) {
-        NEXT_SCREEN_NAME = "Dashboard"
+        if (user.event_planner) NEXT_SCREEN_NAME = "EventPlannerDashboard"
+        else NEXT_SCREEN_NAME = "Dashboard"
+
         navigation.replace(NEXT_SCREEN_NAME)
-      }else
-        navigation.navigate(NEXT_SCREEN_NAME)
+      } else navigation.navigate(NEXT_SCREEN_NAME)
     }, 3000)
   }, [])
 
