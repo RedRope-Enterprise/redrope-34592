@@ -6,7 +6,7 @@ import { Colors, Typography } from "../../styles"
 import Foundation from "react-native-vector-icons/Foundation"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import HomeNavigator from "../../navigations/HomeNavigator"
+import PlannerHomeNavigator from "../../navigations/PlannerHomeNavigator"
 import MyBookingsScreen from "../MyBookings"
 import NotificationScreen from "../Notifications"
 import PlannerProfileScreen from "../PlannerProfile"
@@ -33,7 +33,7 @@ const EventPlannerDashboard = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeNavigator}
+        component={PlannerHomeNavigator}
         tabBarLabelStyle={{
           color: Colors.WHITE
         }}
