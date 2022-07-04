@@ -567,7 +567,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 6YKR59QXKM;
 				INFOPLIST_FILE = redrope_34592/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
