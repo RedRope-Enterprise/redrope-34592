@@ -40,19 +40,15 @@ const LoginScreen = ({}) => {
     dispatch(loginRequest({ email, password }))
       .then(unwrapResult)
       .then(async res => {
-        setDataStorage("@key", res?.key)
 
-        const user = await getUser()
-        if (user) {
-          await setDataStorage("@user", user)
-          global.user = user
-          if(global.user.isEventPlanner){
-            navigation.replace("EventPlannerDashboard")
+        await setDataStorage("@key", res?.token)
+        await setDataStorage("@user", res?.user)
 
-          }else
-            navigation.replace("Dashboard")
-          // Alert.alert("", "Login success!")
-        }
+        global.user = res?.user
+        if (global.user.event_planner) {
+          navigation.replace("EventPlannerDashboard")
+        } else navigation.replace("Dashboard")
+        // Alert.alert("", "Login success!")
       })
       .catch(err => {
         let error = mapErrorMessage(err)

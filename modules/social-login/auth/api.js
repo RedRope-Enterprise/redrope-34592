@@ -12,7 +12,7 @@ const authAPI = axios.create({
 
 function apiLoginRequest(payload) {
   console.log("/rest-auth/login/ ", payload)
-  return authAPI.post(`/rest-auth/login/`, payload)
+  return authAPI.post(`/api/v1/login/`, payload)
 }
 
 function apiSignupRequest(payload) {
