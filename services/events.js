@@ -1,7 +1,7 @@
 import api from "./api"
 
 async function getCategories() {
-  const response = await api.get("/api/v1/categories/", {
+  const response = await api.get("/api/v1/events/categories/", {
     params: {}
   })
   return response.data

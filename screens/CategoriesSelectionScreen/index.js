@@ -14,6 +14,7 @@ import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
 import { useRoute } from "@react-navigation/native"
+import {getCategories} from "../../services/events"
 
 import {
   getDataStorage,
@@ -45,13 +46,20 @@ const CategoriesSelectionScreen = () => {
   }, [categories])
 
   useEffect(() => {
-    if (categories.length == 0)
-      setCategories([
-        { name: "Yatch Parties", isEnabled: true, id: 1},
-        { name: "Bottle Services", isEnabled: true, id: 2 },
-        { name: "Pool Parties", isEnabled: true, id: 3 },
-      ])
+    // if (categories.length == 0)
+    //   setCategories([
+    //     { name: "Yatch Parties", isEnabled: true, id: 1},
+    //     { name: "Bottle Services", isEnabled: true, id: 2 },
+    //     { name: "Pool Parties", isEnabled: true, id: 3 },
+    //   ])
+    getCategoriesFromDb()
   }, [])
+
+
+  const getCategoriesFromDb = async() => {
+    const resp = await getCategories()
+    setCategories(resp?.results)
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>

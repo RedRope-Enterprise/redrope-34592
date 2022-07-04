@@ -63,7 +63,7 @@ const AddNewEventScreen = () => {
     fromData.append("start_date", "2022-08-12")
     fromData.append("end_date", "2022-08-17")
 
-    fromData.append("categories", 4)
+    // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
     fromData.append("desc", eventDescription)
     fromData.append("location", "Nigeria")
@@ -75,6 +75,10 @@ const AddNewEventScreen = () => {
 
     bottleServices.forEach(element => {
       fromData.append("bottle_services", element.id)
+    })
+
+    categories.forEach(element => {
+      fromData.append("categories", element.id)
     })
 
     try {
