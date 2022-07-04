@@ -10,7 +10,7 @@ const Input = props => {
     iconRight = null,
     error = "",
     iconHighlighted = null,
-    height = Mixins.scaleHeight(50),
+    height = null,
     selectedBorderColor = Colors.WHITE,
     isMultiLine = false
   } = props

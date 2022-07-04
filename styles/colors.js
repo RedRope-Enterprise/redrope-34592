@@ -18,3 +18,5 @@ export const GREY = "#676767"
 export const BORDER = "#383838"
 export const WHITE = "#FFF"
 export const WHITE_OPACITY_50 = "rgba(255,255,255,0.5)"
+export const BLACK_OPACITY_50 = "rgba(0,0,0,0.5)"
+
