@@ -30,7 +30,11 @@ from rest_framework.mixins import (
     DestroyModelMixin,
 )
 from django_filters.rest_framework import DjangoFilterBackend
-from utils.custom_permissions import IsOwnerAndReadOnly, IsEventPlanner
+from utils.custom_permissions import (
+    IsOwnerAndReadOnly,
+    IsEventPlannerOrReadOnly,
+    IsEventPlanner,
+)
 from rest_framework.permissions import IsAuthenticated
 from utils.custom_filters import filter_events_with_get_param
 from users.serializers import UserSerializer
@@ -40,7 +44,7 @@ from users.serializers import UserSerializer
 
 class EventViewset(ModelViewSet):
     serializer_class = EventListSerializer
-    permission_classes = (IsAuthenticated, IsEventPlanner, IsOwnerAndReadOnly)
+    permission_classes = (IsAuthenticated, IsEventPlannerOrReadOnly, IsOwnerAndReadOnly)
     queryset = Event.objects.all().order_by("-id")
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = [
@@ -87,18 +91,62 @@ class EventViewset(ModelViewSet):
 
     @action(methods=["get"], detail=False, url_path="my-events")
     def my_events(self, request):
-        """Retieve users going for an event"""
+        if request.user.event_planner:
+            try:
+                """Retrieve events created by user"""
+                user_events = self.get_queryset().filter(user=request.user)
+
+                page = self.paginate_queryset(user_events)
+                if page is not None:
+                    serializer = self.get_serializer(
+                        page, context={"request": request}, many=True
+                    )
+                    return self.get_paginated_response(serializer.data)
+                serializer = self.get_serializer(
+                    user_events, context={"request": request}, many=True
+                )
+                return Response(serializer.data)
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            """Retrieve events enrolled by user"""
+
+            try:
+                my_events = UserEventRegistration.objects.filter(user=request.user)
+                page = self.paginate_queryset(my_events)
+                if page is not None:
+                    serializer = MyEventSerializer(
+                        page, context={"request": request}, many=True
+                    )
+                    return self.get_paginated_response(serializer.data)
+                serializer = MyEventSerializer(
+                    my_events, context={"request": request}, many=True
+                )
+                return Response(serializer.data)
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes=[
+            IsEventPlanner,
+        ],
+        url_path="my-bookings",
+    )
+    def my_bookings(self, request):
+        """Retrieve events enrolled by user"""
 
         try:
-            my_events = UserEventRegistration.objects.filter(user=request.user)
-            page = self.paginate_queryset(my_events)
+            my_bookings = UserEventRegistration.objects.filter(event__user=request.user)
+            page = self.paginate_queryset(my_bookings)
             if page is not None:
                 serializer = MyEventSerializer(
                     page, context={"request": request}, many=True
                 )
                 return self.get_paginated_response(serializer.data)
             serializer = MyEventSerializer(
-                my_events, context={"request": request}, many=True
+                my_bookings, context={"request": request}, many=True
             )
             return Response(serializer.data)
         except Exception as e:
