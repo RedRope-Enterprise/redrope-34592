@@ -35,6 +35,8 @@ import ImgArrow from "../../assets/images/arrow.png"
 import ImgLocation from "../../assets/images/location.png"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { createEvent } from "../../services/events"
+import Spinner from "react-native-loading-spinner-overlay"
+
 import { data } from "../../data"
 
 const { width, height } = Dimensions.get("window")
@@ -57,7 +59,10 @@ const AddNewEventScreen = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [refreshNow, setRefreshNow] = useState(Date.now())
 
+  const [loading, setLoading] = useState(false)
+
   const onCreateEventPress = async () => {
+    setLoading(true)
     const fromData = new FormData()
     fromData.append("price", price)
     fromData.append("start_date", "2022-08-12")
@@ -83,8 +88,12 @@ const AddNewEventScreen = () => {
 
     try {
       const resp = await createEvent(fromData)
+      setLoading(false)
+
       console.log("add event response ", resp)
+      navigation.goBack()
     } catch (error) {
+      setLoading(false)
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -124,12 +133,7 @@ const AddNewEventScreen = () => {
   }
 
   useEffect(() => {
-    if (categories.length == 0)
-      setCategories([
-        { name: "Yatch Parties", isEnabled: true, id: 1 },
-        { name: "Bottle Services", isEnabled: true, id: 2 },
-        { name: "Pool Parties", isEnabled: true, id: 3 }
-      ])
+
   }, [])
 
   updateCategories = data => {
@@ -248,6 +252,12 @@ const AddNewEventScreen = () => {
         style={{ flex: 1, width: "90%" }}
         contentContainerStyle={[{ flexGrow: 1, alignItems: "center" }]}
       >
+        {loading && <Spinner
+          indicatorStyle={{ color: Colors.PRIMARY_1 }}
+          overlayColor={Colors.BLACK_OPACITY_50}
+          visible={true}
+          textStyle={{ color: Colors.PRIMARY_1 }}
+        />}
         <View style={styles.flex1}>
           {renderEventImageView()}
           <View style={styles.shortFieldContainer}>
@@ -265,6 +275,7 @@ const AddNewEventScreen = () => {
           >
             <View style={styles.shortDividedFieldContainer}>
               <TextInput
+                keyboardType="number-pad"
                 style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
                 placeholder={"Price"}
                 placeholderTextColor={Colors.NETURAL_2}
@@ -284,6 +295,7 @@ const AddNewEventScreen = () => {
               ]}
             >
               <TextInput
+                keyboardType="number-pad"
                 style={[styles.FONT_16_2, { marginHorizontal: "8%" }]}
                 placeholder={"Person"}
                 placeholderTextColor={Colors.NETURAL_2}
