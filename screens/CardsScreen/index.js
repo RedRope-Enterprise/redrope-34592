@@ -11,13 +11,14 @@ import {
   StyleSheet,
   FlatList,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, CustomImageModal } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import {
   getDataStorage,
   setDataStorage,
@@ -47,22 +48,23 @@ const { width, height } = Dimensions.get("window")
 
 const CardsScreen = () => {
   const navigation = useNavigation()
-  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
 
   async function getCardsData(params = "") {
-    // setLoading(true)
+    setLoading(true)
     let response = await getCardsList(params)
-    console.log(response)
-    // setLoading(false)
-    // setDatasource([...data, ...response.results])
-    // setNextPage(response.next)
-    // setReloadList(Date.now())
+    console.log("Cards List: ", JSON.stringify(response, null, 2))
+    setLoading(false)
+    setData([])
+    setData(response.data)
   }
 
-  useEffect(() => {
-    getCardsData()
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      getCardsData()
+    }, [])
+  )
 
   const renderCard = (title, icon) => {
     return (
@@ -119,12 +121,16 @@ const CardsScreen = () => {
         <Text style={[styles.title, { color: Colors.WHITE }]}>Saved Cards</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        {renderCard("3827 **** **** 0007", VisaIcon)}
-        <BigCardDesign
-          cardNumber={"3827 **** **** 9876"}
-          icon={VisaIcon}
-        ></BigCardDesign>
-        {renderCard("3827 **** **** 0007", VisaIcon)}
+        {loading && (
+          <View style={styles.loader}>
+            <ActivityIndicator color="white" />
+          </View>
+        )}
+        {/* {renderCard("3827 **** **** 0007", VisaIcon)} */}
+        {data.map(cardItem => {
+          return <BigCardDesign cardDetails={cardItem}></BigCardDesign>
+        })}
+        {/* {renderCard("3827 **** **** 0007", VisaIcon)} */}
         <View style={styles.border}></View>
         {renderAddCardButton()}
       </ScrollView>
@@ -206,5 +212,11 @@ let styles = StyleSheet.create({
     backgroundColor: Colors.NETURAL_5,
     marginBottom: "5%",
     alignSelf: "center"
+  },
+  loader: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row"
   }
 })

@@ -39,6 +39,14 @@ import { useRoute } from "@react-navigation/native"
 import Popover, { Rect } from "react-native-popover-view"
 
 import { data } from "../../data"
+import {
+  createToken,
+  CardField,
+  CardFieldInput,
+  useStripe,
+  CardForm
+} from "@stripe/stripe-react-native"
+import { createCard, deleteCard } from "../../services/Payment"
 
 const { width, height } = Dimensions.get("window")
 const popoverWidth = width * 0.6
@@ -52,20 +60,24 @@ const AddNewCardScreen = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const [name, setName] = useState("")
-  const [cardNo, setCardNo] = useState("")
-  const [date, setDate] = useState("")
+  const [cardNo, setCardNo] = useState("****************")
+  const [expDate, setDate] = useState("")
   const [cvv, setCvv] = useState("")
+  const [brand, setBrand] = useState("")
   const [screenTitle, setScreenTitle] = useState("Add New Card")
 
+  const [card, setCard] = useState(CardFieldInput.Details | null)
+  const { confirmPayment, handleCardAction } = useStripe()
+
   // viewType: add, view, edit
-  const { viewType } = route?.params
+  const { viewType, cardDetails } = route?.params
 
   useEffect(() => {
     if (viewType == "view") {
-      setName("Daniel Austin")
-      setCardNo("3827 **** **** 9876")
-      setDate("02/30")
-      setCvv("123")
+      setName(cardDetails?.name)
+      // setCardNo("3827 **** **** 9876")
+      // setDate("02/30")
+      // setCvv("123")
       setScreenTitle("Card Details")
     }
   }, [])
@@ -165,36 +177,72 @@ const AddNewCardScreen = () => {
       </View>
       <ScrollView contentContainerStyle={styles.flex1} style={styles.flex1}>
         <BigCardDesign
-          cardNumber={"3827 **** **** 9876"}
-          icon={VisaIcon}
+          cardDetails={cardDetails}
+          cardNumber={cardNo}
+          icon={null}
+          name={name}
+          date={expDate}
         ></BigCardDesign>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          {renderItem(ImgUserIcon, "Full Name", setName, name)}
-          {renderItem(ImgCardIcon, "Card No", setCardNo, cardNo)}
-          {renderItem(ImgCalendar, "Expiry Date", setDate, date)}
-          {renderItem(ImgLock, "CVV", setCvv, cvv)}
-        </View>
+        {viewType != "view" && (
+          <>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              {renderItem(ImgUserIcon, "Full Name", setName, name)}
+              {/* {renderItem(ImgCardIcon, "Card No", setCardNo, cardNo)}
+              {renderItem(ImgCalendar, "Expiry Date", setDate, date)}
+              {renderItem(ImgLock, "CVV", setCvv, cvv)} */}
+              <CardField
+                postalCodeEnabled={false}
+                cardStyle={{
+                  backgroundColor: Colors.NETURAL_5,
+                  textColor: Colors.WHITE
+                }}
+                style={[styles.itemContainer]}
+                onCardChange={cardDetails => {
+                  setCard(cardDetails)
+                  setBrand(cardDetails.brand)
+                  setCardNo(
+                    new Array(16 - cardDetails.last4.length)
+                      .fill("*")
+                      .join("") + cardDetails.last4
+                  )
+                  setDate(
+                    cardDetails.expiryMonth + "/" + cardDetails.expiryYear
+                  )
+                }}
+                onFocus={focusedField => {
+                  console.log("focusField", focusedField)
+                }}
+              />
+            </View>
 
-        <View style={styles.nextBtnContainer}>
-          <Button
-            btnWidth={width * 0.8}
-            backgroundColor={Colors.BUTTON_RED}
-            viewStyle={{
-              borderColor: Colors.facebook,
-              marginBottom: 2
-            }}
-            height={35}
-            textFontWeight={Typography.FONT_WEIGHT_600}
-            textStyle={{
-              color: Colors.white,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontSize: Typography.FONT_SIZE_14
-            }}
-            onPress={() => {}}
-          >
-            {"ADD CARD"}
-          </Button>
-        </View>
+            <View style={styles.nextBtnContainer}>
+              <Button
+                btnWidth={width * 0.8}
+                backgroundColor={Colors.BUTTON_RED}
+                viewStyle={{
+                  borderColor: Colors.facebook,
+                  marginBottom: 2
+                }}
+                height={35}
+                textFontWeight={Typography.FONT_WEIGHT_600}
+                textStyle={{
+                  color: Colors.white,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontSize: Typography.FONT_SIZE_14
+                }}
+                onPress={async () => {
+                  const token = await createToken({ type: "Card", ...card })
+                  console.log(token.token.id)
+                  const result = await createCard({ token: token.token.id })
+                  console.log(result)
+                }}
+              >
+                {"ADD CARD"}
+              </Button>
+            </View>
+          </>
+        )}
+
         <Popover
           from={new Rect(width - 150, popoverYPos, 0, 0)}
           isVisible={showPopover}
@@ -220,10 +268,13 @@ const AddNewCardScreen = () => {
         <DeleteModal
           isVisible={showDeleteModal}
           onClose={() => {
-            console.log("on close is called")
             setShowDeleteModal(false)
           }}
-          onYes={() => {}}
+          onYes={async () => {
+            setShowDeleteModal(false)
+            await deleteCard({ card_id: cardDetails?.id })
+            navigation.goBack()
+          }}
         />
       </ScrollView>
     </SafeAreaView>

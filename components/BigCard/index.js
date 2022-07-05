@@ -11,7 +11,7 @@ import { Colors, Typography } from "../../styles"
 import BigCardBackImg from "../../assets/images/card.png"
 import { useNavigation } from "@react-navigation/native"
 
-const BigCard = ({ cardNumber, icon }) => {
+const BigCard = ({ cardNumber, icon, name, date, cardDetails = null }) => {
   const navigation = useNavigation()
   const renderBigCardBottom = (label, value) => {
     return (
@@ -31,7 +31,10 @@ const BigCard = ({ cardNumber, icon }) => {
     <View style={styles.center}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("AddNewCardScreen", { viewType: "view" })
+          navigation.navigate("AddNewCardScreen", {
+            viewType: "view",
+            cardDetails: cardDetails
+          })
         }}
       >
         <View style={[styles.bigItemContainer]}>
@@ -43,12 +46,16 @@ const BigCard = ({ cardNumber, icon }) => {
               <Image
                 resizeMode="center"
                 style={styles.itemIcon}
-                source={icon}
+                source={icon ? icon : null}
               ></Image>
             </View>
             <View style={{ marginLeft: "8%" }}>
               <Text style={[styles.FONT_24, { color: Colors.WHITE }]}>
-                {cardNumber}
+                {cardDetails
+                  ? "************" + cardDetails?.last4
+                  : cardNumber
+                  ? cardNumber
+                  : ""}
               </Text>
             </View>
             <View
@@ -58,8 +65,18 @@ const BigCard = ({ cardNumber, icon }) => {
                 flexDirection: "row"
               }}
             >
-              {renderBigCardBottom("Card Holder name", "Daniel Austin")}
-              {renderBigCardBottom("Expiry date", "02/30")}
+              {renderBigCardBottom(
+                "Card Holder name",
+                cardDetails ? cardDetails?.name ?? "N/A" : name ? name : "N/A"
+              )}
+              {renderBigCardBottom(
+                "Expiry date",
+                cardDetails
+                  ? cardDetails?.exp_month + "/" + cardDetails?.exp_year
+                  : date
+                  ? date
+                  : ""
+              )}
             </View>
           </ImageBackground>
         </View>
