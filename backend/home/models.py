@@ -101,6 +101,7 @@ class Event(BaseModel):
         blank=True,
         related_name="event",
     )
+    active = models.BooleanField(_("Active"), default=True)
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     start_date = models.DateField(_("Event start date"))

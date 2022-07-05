@@ -152,6 +152,41 @@ class EventViewset(ModelViewSet):
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(
+        methods=["put"],
+        detail=True,
+        permission_classes=[IsEventPlanner, IsOwnerAndReadOnly],
+        url_path="activate-deactivate",
+    )
+    def activate_deactivate(self, request, pk):
+        """activate-deactivate event"""
+
+        try:
+            event = self.get_object()
+            event.active = not event.active
+            event.save()
+            return Response({"active": event.active})
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(
+        methods=["delete"],
+        detail=True,
+        permission_classes=[
+            IsEventPlanner,
+            IsOwnerAndReadOnly,
+        ],
+    )
+    def delete(self, request, pk):
+        """delete event"""
+
+        try:
+            self.get_object().delete()
+            return Response("success", status=status.HTTP_204_NO_CONTENT)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class RegisterEventViewset(CreateModelMixin, UpdateModelMixin, GenericViewSet):
     serializer_class = RegisterEventSerializer

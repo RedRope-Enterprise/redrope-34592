@@ -42,8 +42,11 @@ class CardsAPIView(APIView):
                 user.stripe_customer_id = customer.id
                 user.save()
             else:
-                customer = stripe.Customer.retrieve(user.stripe_customer_id)
-                customer.sources.create(source=serializer.data.get("token"))
+                # customer = stripe.Customer.retrieve(user.stripe_customer_id)
+                # customer.sources.create(source=serializer.data.get("token"))
+                stripe.Customer.create_source(
+                    user.stripe_customer_id, source=serializer.data.get("token")
+                )
 
             return Response("success", status=status.HTTP_201_CREATED)
         except Exception as e:
