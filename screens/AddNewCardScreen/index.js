@@ -235,6 +235,7 @@ const AddNewCardScreen = () => {
                   console.log(token.token.id)
                   const result = await createCard({ token: token.token.id })
                   console.log(result)
+                  navigation.goBack()
                 }}
               >
                 {"ADD CARD"}

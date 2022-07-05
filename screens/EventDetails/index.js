@@ -27,7 +27,11 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { SwipeListView } from "react-native-swipe-list-view"
 import { useRoute } from "@react-navigation/native"
-import { getEventDetails } from "../../services/events"
+import {
+  getEventDetails,
+  markEventAsInterested,
+  addEventToFavorite
+} from "../../services/events"
 
 const EventDetailsScreen = () => {
   const route = useRoute()
@@ -50,6 +54,12 @@ const EventDetailsScreen = () => {
       <NavigationHeader
         showLeftBtn1={!global?.user?.event_planner}
         showLeftBtn2={!global?.user?.event_planner}
+        onLeftBtn2={async () => {
+          const resp = await addEventToFavorite({
+            event: event.id
+          })
+          console.log("adding to favt resp ", resp)
+        }}
       ></NavigationHeader>
 
       <Image
@@ -92,7 +102,7 @@ const EventDetailsScreen = () => {
                 color: Colors.WHITE
               }}
             >
-              {event?.organizer?.name}
+              {event?.organizer?.name != "null" ? event?.organizer?.name : ""}
             </Text>
             <Text
               style={{
@@ -296,6 +306,10 @@ const EventDetailsScreen = () => {
           </Text>
 
           <TouchableOpacity
+            onPress={async () => {
+              const resp = await markEventAsInterested({ event: event.id })
+              console.log(" interested event response ", resp)
+            }}
             style={{
               flexDirection: "row",
               backgroundColor: Colors.BUTTON_RED,

@@ -36,10 +36,10 @@ PODS:
     - AppAuth (~> 1.4)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GTMAppAuth (1.2.3):
+  - GTMAppAuth (1.3.0):
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
-  - GTMSessionFetcher/Core (1.7.1)
+  - GTMSessionFetcher/Core (1.7.2)
   - Permission-Camera (3.3.1):
     - RNPermissions
   - Permission-PhotoLibrary (3.3.1):
@@ -384,19 +384,27 @@ PODS:
     - React-Core
   - RNVectorIcons (8.1.0):
     - React-Core
-  - Stripe (21.11.1):
-    - Stripe/Stripe3DS2 (= 21.11.1)
-    - StripeCore (= 21.11.1)
-    - StripeUICore (= 21.11.1)
-  - stripe-react-native (0.2.4):
+  - Stripe (22.5.1):
+    - Stripe/Stripe3DS2 (= 22.5.1)
+    - StripeApplePay (= 22.5.1)
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - stripe-react-native (0.14.0):
     - React-Core
-    - Stripe (~> 21.11.1)
-  - Stripe/Stripe3DS2 (21.11.1):
-    - StripeCore (= 21.11.1)
-    - StripeUICore (= 21.11.1)
-  - StripeCore (21.11.1)
-  - StripeUICore (21.11.1):
-    - StripeCore (= 21.11.1)
+    - Stripe (~> 22.5.1)
+    - StripeFinancialConnections (~> 22.5.1)
+  - Stripe/Stripe3DS2 (22.5.1):
+    - StripeApplePay (= 22.5.1)
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - StripeApplePay (22.5.1):
+    - StripeCore (= 22.5.1)
+  - StripeCore (22.5.1)
+  - StripeFinancialConnections (22.5.1):
+    - StripeCore (= 22.5.1)
+    - StripeUICore (= 22.5.1)
+  - StripeUICore (22.5.1):
+    - StripeCore (= 22.5.1)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
@@ -466,7 +474,9 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - Stripe
+    - StripeApplePay
     - StripeCore
+    - StripeFinancialConnections
     - StripeUICore
     - TOCropViewController
 
@@ -586,8 +596,8 @@ SPEC CHECKSUMS:
   FBSDKShareKit: abc29e1bb4f9f59f679adf1ae191006d68455f96
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   GoogleSignIn: c90b5bec45e780f54c6a8e1e3c182a86e3dda69d
-  GTMAppAuth: 987526d41b07efb1bedda5e936fe0cb718a03113
-  GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
+  GTMAppAuth: 4d8f864896f3646f0c33baf38a28362f4c601e15
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
   Permission-PhotoLibrary: ddb5a158725b29cb12e9e477e8a5f5151c66cc3c
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
@@ -632,13 +642,15 @@ SPEC CHECKSUMS:
   RNReanimated: 7f3eef39b48facdb0b053873abdaafaa6a953b0d
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
-  Stripe: f2bed8369154c35c8ec794704e042e05240d6f21
-  stripe-react-native: 2ba5ddd91db057546757ad88bea950d9bfd4cacc
-  StripeCore: 36571be19dae15e90c8ad47e1af45712aea93f5a
-  StripeUICore: 1b32566d6a69581be786609a032872b0fb5a6823
+  Stripe: 2b2decd03146e08a350960966d41f3028c2eac29
+  stripe-react-native: c90947c1f02761d11622dcb3cd3bd8683916b36b
+  StripeApplePay: b14f06ac6fc24b56704c1e598149ed0cc45e166f
+  StripeCore: 4833738f2ca4336712f279f3c2867a0a7eb67c93
+  StripeFinancialConnections: 982115b82af429968d8aa78d329a42ed7ba3feab
+  StripeUICore: 08c1efbd7e3c54ee7fa74334a37a1d4c08ba944d
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: 4ed1c80c4c0aac20e26f5e83549e7d48b3b059d4
+PODFILE CHECKSUM: 5b32b54ba73cdb16227753e4ce83b9232c627b01
 
 COCOAPODS: 1.11.2

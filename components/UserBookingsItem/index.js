@@ -40,7 +40,9 @@ const UserBookingsItem = props => {
               borderTopLeftRadius: 10,
               borderBottomLeftRadius: 10
             }}
-            source={event?.image}
+            source={{
+              uri: event?.event_images ? event?.event_images[0].image : ""
+            }}
           />
         </View>
         <View style={{ marginHorizontal: "5%", flex: 1 }}>
@@ -60,16 +62,20 @@ const UserBookingsItem = props => {
                 flex: 1
               }}
             >
-              {event.name.length > 12 ? event?.name.slice(0,11) + "...": event.name}
+              {event?.event_title?.length > 12
+                ? event?.event_title.slice(0, 11) + "..."
+                : event?.event_title}
             </Text>
-            <Text
-              style={{
-                fontSize: Typography.FONT_SIZE_18,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM,
-                fontWeight: Typography.FONT_WEIGHT_BOLD,
-                color: Colors.PRIMARY_1
-              }}
-            >{`$${event.price}`}</Text>
+            {(event?.event_price || event?.price) && (
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_18,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD,
+                  color: Colors.PRIMARY_1
+                }}
+              >{`$${event?.event_price || event?.price}`}</Text>
+            )}
           </View>
 
           <View style={{ flexDirection: "row", marginTop: "2%" }}>
@@ -83,7 +89,7 @@ const UserBookingsItem = props => {
               }}
             >
               <Text style={{ color: Colors.PRIMARY_1, margin: 5 }}>
-                {event.type}
+                {event?.event_categories[0].name}
               </Text>
             </View>
 
@@ -97,46 +103,50 @@ const UserBookingsItem = props => {
                 justifyContent: "center"
               }}
             >
-              <Text
-                style={{
-                  fontSize: Typography.FONT_SIZE_10,
-                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                  fontWeight: Typography.FONT_WEIGHT_500,
-                  color: Colors.WHITE,
-                  margin: 5
-                }}
-              >
-                {event.date}
-              </Text>
+              {(event?.date || event?.start_date) && (
+                <Text
+                  style={{
+                    fontSize: Typography.FONT_SIZE_10,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    fontWeight: Typography.FONT_WEIGHT_500,
+                    color: Colors.WHITE,
+                    margin: 5
+                  }}
+                >
+                  {event.date || event?.start_date}
+                </Text>
+              )}
             </View>
 
-            <View
-              style={{
-                borderColor: Colors.WHITE,
-                borderRadius: 10,
-                backgroundColor: Colors.NETURAL_4,
-                height: 30,
-                alignItems: "center",
-                justifyContent: "center",
-                marginLeft: "3%"
-              }}
-            >
-              <Text
+            {event?.status && (
+              <View
                 style={{
-                  fontSize: Typography.FONT_SIZE_10,
-                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                  fontWeight: Typography.FONT_WEIGHT_500,
-                  color: Colors.WHITE,
-                  marginHorizontal: 5
+                  borderColor: Colors.WHITE,
+                  borderRadius: 10,
+                  backgroundColor: Colors.NETURAL_4,
+                  height: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginLeft: "3%"
                 }}
               >
-                {"Interested"}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontSize: Typography.FONT_SIZE_10,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    fontWeight: Typography.FONT_WEIGHT_500,
+                    color: Colors.WHITE,
+                    marginHorizontal: 5
+                  }}
+                >
+                  {event?.status}
+                </Text>
+              </View>
+            )}
           </View>
 
           <Image
-            style={{ marginTop: "7%",  }}
+            style={{ marginTop: "7%" }}
             source={require("../../assets/eventDetails/Group.png")}
           />
 
@@ -162,7 +172,7 @@ const UserBookingsItem = props => {
               style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
             >
               <Image
-                style={{width : 12, height : 12}}
+                style={{ width: 12, height: 12 }}
                 source={require("../../assets/images/table_select/location.png")}
               />
 

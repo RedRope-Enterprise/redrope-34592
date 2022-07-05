@@ -127,7 +127,7 @@ const CardsScreen = () => {
           </View>
         )}
         {/* {renderCard("3827 **** **** 0007", VisaIcon)} */}
-        {data.map(cardItem => {
+        {data?.map(cardItem => {
           return <BigCardDesign cardDetails={cardItem}></BigCardDesign>
         })}
         {/* {renderCard("3827 **** **** 0007", VisaIcon)} */}
