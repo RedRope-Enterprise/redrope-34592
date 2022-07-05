@@ -40,4 +40,32 @@ async function createEvent(payload) {
   return response.data
 }
 
-export { getCategories, getEvents,getEventDetails, getMyEvents,addBottleService, createEvent }
+async function addEventToFavorite(payload) {
+  console.log("payload ", payload)
+  const response = await api.post("/api/v1/events/favorite/", payload)
+  return response.data
+}
+
+async function markEventAsInterested(payload) {
+  console.log("payload ", payload)
+  const response = await api.post("/api/v1/events/register-event/", payload)
+  return response.data
+}
+
+async function registerForEvent(payload) {
+  console.log("payload ", payload)
+  const response = await api.post("/api/v1/events/register-event/", payload)
+  return response.data
+}
+
+export {
+  getCategories,
+  getEvents,
+  getEventDetails,
+  getMyEvents,
+  addBottleService,
+  createEvent,
+  addEventToFavorite,
+  markEventAsInterested,
+  registerForEvent
+}

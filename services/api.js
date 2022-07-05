@@ -7,7 +7,7 @@ const BASE_URL = global.url // change your BASE_URL in `options/options.js` to e
 
 const api = axios.create({
   baseURL: BASE_URL,
-  headers: { Accept: "application/json", "Content-Type": "application/json" },
+  headers: { Accept: "application/json", "Content-Type": "application/json" }
 })
 
 const onRequest = async config => {
@@ -21,5 +21,21 @@ const onRequest = async config => {
 
 api.interceptors.request.use(onRequest)
 
+api.interceptors.response.use(
+  response => {
+    return response
+  },
+  async function (error) {
+    const originalRequest = error.config
+    if (error.response.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true
+      return api(originalRequest)
+    }
+    if (error.response.data) {
+      return Promise.reject(error.response.data)
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default api

@@ -22,6 +22,7 @@ const Splash = ({}) => {
       let user = await getDataStorage("@user")
 
       // clearStorage()
+      global.user = user
       let key = await getDataStorage("@key")
       if (key) {
         if (user.event_planner) NEXT_SCREEN_NAME = "EventPlannerDashboard"

@@ -28,6 +28,11 @@ import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { getUser } from "../../services/user"
 const { width, height } = Dimensions.get("window")
+import {
+  getMyEvents,
+  markEventAsInterested,
+  addEventToFavorite
+} from "../../services/events"
 
 const MyBookingsScreen = () => {
   const navigation = useNavigation()
@@ -36,37 +41,46 @@ const MyBookingsScreen = () => {
 
   const [user, setUser] = useState()
 
-
   useEffect(async () => {
-    const events = data.getEvents()
+    getEventsFromBE()
     getUser()
-
-    setMyBookings(events)
   }, [])
+
+  const getEventsFromBE = async () => {
+    const events = await getMyEvents()
+    console.log("MY events ", events)
+
+    if (events) setMyBookings(events.results)
+  }
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-
       setUser(global.user)
+      getEventsFromBE()
     })
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe
   }, [navigation])
 
-  const getUser = async () =>{
+  const getUser = async () => {
     let u = global.user
     setUser(u)
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
-      {!user?.event_planner && <TouchableOpacity onPress={() => navigation.navigate("UserProfile")} style={{ alignSelf: "flex-end", marginRight: "5%" }}>
-        <Image
-          style={{ width: 30, height: 30, borderRadius: 1000 }}
-          source={{uri : user?.profile_picture}}
-        />
-      </TouchableOpacity>}
+      {!user?.event_planner && (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("UserProfile")}
+          style={{ alignSelf: "flex-end", marginRight: "5%" }}
+        >
+          <Image
+            style={{ width: 30, height: 30, borderRadius: 1000 }}
+            source={{ uri: user?.profile_picture }}
+          />
+        </TouchableOpacity>
+      )}
 
       <ScrollView>
         <View
@@ -114,9 +128,9 @@ const MyBookingsScreen = () => {
           renderItem={({ item }) => (
             <UserBookingsItem
               event={item}
-              onPress={() =>
-                navigation.navigate("EventDetails", { event: item })
-              }
+              onPress={() => {
+                // navigation.navigate("EventDetails", { event: item })
+              }}
             />
           )}
           keyExtractor={(item, index) => index}
