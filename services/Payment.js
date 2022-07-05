@@ -8,6 +8,7 @@ async function getCardsList() {
 }
 
 async function createCard(params = {}) {
+  console.log(params)
   const response = await api.post("/api/v1/payments/cards/", params)
   return response.data
 }
@@ -20,7 +21,9 @@ async function updateCard() {
 }
 
 async function deleteCard(params = {}) {
-  const response = await api.delete("/api/v1/payments/cards/", params)
+  const response = await api.delete("/api/v1/payments/cards/", {
+    data: params
+  })
   return response.data
 }
 
