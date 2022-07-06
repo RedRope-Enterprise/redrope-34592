@@ -26,20 +26,54 @@ import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { Slider } from "@miblanchard/react-native-slider"
+import { applyFilter, resetFilter } from "../../store/custom/Home/home.slice"
 
 const FiltersScreen = () => {
   const navigation = useNavigation()
   const [user, setUser] = useState(global.user)
-  const [selectedEvent, setSelectedEvent] = useState(1)
-  const [dateTabSelection, setDateTabSelection] = useState(0)
+  const [selectedEvent, setSelectedEvent] = useState(0)
+  const [dateTabSelection, setDateTabSelection] = useState(-1)
   const [selectedDuration, setSelectedDuration] = useState(0)
   const [priceRangeValue, setPriceRangeValue] = useState([0, 1000])
+
+  const { hasFilters, filterObj } = useSelector(state => state.home)
+
+  const dispatch = useDispatch()
 
   const eventTypes = [
     { id: 1, type: "Yacht Parties" },
     { id: 2, type: "Bottle Service" },
     { id: 3, type: "Pool Parties" }
   ]
+
+  useEffect(() => {
+    console.log("filter>>>>: ", hasFilters, filterObj)
+    if (hasFilters) {
+      if (filterObj.today) {
+        setDateTabSelection(0)
+      } else if (filterObj.tomorrow) {
+        setDateTabSelection(1)
+      } else if (filterObj.this_week) {
+        setDateTabSelection(2)
+      }
+
+      setPriceRangeValue([filterObj.min_cost ?? 0, filterObj.max_cost ?? 1000])
+      if (filterObj.categories) {
+        console.log("Categories>>>>: ", filterObj.categories)
+        let index = eventTypes.findIndex(
+          item => item.type == filterObj.categories
+        )
+        console.log("Categories index>>>>: ", index)
+        if (index > -1) {
+          setSelectedEvent(index + 1)
+        }
+      }
+    } else {
+      setDateTabSelection(-1)
+      setSelectedEvent(0)
+      setPriceRangeValue([0, 1000])
+    }
+  }, [hasFilters])
 
   const timeDateSection = () => {
     return (
@@ -499,6 +533,9 @@ const FiltersScreen = () => {
               flex: 1,
               marginHorizontal: 15
             }}
+            onPress={() => {
+              dispatch(resetFilter())
+            }}
           >
             <Text
               style={{
@@ -523,7 +560,23 @@ const FiltersScreen = () => {
               flex: 1,
               marginHorizontal: 15
             }}
-            onPress={async () => {}}
+            onPress={async () => {
+              let params = {}
+              if (dateTabSelection == 0) {
+                params.today = true
+              } else if (dateTabSelection == 1) {
+                params.tomorrow = true
+              } else if (dateTabSelection == 2) {
+                params.this_week = true
+              }
+              params.min_cost = priceRangeValue[0]
+              params.max_cost = priceRangeValue[1]
+              if (selectedEvent > 0) {
+                params.categories = eventTypes[selectedEvent - 1].type
+              }
+              dispatch(applyFilter(params))
+              navigation.goBack()
+            }}
           >
             <Text
               style={{

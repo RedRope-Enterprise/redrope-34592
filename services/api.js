@@ -26,12 +26,7 @@ api.interceptors.response.use(
     return response
   },
   async function (error) {
-    const originalRequest = error.config
-    if (error.response.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true
-      return api(originalRequest)
-    }
-    if (error.response.data) {
+    if (error?.response?.data) {
       return Promise.reject(error.response.data)
     }
     return Promise.reject(error)

@@ -7,10 +7,13 @@ async function getCategories() {
   return response.data
 }
 
-async function getEvents() {
-  const response = await api.get("/api/v1/events/", {
-    params: {}
-  })
+async function getEvents(params = {}) {
+  var queryString = Object.keys(params)
+    .map(key => key + "=" + params[key])
+    .join("&")
+  let append = Object.keys(params).length > 0 ? "?" + queryString : ""
+  const response = await api.get("/api/v1/events/" + append)
+
   return response.data
 }
 
