@@ -231,11 +231,11 @@ const AddNewCardScreen = () => {
                   fontSize: Typography.FONT_SIZE_14
                 }}
                 onPress={async () => {
-                  const token = await createToken({ type: "Card", ...card })
-                  console.log(token.token.id)
-                  const result = await createCard({ token: token.token.id })
-                  console.log(result)
-                  navigation.goBack()
+                  try {
+                    const token = await createToken({ type: "Card", ...card })
+                    const result = await createCard({ token: token.token.id })
+                    navigation.goBack()
+                  } catch (e) {}
                 }}
               >
                 {"ADD CARD"}

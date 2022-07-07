@@ -30,13 +30,14 @@ import { data } from "../../data"
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { getUser } from "../../services/user"
-import { getCategories, getEvents} from "../../services/events"
+import { getCategories, getEvents } from "../../services/events"
+import { applyFilter } from "../../store/custom/Home/home.slice"
 
 const { width, height } = Dimensions.get("window")
 
 const HomeScreen = () => {
-  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-  LogBox.ignoreAllLogs();
+  LogBox.ignoreLogs(["Warning: ..."]) // Ignore log notification by message
+  LogBox.ignoreAllLogs()
   const navigation = useNavigation()
   const [events, setEvents] = useState([])
   const [eventCategories, setEventCategories] = useState([])
@@ -46,6 +47,10 @@ const HomeScreen = () => {
   const [searchValue, setSearchValue] = useState("")
   const [userImage, setUserImage] = useState("")
 
+  const { hasFilters, filterObj } = useSelector(state => state.home)
+
+  const dispatch = useDispatch()
+
   useEffect(async () => {
     const events = data.getEvents()
     setEvents(events)
@@ -54,10 +59,9 @@ const HomeScreen = () => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-
       let user = global.user
       setUserImage(user?.profile_picture)
-      
+
       // The screen is focused
       // Call any action
     })
@@ -69,12 +73,10 @@ const HomeScreen = () => {
   useEffect(async () => {
     getEventsFromBackend()
     getEventCategories()
-  }, [])
+  }, [hasFilters])
 
-
-  const getEventsFromBackend = async() => {
-    let resp = await getEvents()
-    console.log("events ", resp.results)
+  const getEventsFromBackend = async () => {
+    let resp = await getEvents(hasFilters ? filterObj : {})
     setEvents(resp.results)
   }
 
@@ -132,7 +134,7 @@ const HomeScreen = () => {
           backgroundColor: Colors.NETURAL_3
         }}
         resizeMode="cover"
-        source={{uri : event.image}}
+        source={{ uri: event.image }}
       >
         <Text
           style={{
@@ -197,9 +199,7 @@ const HomeScreen = () => {
             onChangeText={value => SearchForEvent(value)}
           />
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Filters")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Filters")}>
             <Image
               style={{ width: 24, height: 24, margin: 15 }}
               source={require("../../assets/images/home/Adjust.png")}
