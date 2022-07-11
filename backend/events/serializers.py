@@ -202,6 +202,29 @@ class RegisterEventSerializer(serializers.ModelSerializer):
         )
 
 
+class ReserveSerializer(serializers.ModelSerializer):
+    attendee = serializers.IntegerField()
+    percentage_upfront = serializers.IntegerField()
+    chargeable_card = serializers.CharField()
+
+    class Meta:
+        model = UserEventRegistration
+        fields = (
+            "event",
+            "bottle_service",
+            "attendee",
+            "chargeable_card",
+            "percentage_upfront",
+        )
+
+    def validate(self, attrs):
+        if attrs.get("bottle_service") not in attrs.get("event").bottle_services.all():
+            raise serializers.ValidationError(
+                {"bottle_services": "Event doesn't have selected bottle service."}
+            )
+        return attrs
+
+
 class FavoriteEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteEvent
