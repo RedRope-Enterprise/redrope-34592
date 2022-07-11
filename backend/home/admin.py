@@ -22,17 +22,16 @@ class UserEventRegistrationAdmin(admin.ModelAdmin):
         "attendee",
         "interested",
         "reserved",
-        "event_cost",
         "amount_paid",
         "amount_left",
         "transaction_id",
         "updated_at",
     )
 
-    def event_cost(self, obj):
-        return f"{obj.event.price}"
+    # def event_cost(self, obj):
+    #     return f"{obj.event.price}"
 
-    event_cost.short_description = "Event Cost"
+    # event_cost.short_description = "Event Cost"
 
 
 admin.site.register(Notification)
