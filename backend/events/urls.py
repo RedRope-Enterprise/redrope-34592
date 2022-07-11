@@ -7,6 +7,7 @@ from events.viewsets import (
     FavoriteEventViewset,
     CategoryViewSet,
     InterestViewSet,
+    ReserveViewset,
 )
 
 router = DefaultRouter()
@@ -20,5 +21,6 @@ router.register("", EventViewset, basename="events")
 
 app_name = "events"
 urlpatterns = [
+    path("reserve/", ReserveViewset.as_view(), name="reserve"),
     path("", include(router.urls)),
 ]

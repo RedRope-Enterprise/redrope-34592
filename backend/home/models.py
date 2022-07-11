@@ -147,6 +147,12 @@ class UserEventRegistration(BaseModel):
         related_name="going",
         on_delete=models.CASCADE,
     )
+    bottle_service = models.ForeignKey(
+        "home.BottleService",
+        verbose_name=_("Event"),
+        related_name="event_registration",
+        on_delete=models.CASCADE,
+    )
     user = models.ForeignKey(
         "users.User",
         verbose_name=_("User"),
@@ -164,6 +170,17 @@ class UserEventRegistration(BaseModel):
     )
     transaction_id = models.CharField(
         _("Transaction ID"), max_length=50, blank=True, null=True
+    )
+    payment_status = models.CharField(
+        _("Payment Status"),
+        max_length=50,
+        blank=True,
+        null=True,
+        choices=(
+            ("Pending", "pending"),
+            ("Succeeded", "succeeded"),
+            ("Failed", "failed"),
+        ),
     )
     notification = GenericRelation(Notification)
 
