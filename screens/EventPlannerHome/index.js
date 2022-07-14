@@ -53,6 +53,7 @@ const EventPlannerHomeScreen = () => {
     const unsubscribe = navigation.addListener("focus", () => {
       let user = global.user
       setUser(user)
+      getEventsFromBackend()
       setUserImage(user?.profile_picture)
 
       // The screen is focused
