@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import RegexValidator
 
 
 class User(AbstractUser):
@@ -21,7 +22,11 @@ class User(AbstractUser):
 
     # First Name and Last Name do not cover name patterns
     # around the globe.
-    name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
+    name = models.CharField(
+        _("Name of User"),
+        max_length=255,
+        validators=[RegexValidator("[+-/%#$@!~^&*()1234567890]", inverse_match=True)],
+    )
     bio = models.TextField(_("Bio"), blank=True, null=True)
     profile_picture = models.ImageField(
         _("Profile Picture"), max_length=300, blank=True, null=True
