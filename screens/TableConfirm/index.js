@@ -42,7 +42,7 @@ const TableConfirmScreen = () => {
   const { event } = route?.params
 
   const calculatePriceToPay = () => {
-    let v = ((valueToPayPercentage/ 100) * event?.price).toFixed(2)
+    let v = ((valueToPayPercentage / 100) * event?.price).toFixed(2)
     setPriceToPay(v)
   }
 
@@ -133,10 +133,115 @@ const TableConfirmScreen = () => {
         />
       </View>
       <View style={styles.nextBtnContainer}>
-        <Text style={styles.downpaymentPayText}>
-          Decide the percentage you want to pay upfront
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: "5%",
+            marginTop: "5%",
+            marginBottom: "3%"
+          }}
+        >
+          <Text
+            style={{
+              flex: 1,
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.NETURAL_2,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            Event Name
+          </Text>
+          <Text
+            style={{
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.NETURAL_2,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            {event?.title}
+          </Text>
+        </View>
+
         <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
+          <Text
+            style={{
+              flex: 1,
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.NETURAL_2,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            Total Price
+          </Text>
+          <Text
+            style={{
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.NETURAL_2,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            {`$${event?.price}`}
+          </Text>
+        </View>
+        <View
+          style={{
+            alignSelf: "center",
+            marginVertical: "5%",
+            width: "90%",
+            borderBottomColor: Colors.WHITE,
+            borderBottomWidth: 1,
+            opacity: 1
+          }}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: "5%",
+            marginBottom: "5%"
+          }}
+        >
+          <Text
+            style={{
+              flex: 1,
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.WHITE,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_16,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            Pay now to reserve
+          </Text>
+          <Text
+            style={{
+              alignItems: "center",
+              alignSelf: "center",
+              color: Colors.WHITE,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_16,
+              fontWeight: Typography.FONT_WEIGHT_400
+            }}
+          >
+            {`$${50}`}
+          </Text>
+        </View>
+        {/* <Text style={styles.downpaymentPayText}>
+          Decide the percentage you want to pay upfront
+        </Text> */}
+        {/* <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
           <Text
             style={[
               styles.downpaymentPayText,
@@ -162,9 +267,9 @@ const TableConfirmScreen = () => {
           >
             {`$${priceToPay}`}
           </Text>
-        </View>
+        </View> */}
 
-        <View style={{ flex: 1, width: "90%", marginVertical: "5%" }}>
+        {/* <View style={{ flex: 1, width: "90%", marginVertical: "5%" }}>
           <Slider
             step={1}
             maximumTrackTintColor={Colors.GREY}
@@ -204,7 +309,7 @@ const TableConfirmScreen = () => {
               )
             }}
           />
-        </View>
+        </View> */}
 
         <View style={{ marginVertical: "5%" }}>
           <Button
@@ -223,7 +328,7 @@ const TableConfirmScreen = () => {
             }}
             onPress={() => {
               navigation.navigate("PaymentScreen", {
-                price : priceToPay
+                price: priceToPay
               })
             }}
           >
