@@ -158,7 +158,7 @@ const PaymentScreen = () => {
             setIsModalVisible(true)
           }}
         >
-          {`PAY $${price}`}
+          {`PAY $${50}`}
         </Button>
       </View>
       <CustomImageModal
