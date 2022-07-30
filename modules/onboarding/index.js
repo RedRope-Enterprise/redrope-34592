@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get("window")
 const Onboarding = () => {
   const navigation = useNavigation()
   const slideRef = useRef()
-  const [currentIndex , setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     slideRef?.current.goToSlide(currentIndex)
@@ -60,6 +60,24 @@ const Onboarding = () => {
         bottomButton
         showSkipButton
         onDone={onDone}
+        renderSkipButton={() => (
+          <TouchableOpacity
+            onPress={onDone}
+            style={{ alignSelf: "center", marginVertical: "5%" }}
+          >
+            <Text
+              style={{
+                color: Colors.WHITE,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_13,
+                fontWeight: Typography.FONT_WEIGHT_500,
+                textDecorationLine: "underline"
+              }}
+            >
+              Skip for now
+            </Text>
+          </TouchableOpacity>
+        )}
         renderDoneButton={() => (
           <View style={{ alignSelf: "center" }}>
             <Button

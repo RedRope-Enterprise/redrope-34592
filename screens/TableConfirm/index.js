@@ -69,7 +69,7 @@ const TableConfirmScreen = () => {
     })
 
     arr.push({
-      title: "10% Pay now to reserve",
+      title: "Pay $50 now to reserve",
       desc: "You can reserve spot in this event and wait to be filled.",
       image: RatioImage
     })

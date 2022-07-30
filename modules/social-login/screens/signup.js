@@ -197,6 +197,7 @@ const SignupScreen = ({}) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
           <Input
+            keyboardType={"default"}
             width={"90%"}
             onChangeText={value => setName(value)}
             value={name}

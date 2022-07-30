@@ -15,7 +15,7 @@ export const slides = [
     text: `Chill by the pool at some of the best pool parties in the city. Who 
     needs the bar when they bring the bottles directly to you! Don’t 
     tan alone, find some friends!`,
-    image: require("../../assets/images/onboarding/2.png"),
+    image: require("../../assets/images/onboarding/3.png"),
     backgroundColor: "rgba(0,0,0,1)"
   },
   {
@@ -24,7 +24,7 @@ export const slides = [
     text: `Choose from all varieties of yachts that meet your party and 
     budget needs. Enjoy the sunset and waves with like-minded 
     people. Vibe like a VIP!`,
-    image: require("../../assets/images/onboarding/3.png"),
+    image: require("../../assets/images/onboarding/2.png"),
     backgroundColor: "rgba(0,0,0,1)"
   }
   // {
