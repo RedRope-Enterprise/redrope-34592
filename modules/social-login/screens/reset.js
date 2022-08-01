@@ -133,7 +133,7 @@ const PasswordRecover = ({ navigation }) => {
             fontSize: Typography.FONT_SIZE_14
           }}
           // loading={props.loading}
-          onPress={() => {}}
+          onPress={handlePasswordReset}
         >
           SEND
         </Button>

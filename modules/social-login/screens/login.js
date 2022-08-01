@@ -10,7 +10,8 @@ import {
   View,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from "react-native"
 import { unwrapResult } from "@reduxjs/toolkit"
 
@@ -32,6 +33,10 @@ import { getUser } from "../../../services/user"
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const [validationError, setValidationError] = useState({
+    email: "",
+    password: ""
+  })
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -98,6 +103,7 @@ const LoginScreen = ({}) => {
             source={require("../../../assets/images/login_signup/email_active.png")}
           />
         }
+        error={validationError.email}
       />
 
       <Input
@@ -118,6 +124,7 @@ const LoginScreen = ({}) => {
             source={require("../../../assets/images/login_signup/lock_active.png")}
           />
         }
+        error={validationError.password}
       />
 
       <TouchableOpacity
@@ -190,7 +197,7 @@ const LoginScreen = ({}) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        {Platform.OS !== "android" && <TouchableOpacity>
           <Image
             style={{
               resizeMode: "contain",
@@ -200,7 +207,7 @@ const LoginScreen = ({}) => {
             }}
             source={require("../../../assets/images/login_signup/Apple.png")}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
 
         <TouchableOpacity>
           <Image

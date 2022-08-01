@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import { HOME_SCREEN_NAME, validateEmail } from "./constants"
+
 import {
   Image,
   Dimensions,
@@ -94,12 +96,11 @@ const SignupScreen = ({}) => {
         setDataStorage("@user", res)
 
         global.user = res
-        if(res.event_planner){
+        if (res.event_planner) {
           navigation.navigate("PlannerProfileEdit")
-        }else{
+        } else {
           navigation.navigate("Profile")
         }
-
       })
       .catch(err => {
         let error = mapErrorMessage(err)
@@ -185,6 +186,12 @@ const SignupScreen = ({}) => {
     const [repassword, setRepassword] = useState("")
     const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
       useState(false)
+
+    const [validationError, setValidationError] = useState({
+      email: "",
+      password: ""
+    })
+
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -233,6 +240,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/email_active.png")}
               />
             }
+            error={validationError.email}
           />
 
           <Input
@@ -253,6 +261,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock_active.png")}
               />
             }
+            error={validationError.password}
           />
 
           <Input
@@ -273,6 +282,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock_active.png")}
               />
             }
+            error={validationError.password}
           />
 
           <View
@@ -330,17 +340,19 @@ const SignupScreen = ({}) => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  width: 50,
-                  height: 50,
-                  marginHorizontal: 15
-                }}
-                source={require("../../../assets/images/login_signup/Apple.png")}
-              />
-            </TouchableOpacity>
+            {Platform.OS !== "android" && (
+              <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
+                <Image
+                  style={{
+                    resizeMode: "contain",
+                    width: 50,
+                    height: 50,
+                    marginHorizontal: 15
+                  }}
+                  source={require("../../../assets/images/login_signup/Apple.png")}
+                />
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
               <Image
@@ -408,6 +420,23 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
+                if (!validateEmail.test(email))
+                  return setValidationError({
+                    email: "Please enter a valid email address.",
+                    password: ""
+                  })
+
+                if (!password)
+                  return setValidationError({
+                    email: "",
+                    password: "Please enter a valid password"
+                  })
+
+                if (password !== confirmPassword)
+                  return setValidationError({
+                    email: "",
+                    password: "Confirm password and password do not match."
+                  })
                 if (!termsAndConditionsCheckBox) {
                   Alert.alert("", "Please accept terms and conditions")
                   return
@@ -465,6 +494,12 @@ const SignupScreen = ({}) => {
     const [repassword, setRepassword] = useState("")
     const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
       useState(false)
+
+    const [validationError, setValidationError] = useState({
+      email: "",
+      password: ""
+    })
+
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -531,6 +566,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/email_active.png")}
               />
             }
+            error={validationError.email}
           />
 
           <Input
@@ -545,6 +581,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock.png")}
               />
             }
+            error={validationError.password}
             iconHighlighted={
               <Image
                 style={{ width: 24, height: 24, margin: 10 }}
@@ -628,17 +665,19 @@ const SignupScreen = ({}) => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  width: 50,
-                  height: 50,
-                  marginHorizontal: 15
-                }}
-                source={require("../../../assets/images/login_signup/Apple.png")}
-              />
-            </TouchableOpacity>
+            {Platform.OS !== "android" && (
+              <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
+                <Image
+                  style={{
+                    resizeMode: "contain",
+                    width: 50,
+                    height: 50,
+                    marginHorizontal: 15
+                  }}
+                  source={require("../../../assets/images/login_signup/Apple.png")}
+                />
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
               <Image
@@ -706,13 +745,31 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
+                if (!validateEmail.test(email))
+                  return setValidationError({
+                    email: "Please enter a valid email address.",
+                    password: ""
+                  })
+
+                if (!password)
+                  return setValidationError({
+                    email: "",
+                    password: "Please enter a valid password"
+                  })
+
+                if (password !== confirmPassword)
+                  return setValidationError({
+                    email: "",
+                    password: "Confirm password and password do not match."
+                  })
+
                 if (!termsAndConditionsCheckBox) {
                   Alert.alert("", "Please accept terms and conditions")
                   return
                 }
                 onSignupPress({
                   business_name: businessName,
-                  business_reg_no : employerNumber,
+                  business_reg_no: employerNumber,
                   email: email,
                   password: password,
                   password2: repassword,
