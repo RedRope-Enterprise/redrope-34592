@@ -18,6 +18,8 @@ target 'redrope_34592' do
 
   pod 'rn-range-slider', :path => '../node_modules/rn-range-slider'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'redrope_34592Tests' do
     inherit! :complete
     # Pods for testing

@@ -98,7 +98,7 @@ const Dashboard = () => {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Search"
         component={SearchScreen}
         tabBarLabelStyle={{
@@ -130,7 +130,7 @@ const Dashboard = () => {
             </View>
           )
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Notifications"
