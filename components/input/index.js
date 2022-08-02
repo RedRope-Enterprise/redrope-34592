@@ -98,7 +98,7 @@ const Input = props => {
           style={{
             textAlign: "center",
             fontSize: Typography.FONT_SIZE_11,
-            color: Colors.RED,
+            color: "red",
             fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT
           }}
         >

@@ -40,34 +40,33 @@ const EventMenuScreen = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const carouselRef = useRef()
-  const {event} = route?.params
+  const { event } = route?.params
 
   const [datasource, setDatasource] = useState(event?.event_images)
   const [activeDatasourceIndex, setActiveDatasourceIndex] = useState(0)
   const [data, setData] = useState([])
   const [reloadList, setReloadList] = useState(Date.now())
 
-
   useEffect(() => {
     let arr = []
 
-    arr.push({
-      title: "Side Cabanas",
-      desc: "Cabana located on sides of venue. Food and beverage minimum. Deposit required",
-      isSoldOut: true
-    })
-    arr.push({
-      title: "Garden Tables",
-      desc: "Table in the garden area on sides of venue. Food and beverage minimum. Deposit required.",
-      isSoldOut: true
-    })
-    arr.push({
-      title: "Side Cabanas 907",
-      desc: "Table in the garden area on sides of venue. Food and beverage minimum. Deposit required.",
-      isSoldOut: false
-    })
+    // arr.push({
+    //   title: "Side Cabanas",
+    //   desc: "Cabana located on sides of venue. Food and beverage minimum. Deposit required",
+    //   isSoldOut: true
+    // })
+    // arr.push({
+    //   title: "Garden Tables",
+    //   desc: "Table in the garden area on sides of venue. Food and beverage minimum. Deposit required.",
+    //   isSoldOut: true
+    // })
+    // arr.push({
+    //   title: "Side Cabanas 907",
+    //   desc: "Table in the garden area on sides of venue. Food and beverage minimum. Deposit required.",
+    //   isSoldOut: false
+    // })
 
-    setData(arr)
+    setData(event?.bottle_services)
   }, [])
 
   const renderCarouselItem = ({ item, index }) => {
@@ -76,7 +75,7 @@ const EventMenuScreen = () => {
         <Image
           resizeMode="cover"
           style={{ width: "100%", height: "100%" }}
-          source={{uri : item.image}}
+          source={{ uri: item.image }}
         ></Image>
       </View>
     )
@@ -176,13 +175,16 @@ const EventMenuScreen = () => {
           <View style={[styles.center, { width: "100%" }]}>
             <TouchableOpacity
               style={styles.dataHeaderContainer}
-              onPress={() => 
-                navigation.navigate("TableSelect", { event : route.params?.event})
+              onPress={
+                () =>
+                  navigation.navigate("TableSelect", {
+                    event: route.params?.event
+                  })
                 // changeExpansion(index)
               }
             >
               <Text style={[styles.dataTitle, { color: Colors.PRIMARY_1 }]}>
-                {item.title}
+                {item.name}
               </Text>
               {!item.isSoldOut && (
                 <View style={styles.arrowContainer}>
@@ -200,10 +202,11 @@ const EventMenuScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: "row", marginBottom: '3%' }}>
-            {renderMainDetails("10 Guest")}
-            {renderMainDetails("$550.00 minimum")}
-            {item.isSoldOut && renderMainDetails("SOLD OUT", Colors.PRIMARY_2, true)}
+          <View style={{ flexDirection: "row", marginBottom: "3%" }}>
+            {renderMainDetails(`${item.person} Guest`)}
+            {renderMainDetails(`$${item?.price} minimum`)}
+            {item.isSoldOut &&
+              renderMainDetails("SOLD OUT", Colors.PRIMARY_2, true)}
           </View>
           <View>
             <Text style={[styles.Font14, { color: Colors.NETURAL_2 }]}>
@@ -334,7 +337,7 @@ let styles = StyleSheet.create({
     fontSize: Typography.FONT_SIZE_14,
     fontWeight: Typography.FONT_WEIGHT_600,
     lineHeight: Typography.LINE_HEIGHT_20,
-    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
+    fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM
   },
   Font14: {
     fontSize: Typography.FONT_SIZE_13,

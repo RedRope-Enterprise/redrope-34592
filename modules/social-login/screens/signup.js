@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import { HOME_SCREEN_NAME, validateEmail } from "./constants"
+
 import {
   Image,
   Dimensions,
@@ -94,12 +96,11 @@ const SignupScreen = ({}) => {
         setDataStorage("@user", res)
 
         global.user = res
-        if(res.event_planner){
+        if (res.event_planner) {
           navigation.navigate("PlannerProfileEdit")
-        }else{
+        } else {
           navigation.navigate("Profile")
         }
-
       })
       .catch(err => {
         let error = mapErrorMessage(err)
@@ -111,7 +112,7 @@ const SignupScreen = ({}) => {
       })
   }
 
-  const onFacebookConnect = async dispatch => {
+  const onFacebookConnect = async (dispatch, event_planner) => {
     try {
       const fb_result = await LoginManager.logInWithPermissions([
         "public_profile",
@@ -119,7 +120,7 @@ const SignupScreen = ({}) => {
       ])
       if (!fb_result.isCancelled) {
         const data = await AccessToken.getCurrentAccessToken()
-        dispatch(facebookLogin({ access_token: data.accessToken }))
+        dispatch(facebookLogin({ access_token: data.accessToken, event_planner: event_planner  }))
           .then(unwrapResult)
           .then(res => {
             if (res.key) navigation.navigate(HOME_SCREEN_NAME)
@@ -130,7 +131,7 @@ const SignupScreen = ({}) => {
     }
   }
 
-  const onGoogleConnect = async dispatch => {
+  const onGoogleConnect = async (dispatch, event_planner) => {
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
@@ -141,7 +142,7 @@ const SignupScreen = ({}) => {
       await GoogleSignin.hasPlayServices()
       await GoogleSignin.signIn()
       const tokens = await GoogleSignin.getTokens()
-      dispatch(googleLogin({ access_token: tokens.accessToken }))
+      dispatch(googleLogin({ access_token: tokens.accessToken, event_planner: event_planner }))
         .then(unwrapResult)
         .then(res => {
           if (res.key) navigation.navigate(HOME_SCREEN_NAME)
@@ -153,15 +154,16 @@ const SignupScreen = ({}) => {
     }
   }
 
-  const onAppleConnect = async dispatch => {
+  const onAppleConnect = async (dispatch, event_planner) => {
     try {
       const signinFunction = Platform.select({
         ios: appleForiOS,
         android: appleForAndroid
       })
       const result = await signinFunction()
+      console.log("result ", result)
       dispatch(
-        appleLogin({ id_token: result.id_token, access_token: result.code })
+        appleLogin({ id_token: result.id_token, access_token: result.code, event_planner: event_planner  })
       )
         .then(unwrapResult)
         .then(res => {
@@ -185,6 +187,12 @@ const SignupScreen = ({}) => {
     const [repassword, setRepassword] = useState("")
     const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
       useState(false)
+
+    const [validationError, setValidationError] = useState({
+      email: "",
+      password: ""
+    })
+
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -233,6 +241,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/email_active.png")}
               />
             }
+            error={validationError.email}
           />
 
           <Input
@@ -253,6 +262,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock_active.png")}
               />
             }
+            error={validationError.password}
           />
 
           <Input
@@ -273,6 +283,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock_active.png")}
               />
             }
+            error={validationError.password}
           />
 
           <View
@@ -318,7 +329,7 @@ const SignupScreen = ({}) => {
               alignItems: "center"
             }}
           >
-            <TouchableOpacity onPress={() => onGoogleConnect(dispatch)}>
+            <TouchableOpacity onPress={() => onGoogleConnect(dispatch, false)}>
               <Image
                 style={{
                   resizeMode: "contain",
@@ -330,19 +341,21 @@ const SignupScreen = ({}) => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  width: 50,
-                  height: 50,
-                  marginHorizontal: 15
-                }}
-                source={require("../../../assets/images/login_signup/Apple.png")}
-              />
-            </TouchableOpacity>
+            {Platform.OS !== "android" && (
+              <TouchableOpacity onPress={() => onAppleConnect(dispatch, false)}>
+                <Image
+                  style={{
+                    resizeMode: "contain",
+                    width: 50,
+                    height: 50,
+                    marginHorizontal: 15
+                  }}
+                  source={require("../../../assets/images/login_signup/Apple.png")}
+                />
+              </TouchableOpacity>
+            )}
 
-            <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
+            <TouchableOpacity onPress={() => onFacebookConnect(dispatch, false)}>
               <Image
                 style={{
                   resizeMode: "contain",
@@ -359,11 +372,11 @@ const SignupScreen = ({}) => {
             style={{ flexDirection: "row", margin: "5%", alignItems: "center" }}
           >
             <CheckBox
-              onCheckColor={"#000"}
+              onCheckColor={"#fff"}
               onTintColor={Colors.PRIMARY_1}
               boxType={"square"}
               onFillColor={Colors.PRIMARY_1}
-              style={{ marginHorizontal: "2%", width: 20, height: 20 }}
+              style={{marginRight: width *0.04,width: 20, height: 20, color: "#fff" }}
               disabled={false}
               value={termsAndConditionsCheckBox}
               onValueChange={newValue =>
@@ -376,7 +389,8 @@ const SignupScreen = ({}) => {
                 color: Colors.WHITE,
                 fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
                 fontWeight: Typography.FONT_WEIGHT_400,
-                flex: 1
+                flex: 1,
+                // marginLeft: "3%"
               }}
               multiline={true}
             >
@@ -408,6 +422,23 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
+                if (!validateEmail.test(email))
+                  return setValidationError({
+                    email: "Please enter a valid email address.",
+                    password: ""
+                  })
+
+                if (!password)
+                  return setValidationError({
+                    email: "",
+                    password: "Please enter a valid password"
+                  })
+
+                if (password !== confirmPassword)
+                  return setValidationError({
+                    email: "",
+                    password: "Confirm password and password do not match."
+                  })
                 if (!termsAndConditionsCheckBox) {
                   Alert.alert("", "Please accept terms and conditions")
                   return
@@ -465,6 +496,12 @@ const SignupScreen = ({}) => {
     const [repassword, setRepassword] = useState("")
     const [termsAndConditionsCheckBox, setTermsAndConditionsCheckBox] =
       useState(false)
+
+    const [validationError, setValidationError] = useState({
+      email: "",
+      password: ""
+    })
+
     return (
       <ScrollView>
         <KeyboardAvoidingView
@@ -531,6 +568,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/email_active.png")}
               />
             }
+            error={validationError.email}
           />
 
           <Input
@@ -545,6 +583,7 @@ const SignupScreen = ({}) => {
                 source={require("../../../assets/images/login_signup/lock.png")}
               />
             }
+            error={validationError.password}
             iconHighlighted={
               <Image
                 style={{ width: 24, height: 24, margin: 10 }}
@@ -616,7 +655,7 @@ const SignupScreen = ({}) => {
               alignItems: "center"
             }}
           >
-            <TouchableOpacity onPress={() => onGoogleConnect(dispatch)}>
+            <TouchableOpacity onPress={() => onGoogleConnect(dispatch, true)}>
               <Image
                 style={{
                   resizeMode: "contain",
@@ -628,19 +667,21 @@ const SignupScreen = ({}) => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  width: 50,
-                  height: 50,
-                  marginHorizontal: 15
-                }}
-                source={require("../../../assets/images/login_signup/Apple.png")}
-              />
-            </TouchableOpacity>
+            {Platform.OS !== "android" && (
+              <TouchableOpacity onPress={() => onAppleConnect(dispatch, true)}>
+                <Image
+                  style={{
+                    resizeMode: "contain",
+                    width: 50,
+                    height: 50,
+                    marginHorizontal: 15
+                  }}
+                  source={require("../../../assets/images/login_signup/Apple.png")}
+                />
+              </TouchableOpacity>
+            )}
 
-            <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
+            <TouchableOpacity onPress={() => onFacebookConnect(dispatch, true)}>
               <Image
                 style={{
                   resizeMode: "contain",
@@ -706,13 +747,31 @@ const SignupScreen = ({}) => {
               }}
               // loading={props.loading}
               onPress={() => {
+                if (!validateEmail.test(email))
+                  return setValidationError({
+                    email: "Please enter a valid email address.",
+                    password: ""
+                  })
+
+                if (!password)
+                  return setValidationError({
+                    email: "",
+                    password: "Please enter a valid password"
+                  })
+
+                if (password !== confirmPassword)
+                  return setValidationError({
+                    email: "",
+                    password: "Confirm password and password do not match."
+                  })
+
                 if (!termsAndConditionsCheckBox) {
                   Alert.alert("", "Please accept terms and conditions")
                   return
                 }
                 onSignupPress({
                   business_name: businessName,
-                  business_reg_no : employerNumber,
+                  business_reg_no: employerNumber,
                   email: email,
                   password: password,
                   password2: repassword,

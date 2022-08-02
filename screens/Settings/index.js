@@ -77,7 +77,7 @@ const SettingsScreen = () => {
           url: "https://app.termly.io/document/privacy-policy/ffe5e1d0-ab91-4d33-956c-57bdbdd99d59"
         })
     },
-    { key: 1, text: "About us", onPress: onProfileSettingsPress }
+    { key: 1, text: "About us", onPress: () => navigation.navigate("AboutUs")}
   ]
 
   return (

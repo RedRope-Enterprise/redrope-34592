@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StatusBar
 } from "react-native"
+import RNFS from "react-native-fs"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
@@ -58,7 +59,7 @@ const ProfileScreen = () => {
   setInitialValues = async () => {
     let eUser = await global.user
     setExistingUser(eUser)
-    if(!eUser?.likes){
+    if (!eUser?.likes) {
       setIsModalVisible(true)
     }
 
@@ -97,25 +98,36 @@ const ProfileScreen = () => {
 
   setupUserProfile = async () => {
     let likes = await getInterestsIds()
-    const data = new FormData()
-    data.append("name", name)
-    data.append("bio", about)
-    data.append("profile_picture", {
-      uri: userImage,
-      type: "image/jpeg",
-      name: Date.now() + "photo.jpg"
-    })
+    // const data = new FormData()
+    // data.append("name", name)
+    // data.append("bio", about)
+    // data.append("profile_picture", {
+    //   uri: userImage,
+    //   type: "image/jpeg",
+    //   name: Date.now() + "photo.jpg"
+    // })
 
-    const resp = await updateUser(data)
+    let base64Image = null
+    if(!userImage.includes("http"))
+      base64Image = await RNFS.readFile(userImage, "base64")
+
+
+    let payload = {
+      name,
+      bio: about,
+      interests: likes,
+    }
+
+    if(base64Image){
+      payload[" profile_picture"] = base64Image
+    }
+
+    console.log("base64Image ", base64Image)
+
+    const resp = await updateUser(payload)
     if (resp) {
-      let param = {
-        interests: likes
-      }
-      let finalResp = await updateUser(param)
-
-      await setDataStorage("@user", finalResp)
-      global.user = finalResp
-      navigation.navigate("Dashboard")
+      await setDataStorage("@user", resp)
+      global.user = resp
     }
   }
 

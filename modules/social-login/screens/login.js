@@ -10,9 +10,13 @@ import {
   View,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from "react-native"
 import { unwrapResult } from "@reduxjs/toolkit"
+import { LoginManager, AccessToken } from "react-native-fbsdk"
+import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from "../auth/utils"
+import { appleForAndroid, appleForiOS } from "../auth/apple"
 
 import { useNavigation } from "@react-navigation/native"
 import { Colors, Typography } from "../../../styles"
@@ -24,6 +28,11 @@ import {
   googleLogin,
   appleLogin
 } from "../auth"
+import {
+  GoogleSigninButton,
+  GoogleSignin,
+  statusCodes
+} from "@react-native-google-signin/google-signin"
 const { width, height } = Dimensions.get("window")
 import { setDataStorage } from "../../../utils/storage"
 import { mapErrorMessage } from "../auth/utils"
@@ -32,6 +41,10 @@ import { getUser } from "../../../services/user"
 const LoginScreen = ({}) => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const [validationError, setValidationError] = useState({
+    email: "",
+    password: ""
+  })
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -40,7 +53,6 @@ const LoginScreen = ({}) => {
     dispatch(loginRequest({ email, password }))
       .then(unwrapResult)
       .then(async res => {
-
         await setDataStorage("@key", res?.token)
         await setDataStorage("@user", res?.user)
 
@@ -58,6 +70,78 @@ const LoginScreen = ({}) => {
           Alert.alert("INFO", error.message)
         }
       })
+  }
+
+  const onFacebookConnect = async dispatch => {
+    try {
+      const fb_result = await LoginManager.logInWithPermissions([
+        "public_profile",
+        "email"
+      ])
+      if (!fb_result.isCancelled) {
+        const data = await AccessToken.getCurrentAccessToken()
+        dispatch(
+          facebookLogin({
+            access_token: data.accessToken
+          })
+        )
+          .then(unwrapResult)
+          .then(res => {
+            if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+          })
+      }
+    } catch (err) {
+      console.log("Facebook Login Failed: ", JSON.stringify(err))
+    }
+  }
+
+  const onGoogleConnect = async dispatch => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      forceCodeForRefreshToken: false,
+      iosClientId: GOOGLE_IOS_CLIENT_ID
+    })
+    try {
+      await GoogleSignin.hasPlayServices()
+      await GoogleSignin.signIn()
+      const tokens = await GoogleSignin.getTokens()
+      dispatch(
+        googleLogin({
+          access_token: tokens.accessToken
+        })
+      )
+        .then(unwrapResult)
+        .then(res => {
+          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        })
+    } catch (err) {
+      if (err.code === statusCodes.SIGN_IN_CANCELLED) {
+        Alert.alert("Error", "The user canceled the signin request.")
+      }
+    }
+  }
+
+  const onAppleConnect = async (dispatch) => {
+    try {
+      const signinFunction = Platform.select({
+        ios: appleForiOS,
+        android: appleForAndroid
+      })
+      const result = await signinFunction()
+      console.log("result ", result)
+      dispatch(
+        appleLogin({
+          id_token: result.id_token,
+          access_token: result.code  })
+      )
+        .then(unwrapResult)
+        .then(res => {
+          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        })
+    } catch (err) {
+      console.log(JSON.stringify(err))
+    }
   }
 
   return (
@@ -98,6 +182,7 @@ const LoginScreen = ({}) => {
             source={require("../../../assets/images/login_signup/email_active.png")}
           />
         }
+        error={validationError.email}
       />
 
       <Input
@@ -118,6 +203,7 @@ const LoginScreen = ({}) => {
             source={require("../../../assets/images/login_signup/lock_active.png")}
           />
         }
+        error={validationError.password}
       />
 
       <TouchableOpacity
@@ -178,7 +264,7 @@ const LoginScreen = ({}) => {
           alignItems: "center"
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onGoogleConnect(dispatch)}>
           <Image
             style={{
               resizeMode: "contain",
@@ -190,19 +276,21 @@ const LoginScreen = ({}) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Image
-            style={{
-              resizeMode: "contain",
-              width: 50,
-              height: 50,
-              marginHorizontal: 15
-            }}
-            source={require("../../../assets/images/login_signup/Apple.png")}
-          />
-        </TouchableOpacity>
+        {Platform.OS !== "android" && (
+          <TouchableOpacity onPress={() => onAppleConnect(dispatch)}>
+            <Image
+              style={{
+                resizeMode: "contain",
+                width: 50,
+                height: 50,
+                marginHorizontal: 15
+              }}
+              source={require("../../../assets/images/login_signup/Apple.png")}
+            />
+          </TouchableOpacity>
+        )}
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onFacebookConnect(dispatch)}>
           <Image
             style={{
               resizeMode: "contain",
