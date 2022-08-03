@@ -7,7 +7,8 @@ from events.viewsets import (
     FavoriteEventViewset,
     CategoryViewSet,
     InterestViewSet,
-    ReserveViewset,
+    PaymentIntentViewset,
+    ConfirmReservationViewset,
 )
 
 router = DefaultRouter()
@@ -21,6 +22,11 @@ router.register("", EventViewset, basename="events")
 
 app_name = "events"
 urlpatterns = [
-    path("reserve/", ReserveViewset.as_view(), name="reserve"),
+    path("payment-intent/", PaymentIntentViewset.as_view(), name="payment_intent"),
+    path(
+        "confirm-reservation/",
+        ConfirmReservationViewset.as_view(),
+        name="confirm_reservation",
+    ),
     path("", include(router.urls)),
 ]
