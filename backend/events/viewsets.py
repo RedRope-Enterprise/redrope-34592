@@ -10,6 +10,7 @@ from events.serializers import (
     InterestSerializer,
     MyEventSerializer,
     ReserveSerializer,
+    ConfirmReservationSerializer,
 )
 from home.models import (
     Event,
@@ -236,7 +237,37 @@ class InterestViewSet(ListModelMixin, GenericViewSet):
 from rest_framework.views import APIView
 
 
-class ReserveViewset(APIView):
+class ConfirmReservationViewset(APIView):
+
+    http_method_names = ["post"]
+
+    def post(self, request):
+        serializer = ConfirmReservationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+
+            # Collect post data
+            payment_intent_id = serializer.data.get("payment_intent_id")
+
+            check_payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+            if check_payment_intent.status == "succeeded":
+                obj = UserEventRegistration.objects.filter(
+                    payment_intent_id=payment_intent_id
+                ).update(
+                    reserved=True,
+                    transaction_id=check_payment_intent.charges.data[
+                        0
+                    ].balance_transaction,
+                    payment_status="succeeded",
+                )
+                return Response(check_payment_intent.status, status=status.HTTP_200_OK)
+            return Response("Payment not confirmed", status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class PaymentIntentViewset(APIView):
 
     http_method_names = ["post"]
 
@@ -250,82 +281,82 @@ class ReserveViewset(APIView):
                 pk=serializer.data.get("bottle_service")
             )
             attendees = serializer.data.get("attendee")
-            card = serializer.data.get("chargeable_card")
-            percentage = int(serializer.data.get("percentage_upfront"))
+            # card = serializer.data.get("chargeable_card")
+            # percentage = int(serializer.data.get("percentage_upfront"))
 
             total_amount = attendees * bottle_service.price
 
             # Calculate the amount to pay based on the percentage provided
-            amount_to_pay = (percentage * total_amount) / 100
-            amount_to_balance = total_amount - amount_to_pay
+            # amount_to_pay = (percentage * total_amount) / 100
+            # amount_to_balance = total_amount - amount_to_pay
+            amount_to_balance = total_amount - 50
 
-            charge_card = stripe.Charge.create(
-                amount=int(amount_to_pay),
+            payment_intent = stripe.PaymentIntent.create(
+                amount=50,
                 currency="usd",
-                source=card,
-                customer=request.user.stripe_customer_id,
                 description="Payment for event reservation",
             )
 
-            if charge_card.status == "succeeded":
-                obj, created = UserEventRegistration.objects.update_or_create(
-                    user=request.user,
-                    event=event,
-                    defaults={
-                        "bottle_service": bottle_service,
-                        "attendee": attendees,
-                        "reserved": True,
-                        "amount_paid": charge_card.amount,
-                        "amount_left": amount_to_balance,
-                        "transaction_id": charge_card.balance_transaction,
-                        "payment_status": "succeeded",
-                    },
-                )
-                res = {
-                    "status": charge_card.status,
-                    "amount_paid": charge_card.amount,
-                    "transaction_id": charge_card.balance_transaction,
-                }
-                return Response(res, status=status.HTTP_200_OK)
-            elif charge_card.status == "pending":
-                obj, created = UserEventRegistration.objects.update_or_create(
-                    user=request.user,
-                    event=event,
-                    defaults={
-                        "bottle_service": bottle_service,
-                        "attendee": attendees,
-                        "amount_paid": charge_card.amount,
-                        "amount_left": amount_to_balance,
-                        "transaction_id": charge_card.balance_transaction,
-                        "payment_status": "pending",
-                    },
-                )
+            # if charge_card.status == "succeeded":
+            obj, created = UserEventRegistration.objects.update_or_create(
+                user=request.user,
+                event=event,
+                defaults={
+                    "bottle_service": bottle_service,
+                    "attendee": attendees,
+                    # "reserved": True,
+                    "amount_paid": payment_intent.amount,
+                    "amount_left": amount_to_balance,
+                    "payment_intent_id": payment_intent.id,
+                    # "transaction_id": charge_card.balance_transaction,
+                    "payment_status": "requires_payment_method",
+                },
+            )
+            # res = {
+            #     "status": charge_card.status,
+            #     "amount_paid": charge_card.amount,
+            #     "transaction_id": charge_card.balance_transaction,
+            # }
+            return Response(payment_intent, status=status.HTTP_200_OK)
+            # elif charge_card.status == "pending":
+            #     obj, created = UserEventRegistration.objects.update_or_create(
+            #         user=request.user,
+            #         event=event,
+            #         defaults={
+            #             "bottle_service": bottle_service,
+            #             "attendee": attendees,
+            #             "amount_paid": charge_card.amount,
+            #             "amount_left": amount_to_balance,
+            #             "transaction_id": charge_card.balance_transaction,
+            #             "payment_status": "pending",
+            #         },
+            #     )
 
-                res = {
-                    "status": charge_card.status,
-                    "amount": charge_card.amount,
-                    "transaction_id": charge_card.balance_transaction,
-                }
-                return Response(res, status=status.HTTP_200_OK)
-            elif charge_card.status == "failed":
-                obj, created = UserEventRegistration.objects.update_or_create(
-                    user=request.user,
-                    event=event,
-                    defaults={
-                        "bottle_service": bottle_service,
-                        "attendee": attendees,
-                        "amount_paid": charge_card.amount,
-                        "amount_left": amount_to_balance,
-                        "transaction_id": charge_card.balance_transaction,
-                        "payment_status": "failed",
-                    },
-                )
+            #     res = {
+            #         "status": charge_card.status,
+            #         "amount": charge_card.amount,
+            #         "transaction_id": charge_card.balance_transaction,
+            #     }
+            #     return Response(res, status=status.HTTP_200_OK)
+            # elif charge_card.status == "failed":
+            #     obj, created = UserEventRegistration.objects.update_or_create(
+            #         user=request.user,
+            #         event=event,
+            #         defaults={
+            #             "bottle_service": bottle_service,
+            #             "attendee": attendees,
+            #             "amount_paid": charge_card.amount,
+            #             "amount_left": amount_to_balance,
+            #             "transaction_id": charge_card.balance_transaction,
+            #             "payment_status": "failed",
+            #         },
+            #     )
 
-                res = {
-                    "status": charge_card.status,
-                    "message": charge_card.failure_message,
-                    "transaction_id": charge_card.failure_balance_transaction,
-                }
-                return Response(res, status=status.HTTP_200_OK)
+            #     res = {
+            #         "status": charge_card.status,
+            #         "message": charge_card.failure_message,
+            #         "transaction_id": charge_card.failure_balance_transaction,
+            #     }
+            #     return Response(res, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

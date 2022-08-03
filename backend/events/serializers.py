@@ -204,8 +204,8 @@ class RegisterEventSerializer(serializers.ModelSerializer):
 
 class ReserveSerializer(serializers.ModelSerializer):
     attendee = serializers.IntegerField()
-    percentage_upfront = serializers.IntegerField()
-    chargeable_card = serializers.CharField()
+    # percentage_upfront = serializers.IntegerField()
+    # chargeable_card = serializers.CharField()
 
     class Meta:
         model = UserEventRegistration
@@ -213,8 +213,8 @@ class ReserveSerializer(serializers.ModelSerializer):
             "event",
             "bottle_service",
             "attendee",
-            "chargeable_card",
-            "percentage_upfront",
+            # "chargeable_card",
+            # "percentage_upfront",
         )
 
     def validate(self, attrs):
@@ -223,6 +223,10 @@ class ReserveSerializer(serializers.ModelSerializer):
                 {"bottle_services": "Event doesn't have selected bottle service."}
             )
         return attrs
+
+
+class ConfirmReservationSerializer(serializers.Serializer):
+    payment_intent_id = serializers.CharField()
 
 
 class FavoriteEventSerializer(serializers.ModelSerializer):
