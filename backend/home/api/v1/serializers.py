@@ -142,6 +142,9 @@ class SignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"accept_tc": "Please accept terms and conditions"}
             )
+        if not attrs.get("name"):
+            raise serializers.ValidationError({"name": "This field is required"})
+
         if attrs.get("event_planner"):
             if not attrs.get("business_name") or not attrs.get("business_reg_no"):
                 raise serializers.ValidationError(

@@ -24,6 +24,7 @@ class User(AbstractUser):
     # around the globe.
     name = models.CharField(
         _("Name of User"),
+        blank=True,
         max_length=255,
         validators=[RegexValidator("[+-/%#$@!~^&*()1234567890]", inverse_match=True)],
     )
