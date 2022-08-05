@@ -27,4 +27,21 @@ async function deleteCard(params = {}) {
   return response.data
 }
 
-export { getCardsList, createCard, updateCard, deleteCard }
+async function createPaymentIntent(params = {}) {
+  const response = await api.post("/api/v1/events/payment-intent/", params)
+  return response.data
+}
+
+async function confirmReservation(params = {}) {
+  const response = await api.post("/api/v1/events/confirm-reservation/", params)
+  return response.data
+}
+
+export {
+  getCardsList,
+  createCard,
+  updateCard,
+  deleteCard,
+  createPaymentIntent,
+  confirmReservation
+}
