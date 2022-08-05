@@ -31,7 +31,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>5146969218696306</string>
 	<key>FacebookClientToken</key>
@@ -69,10 +69,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Provide access to change your profile picture</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Provide access to the location to add or change address</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Provide access to change your picture</string>
+	<string>Provide access to change your profile picture</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Bold.ttf</string>
@@ -105,8 +107,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

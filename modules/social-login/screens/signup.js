@@ -74,7 +74,7 @@ const SignupScreen = ({}) => {
     //     password: "Please enter a valid password"
     //   })
 
-    // if (password !== confirmPassword)
+    // if (password !== repassword)
     //   setValidationError({
     //     ...validationError,
     //     password: "Confirm password and password do not match."
@@ -99,7 +99,9 @@ const SignupScreen = ({}) => {
         if (res.event_planner) {
           navigation.navigate("PlannerProfileEdit")
         } else {
-          navigation.navigate("Profile")
+          navigation.navigate("Profile", {
+            initialSetup : true
+          })
         }
       })
       .catch(err => {
@@ -434,7 +436,7 @@ const SignupScreen = ({}) => {
                     password: "Please enter a valid password"
                   })
 
-                if (password !== confirmPassword)
+                if (password !== repassword)
                   return setValidationError({
                     email: "",
                     password: "Confirm password and password do not match."
@@ -759,7 +761,7 @@ const SignupScreen = ({}) => {
                     password: "Please enter a valid password"
                   })
 
-                if (password !== confirmPassword)
+                if (password !== repassword)
                   return setValidationError({
                     email: "",
                     password: "Confirm password and password do not match."

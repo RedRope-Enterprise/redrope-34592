@@ -7,6 +7,13 @@ async function getCategories() {
   return response.data
 }
 
+async function getIntrests(){
+  const response = await api.get("/api/v1/events/interests/", {
+    params: {}
+  })
+  return response.data
+}
+
 async function getEvents(params = {}) {
   var queryString = Object.keys(params)
     .map(key => key + "=" + params[key])
@@ -70,5 +77,6 @@ export {
   createEvent,
   addEventToFavorite,
   markEventAsInterested,
-  registerForEvent
+  registerForEvent,
+  getIntrests
 }
