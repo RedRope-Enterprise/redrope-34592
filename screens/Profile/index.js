@@ -16,6 +16,7 @@ import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
 import ImagePicker from "react-native-image-crop-picker"
+import { useRoute } from "@react-navigation/native"
 import { getUser, updateUser } from "../../services/user"
 import {
   getDataStorage,
@@ -29,6 +30,7 @@ const { width, height } = Dimensions.get("window")
 
 const ProfileScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [name, setName] = useState("")
@@ -90,7 +92,7 @@ const ProfileScreen = () => {
     let result = []
     userInterests?.forEach(element => {
       element = JSON.parse(JSON.stringify(element))
-      result.push(element.id)
+      result.push(parseInt(element.id))
     })
 
     return result
@@ -98,36 +100,29 @@ const ProfileScreen = () => {
 
   setupUserProfile = async () => {
     let likes = await getInterestsIds()
-    // const data = new FormData()
-    // data.append("name", name)
-    // data.append("bio", about)
-    // data.append("profile_picture", {
-    //   uri: userImage,
-    //   type: "image/jpeg",
-    //   name: Date.now() + "photo.jpg"
-    // })
+    console.log("likesss ", likes)
+    const data = new FormData()
+    data.append("name", name)
+    data.append("bio", about)
+    data.append("profile_picture", {
+      uri: userImage,
+      type: "image/jpeg",
+      name: Date.now() + "photo.jpg"
+    })
 
-    let base64Image = null
-    if(!userImage.includes("http"))
-      base64Image = await RNFS.readFile(userImage, "base64")
-
-
-    let payload = {
-      name,
-      bio: about,
-      interests: likes,
-    }
-
-    if(base64Image){
-      payload[" profile_picture"] = base64Image
-    }
-
-    console.log("base64Image ", base64Image)
-
-    const resp = await updateUser(payload)
+    let resp = await updateUser(data)
     if (resp) {
+      resp = await updateUser({interests:likes})
+      console.log("resp ", resp)
       await setDataStorage("@user", resp)
       global.user = resp
+      if(route?.params?.initialSetup){
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Dashboard'}],
+        });
+      }else
+        Alert.alert("Info", "Profile Updated successfully")
     }
   }
 
@@ -140,19 +135,6 @@ const ProfileScreen = () => {
       setUpdateInterests(Date.now())
     }
 
-    // if (!data) {
-    //   await setDataStorage("@user_interests", [
-    //     { title: "Music", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Secret Party", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Art", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Celebrities", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Food", isEnabled: false, updatedAt: Date.now() },
-    //     { title: "Cinema", isEnabled: true, updatedAt: Date.now() },
-    //     { title: "Entertainment", isEnabled: false, updatedAt: Date.now() }
-    //   ])
-    // } else {
-    // }
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>

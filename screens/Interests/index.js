@@ -19,7 +19,7 @@ import {
   clearStorage
 } from "../../utils/storage"
 
-import {getCategories} from "../../services/events"
+import {getCategories, getIntrests} from "../../services/events"
 import {updateUser} from "../../services/user"
 
 
@@ -38,7 +38,7 @@ const InterestScreen = () => {
 
   const getUserInterests = async () => {
     // const data = await getDataStorage("@user_interests")
-    const data = await getCategories()
+    const data = await getIntrests()
     if (data) {
       setUserInterests(data.results)
     }
@@ -145,6 +145,7 @@ const InterestScreen = () => {
           onPress={async() =>{  
             const likes =  await getInterestsIds()
             let resp = await updateUser({interests:likes})
+            console.log("resp in ", resp)
             await setDataStorage("@user", JSON.stringify(resp))
             navigation.goBack()
 
