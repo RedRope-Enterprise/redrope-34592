@@ -40,6 +40,7 @@ const { width, height } = Dimensions.get("window")
 const TableConfirmScreen = () => {
   const route = useRoute()
   const { event } = route?.params
+  console.log(JSON.stringify(event, null, 2))
 
   const calculatePriceToPay = () => {
     let v = ((valueToPayPercentage / 100) * event?.price).toFixed(2)
@@ -328,7 +329,9 @@ const TableConfirmScreen = () => {
             }}
             onPress={() => {
               navigation.navigate("PaymentScreen", {
-                price: priceToPay
+                price: priceToPay,
+                attendeeCount: event?.attendeeCount,
+                event: event
               })
             }}
           >
