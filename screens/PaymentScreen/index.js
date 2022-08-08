@@ -103,7 +103,11 @@ const PaymentScreen = () => {
   const renderAddCardButton = () => {
     return (
       <View style={styles.center}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("AddNewCardScreen", { viewType: "add" })
+          }
+        >
           <View style={[styles.itemContainer, { justifyContent: "center" }]}>
             <View>
               <Text style={[styles.desc, { color: Colors.WHITE }]}>
