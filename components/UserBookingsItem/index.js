@@ -10,6 +10,8 @@ import {
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
+import FastImage from 'react-native-fast-image';
+
 
 const { width, height } = Dimensions.get("window")
 
@@ -33,7 +35,7 @@ const UserBookingsItem = props => {
         }}
       >
         <View style={{}}>
-          <Image
+          <FastImage
             style={{
               width: 90,
               height: Mixins.scaleHeight(150),

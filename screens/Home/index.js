@@ -32,6 +32,7 @@ import { unwrapResult } from "@reduxjs/toolkit"
 import { getUser } from "../../services/user"
 import { getCategories, getEvents } from "../../services/events"
 import { applyFilter } from "../../store/custom/Home/home.slice"
+import FastImage from "react-native-fast-image"
 
 const { width, height } = Dimensions.get("window")
 
@@ -123,7 +124,7 @@ const HomeScreen = () => {
       }}
       key={event.id}
     >
-      <ImageBackground
+      <FastImage
         imageStyle={{
           borderRadius: 10,
           backgroundColor: Colors.NETURAL_3
@@ -152,7 +153,7 @@ const HomeScreen = () => {
         >
           {event.name}
         </Text>
-      </ImageBackground>
+      </FastImage>
     </TouchableOpacity>
   )
 

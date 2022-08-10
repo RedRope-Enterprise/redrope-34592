@@ -17,6 +17,8 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import FastImage from 'react-native-fast-image';
+
 import {
   getDataStorage,
   setDataStorage,
@@ -89,7 +91,7 @@ const TableConfirmScreen = () => {
       <View style={styles.center}>
         <View style={styles.itemContainer}>
           <View style={styles.itemImgContainer}>
-            <Image style={styles.itemIcon} source={item.image}></Image>
+            <FastImage style={styles.itemIcon} source={item.image}></FastImage>
           </View>
           <View
             style={{
@@ -118,7 +120,7 @@ const TableConfirmScreen = () => {
         <Text style={[styles.title, { color: Colors.WHITE }]}>Disclaimer</Text>
       </View> */}
       <View style={styles.banner}>
-        <Image
+        <FastImage
           style={styles.full}
           source={{
             uri: event?.event_images ? event?.event_images[0].image : ""

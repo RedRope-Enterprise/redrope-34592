@@ -22,6 +22,7 @@ import {
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
+import FastImage from 'react-native-fast-image';
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
@@ -72,11 +73,11 @@ const EventMenuScreen = () => {
   const renderCarouselItem = ({ item, index }) => {
     return (
       <View style={{ width: "100%", height: undefined, aspectRatio: 1.56 }}>
-        <Image
-          resizeMode="cover"
+        <FastImage
+          resizeMode={FastImage.resizeMode.cover}
           style={{ width: "100%", height: "100%" }}
           source={{ uri: item.image }}
-        ></Image>
+        ></FastImage>
       </View>
     )
   }

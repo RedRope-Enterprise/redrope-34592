@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import {
-  Image,
+
   Alert,
   View,
   TouchableOpacity,
@@ -9,12 +9,16 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
+import {Image} from "react-native-elements"
+import FastImage from 'react-native-fast-image';
+
 import { useNavigation } from "@react-navigation/native"
 import {
   getDataStorage,
@@ -62,11 +66,13 @@ const EventDetailsScreen = () => {
         }}
       ></NavigationHeader>
 
-      <Image
-        style={{ width: "100%", height: height * 0.3 }}
+      <FastImage
+      containerStyle={{ backgroundColor: Colors.BLACK }}
+        style={{ width: "100%", height: height * 0.3, backgroundColor: Colors.BLACK }}
         source={{
           uri: event?.event_images ? event?.event_images[0].image : ""
         }}
+        PlaceholderContent={<ActivityIndicator color={Colors.BUTTON_RED}/>}
       />
       <View style={{ marginHorizontal: "5%" }}>
         <View style={{ flexDirection: "row", marginTop: "5%" }}>
@@ -344,7 +350,7 @@ const EventDetailsScreen = () => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {event?.bottle_services.length > 0 && <TouchableOpacity
             onPress={() => navigation.navigate("EventMenu", { event })}
             style={{
               flexDirection: "row",
@@ -378,7 +384,7 @@ const EventDetailsScreen = () => {
             >
               {">"}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       )}
     </ScrollView>
