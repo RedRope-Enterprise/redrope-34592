@@ -191,6 +191,7 @@ const AddNewCardScreen = () => {
               {renderItem(ImgCalendar, "Expiry Date", setDate, date)}
               {renderItem(ImgLock, "CVV", setCvv, cvv)} */}
               <CardField
+              dangerouslyGetFullCardDetails={true}
                 postalCodeEnabled={false}
                 cardStyle={{
                   backgroundColor: Colors.NETURAL_5,

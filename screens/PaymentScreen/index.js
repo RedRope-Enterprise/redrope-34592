@@ -11,10 +11,11 @@ import {
   StyleSheet,
   FlatList,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, CustomImageModal } from "../../components"
+import { Button, Input, CustomModal, CustomImageModal, LoaderComponent } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
@@ -57,8 +58,7 @@ const PaymentScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
-  const {confirmPayment} = useConfirmPayment();
-
+  const { confirmPayment } = useConfirmPayment()
 
   async function getCardsData(params = "") {
     setLoading(true)
@@ -147,11 +147,12 @@ const PaymentScreen = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader></NavigationHeader>
       <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>Payment</Text>
       </View>
+
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.subTitleContainer}>
           <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
@@ -170,7 +171,7 @@ const PaymentScreen = () => {
         })}
 
         <View style={styles.border}></View>
-        {data?.length == 0 && renderAddCardButton()}
+        {data?.length !== 0 && renderAddCardButton()}
       </ScrollView>
       <View style={styles.nextBtnContainer}>
         <Button
@@ -178,7 +179,7 @@ const PaymentScreen = () => {
           backgroundColor={Colors.BUTTON_RED}
           viewStyle={{
             borderColor: Colors.facebook,
-            marginBottom: 2
+            marginBottom: 10
           }}
           height={35}
           textFontWeight={Typography.FONT_WEIGHT_600}
@@ -196,43 +197,51 @@ const PaymentScreen = () => {
             })
             setLoading(true)
             if (event?.id && event.bottle_services.length > 0) {
-              let response = await createPaymentIntent({
-                event: event?.id,
-                attendee: attendeeCount,
-                bottle_service: event?.bottle_services[0].id
-              })
-              console.log(JSON.stringify(response, null, 2))
-              if (response.id) {
-                console.log({
-                  payment_intent_id: response.id
+              try {
+                let response = await createPaymentIntent({
+                  event: event?.id,
+                  attendee: attendeeCount,
+                  bottle_service: event?.bottle_services[0].id
                 })
-                const billingDetails = {
-                  email: "test@gmail.com"
-                }
-                console.log({
-                  paymentMethodType: "Card",
-                  paymentMethodData: {
-                    billingDetails
+                console.log(JSON.stringify(response, null, 2))
+                if (response.id) {
+                  console.log({
+                    payment_intent_id: response.id
+                  })
+                  const billingDetails = {
+                    email: "test@gmail.com"
                   }
-                })
-                const { paymentIntent, error } = await confirmPayment(
-                  response.client_secret,
-                  {
+                  console.log({
                     paymentMethodType: "Card",
                     paymentMethodData: {
                       billingDetails
                     }
-                  }
+                  })
+                  const { paymentIntent, error } = await confirmPayment(
+                    response.client_secret,
+                    {
+                      paymentMethodType: "Card",
+                      paymentMethodData: {
+                        billingDetails
+                      }
+                    }
+                  )
+                  console.log("LOG: error ", JSON.stringify(error, null, 2))
+                  console.log(
+                    "LOG: paymentIntent ",
+                    JSON.stringify(paymentIntent, null, 2)
+                  )
+                  let result = await confirmReservation({
+                    payment_intent_id: response.id
+                  })
+                  console.log(JSON.stringify(result, null, 2))
+                }
+              } catch (error) {
+                Alert.alert(
+                  "Payment process",
+                  "Unable to complete payment process at the moment. Pleae try again later."
                 )
-                console.log("LOG: error ", JSON.stringify(error, null, 2))
-                console.log(
-                  "LOG: paymentIntent ",
-                  JSON.stringify(paymentIntent, null, 2)
-                )
-                let result = await confirmReservation({
-                  payment_intent_id: response.id
-                })
-                console.log(JSON.stringify(result, null, 2))
+                setLoading(false)
               }
             }
             setLoading(false)
@@ -243,13 +252,17 @@ const PaymentScreen = () => {
           {`PAY $${50}`}
         </Button>
       </View>
+
       <CustomImageModal
         isVisible={isModalVisible}
         text={`We are going to notify you when all users from your group are paid and`}
         image={SuccessPopupImg}
         onClose={() => setIsModalVisible(false)}
       ></CustomImageModal>
-    </SafeAreaView>
+      {loading && (
+        <LoaderComponent></LoaderComponent>
+      )}
+    </View>
   )
 }
 
@@ -316,7 +329,7 @@ let styles = StyleSheet.create({
   nextBtnContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "5%"
+    marginBottom: "10%"
   },
   itemContainer: {
     flexDirection: "row",

@@ -4,6 +4,7 @@ import CustomModal from "./CustomModal"
 import CustomImageModal from "./CustomImageModal"
 import HomeEventItem from "./HomeEventItem"
 import UserBookingsItem from "./UserBookingsItem"
+import LoaderComponent from "./LoaderComponent"
 
 export {
   Input,
@@ -11,5 +12,6 @@ export {
   CustomModal,
   CustomImageModal,
   HomeEventItem,
-  UserBookingsItem
+  UserBookingsItem,
+  LoaderComponent
 }
