@@ -10,6 +10,8 @@ import {
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
+import FastImage from 'react-native-fast-image';
+
 
 const { width, height } = Dimensions.get("window")
 
@@ -24,7 +26,7 @@ const HomeEventItem = props => {
         backgroundColor: Colors.NETURAL_3
       }}
     >
-      <ImageBackground
+      <FastImage
         imageStyle={{ borderRadius: 20, backgroundColor: Colors.NETURAL_3 }}
         style={{
           width: "100%",
@@ -34,7 +36,8 @@ const HomeEventItem = props => {
         }}
         resizeMode="cover"
         source={{
-          uri: event?.event_images ? event?.event_images[0].image : ""
+          uri: event?.event_images ? event?.event_images[0].image : "",
+          priority: FastImage.priority.high,
         }}
       >
         <LinearGradient
@@ -137,7 +140,7 @@ const HomeEventItem = props => {
             </View>
           </View>
         </LinearGradient>
-      </ImageBackground>
+      </FastImage>
     </TouchableOpacity>
   )
 }

@@ -20,6 +20,8 @@ target 'redrope_34592' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
+
   target 'redrope_34592Tests' do
     inherit! :complete
     # Pods for testing

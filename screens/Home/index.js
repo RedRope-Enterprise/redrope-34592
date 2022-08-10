@@ -16,7 +16,7 @@ import {
   LogBox
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, HomeEventItem } from "../../components"
+import { Button, Input, CustomModal, HomeEventItem, LoaderComponent } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -32,6 +32,7 @@ import { unwrapResult } from "@reduxjs/toolkit"
 import { getUser } from "../../services/user"
 import { getCategories, getEvents } from "../../services/events"
 import { applyFilter } from "../../store/custom/Home/home.slice"
+import FastImage from "react-native-fast-image"
 
 const { width, height } = Dimensions.get("window")
 
@@ -46,6 +47,7 @@ const HomeScreen = () => {
 
   const [searchValue, setSearchValue] = useState("")
   const [userImage, setUserImage] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
 
   const { hasFilters, filterObj } = useSelector(state => state.home)
 
@@ -92,6 +94,7 @@ const HomeScreen = () => {
       global.user = user
       setUserImage(user?.profile_picture)
     }
+    setIsLoading(false)
   }
 
   SearchForEvent = value => {
@@ -121,7 +124,7 @@ const HomeScreen = () => {
       }}
       key={event.id}
     >
-      <ImageBackground
+      <FastImage
         imageStyle={{
           borderRadius: 10,
           backgroundColor: Colors.NETURAL_3
@@ -150,7 +153,7 @@ const HomeScreen = () => {
         >
           {event.name}
         </Text>
-      </ImageBackground>
+      </FastImage>
     </TouchableOpacity>
   )
 
@@ -275,6 +278,7 @@ const HomeScreen = () => {
           </View>
         )}
       </ScrollView>
+      {isLoading &&<LoaderComponent></LoaderComponent>}
     </SafeAreaView>
   )
 }

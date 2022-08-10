@@ -154,7 +154,11 @@ const TableSelectScreen = () => {
           }}
           onPress={() => {
             navigation.navigate("TableConfirm", {
-              event: { ...event, price: event?.price * datasource.length }
+              event: {
+                ...event,
+                price: event?.price * datasource.length,
+                attendeeCount: datasource.length
+              }
             })
           }}
         >

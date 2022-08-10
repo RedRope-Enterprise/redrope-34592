@@ -11,13 +11,14 @@ import {
   StyleSheet,
   FlatList,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, CustomImageModal } from "../../components"
+import { Button, Input, CustomModal, CustomImageModal, LoaderComponent } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import {
   getDataStorage,
   setDataStorage,
@@ -38,16 +39,41 @@ import GoogleIcon from "../../assets/images/payment/google.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 
+import { useConfirmPayment } from "@stripe/stripe-react-native"
 import { data } from "../../data"
+
+import {
+  confirmReservation,
+  createPaymentIntent,
+  getCardsList
+} from "../../services/Payment"
 
 const { width, height } = Dimensions.get("window")
 
 const PaymentScreen = () => {
   const route = useRoute()
-  const { price } = route?.params
+  const { price, attendeeCount, event } = route?.params
 
   const navigation = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState([])
+  const { confirmPayment } = useConfirmPayment()
+
+  async function getCardsData(params = "") {
+    setLoading(true)
+    let response = await getCardsList(params)
+    console.log(JSON.stringify(response.data, null, 2))
+    setLoading(false)
+    setData([])
+    setData(response.data)
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getCardsData()
+    }, [])
+  )
 
   const renderPaymentMethod = (title, icon) => {
     return (
@@ -72,7 +98,7 @@ const PaymentScreen = () => {
     )
   }
 
-  const renderCard = (title, icon) => {
+  const renderCard = (card, title, icon) => {
     return (
       <View style={styles.center}>
         <TouchableOpacity onPress={() => {}}>
@@ -83,7 +109,7 @@ const PaymentScreen = () => {
             >
               <View style={{ marginLeft: "8%" }}>
                 <Text style={[styles.desc, { color: Colors.WHITE }]}>
-                  {title}
+                  {card ? "************" + card?.last4 : ""}
                 </Text>
               </View>
               <View style={styles.cardImage}>
@@ -103,7 +129,11 @@ const PaymentScreen = () => {
   const renderAddCardButton = () => {
     return (
       <View style={styles.center}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("AddNewCardScreen", { viewType: "add" })
+          }}
+        >
           <View style={[styles.itemContainer, { justifyContent: "center" }]}>
             <View>
               <Text style={[styles.desc, { color: Colors.WHITE }]}>
@@ -122,6 +152,7 @@ const PaymentScreen = () => {
       <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>Payment</Text>
       </View>
+
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.subTitleContainer}>
           <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
@@ -135,9 +166,12 @@ const PaymentScreen = () => {
             Pay with Debit/Credit Card
           </Text>
         </View>
-        {renderCard("3827 **** **** 0007", VisaIcon)}
+        {data?.map(cardItem => {
+          return renderCard(cardItem)
+        })}
+
         <View style={styles.border}></View>
-        {renderAddCardButton()}
+        {data?.length == 0 && renderAddCardButton()}
       </ScrollView>
       <View style={styles.nextBtnContainer}>
         <Button
@@ -145,7 +179,7 @@ const PaymentScreen = () => {
           backgroundColor={Colors.BUTTON_RED}
           viewStyle={{
             borderColor: Colors.facebook,
-            marginBottom: 2
+            marginBottom: 10
           }}
           height={35}
           textFontWeight={Typography.FONT_WEIGHT_600}
@@ -154,19 +188,80 @@ const PaymentScreen = () => {
             fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
             fontSize: Typography.FONT_SIZE_14
           }}
-          onPress={() => {
-            setIsModalVisible(true)
+          onPress={async () => {
+            console.log(event?.id, attendeeCount, price)
+            console.log({
+              event: event?.id,
+              attendee: attendeeCount,
+              bottle_service: event?.bottle_services[0].id
+            })
+            setLoading(true)
+            if (event?.id && event.bottle_services.length > 0) {
+              try {
+                let response = await createPaymentIntent({
+                  event: event?.id,
+                  attendee: attendeeCount,
+                  bottle_service: event?.bottle_services[0].id
+                })
+                console.log(JSON.stringify(response, null, 2))
+                if (response.id) {
+                  console.log({
+                    payment_intent_id: response.id
+                  })
+                  const billingDetails = {
+                    email: "test@gmail.com"
+                  }
+                  console.log({
+                    paymentMethodType: "Card",
+                    paymentMethodData: {
+                      billingDetails
+                    }
+                  })
+                  const { paymentIntent, error } = await confirmPayment(
+                    response.client_secret,
+                    {
+                      paymentMethodType: "Card",
+                      paymentMethodData: {
+                        billingDetails
+                      }
+                    }
+                  )
+                  console.log("LOG: error ", JSON.stringify(error, null, 2))
+                  console.log(
+                    "LOG: paymentIntent ",
+                    JSON.stringify(paymentIntent, null, 2)
+                  )
+                  let result = await confirmReservation({
+                    payment_intent_id: response.id
+                  })
+                  console.log(JSON.stringify(result, null, 2))
+                }
+              } catch (error) {
+                Alert.alert(
+                  "Payment process",
+                  "Unable to complete payment process at the moment. Pleae try again later."
+                )
+                setLoading(false)
+              }
+            }
+            setLoading(false)
+
+            // setIsModalVisible(true)
           }}
         >
           {`PAY $${50}`}
         </Button>
       </View>
+
       <CustomImageModal
         isVisible={isModalVisible}
         text={`We are going to notify you when all users from your group are paid and`}
         image={SuccessPopupImg}
         onClose={() => setIsModalVisible(false)}
       ></CustomImageModal>
+      {loading && (
+        <LoaderComponent></LoaderComponent>
+      )}
     </SafeAreaView>
   )
 }
@@ -234,7 +329,7 @@ let styles = StyleSheet.create({
   nextBtnContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "5%"
+    marginBottom: "10%"
   },
   itemContainer: {
     flexDirection: "row",

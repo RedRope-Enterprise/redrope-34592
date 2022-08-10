@@ -17,6 +17,8 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
+import FastImage from 'react-native-fast-image';
+
 import {
   getDataStorage,
   setDataStorage,
@@ -40,6 +42,7 @@ const { width, height } = Dimensions.get("window")
 const TableConfirmScreen = () => {
   const route = useRoute()
   const { event } = route?.params
+  console.log(JSON.stringify(event, null, 2))
 
   const calculatePriceToPay = () => {
     let v = ((valueToPayPercentage / 100) * event?.price).toFixed(2)
@@ -88,7 +91,7 @@ const TableConfirmScreen = () => {
       <View style={styles.center}>
         <View style={styles.itemContainer}>
           <View style={styles.itemImgContainer}>
-            <Image style={styles.itemIcon} source={item.image}></Image>
+            <FastImage style={styles.itemIcon} source={item.image}></FastImage>
           </View>
           <View
             style={{
@@ -117,7 +120,7 @@ const TableConfirmScreen = () => {
         <Text style={[styles.title, { color: Colors.WHITE }]}>Disclaimer</Text>
       </View> */}
       <View style={styles.banner}>
-        <Image
+        <FastImage
           style={styles.full}
           source={{
             uri: event?.event_images ? event?.event_images[0].image : ""
@@ -328,7 +331,9 @@ const TableConfirmScreen = () => {
             }}
             onPress={() => {
               navigation.navigate("PaymentScreen", {
-                price: priceToPay
+                price: priceToPay,
+                attendeeCount: event?.attendeeCount,
+                event: event
               })
             }}
           >

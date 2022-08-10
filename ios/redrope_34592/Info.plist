@@ -38,6 +38,8 @@
 	<string>b75c0eacfc2b9b9634be56a60a9235f8</string>
 	<key>FacebookDisplayName</key>
 	<string>Red Rope</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
