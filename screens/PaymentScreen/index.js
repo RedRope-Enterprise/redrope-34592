@@ -147,7 +147,7 @@ const PaymentScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader></NavigationHeader>
       <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>Payment</Text>
@@ -171,7 +171,7 @@ const PaymentScreen = () => {
         })}
 
         <View style={styles.border}></View>
-        {data?.length !== 0 && renderAddCardButton()}
+        {data?.length == 0 && renderAddCardButton()}
       </ScrollView>
       <View style={styles.nextBtnContainer}>
         <Button
@@ -262,7 +262,7 @@ const PaymentScreen = () => {
       {loading && (
         <LoaderComponent></LoaderComponent>
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 

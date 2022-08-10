@@ -16,7 +16,7 @@ import {
   LogBox
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, HomeEventItem } from "../../components"
+import { Button, Input, CustomModal, HomeEventItem, LoaderComponent } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -46,6 +46,7 @@ const HomeScreen = () => {
 
   const [searchValue, setSearchValue] = useState("")
   const [userImage, setUserImage] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
 
   const { hasFilters, filterObj } = useSelector(state => state.home)
 
@@ -92,6 +93,7 @@ const HomeScreen = () => {
       global.user = user
       setUserImage(user?.profile_picture)
     }
+    setIsLoading(false)
   }
 
   SearchForEvent = value => {
@@ -275,6 +277,7 @@ const HomeScreen = () => {
           </View>
         )}
       </ScrollView>
+      {isLoading &&<LoaderComponent></LoaderComponent>}
     </SafeAreaView>
   )
 }
