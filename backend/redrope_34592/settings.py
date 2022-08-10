@@ -330,3 +330,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     },
 }
+
+# Constants
+RESERVATION_UPFRONT_AMOUNT = 50

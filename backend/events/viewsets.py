@@ -24,6 +24,7 @@ import stripe
 from django.conf import settings
 from rest_framework import status
 from rest_framework import filters
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
@@ -234,9 +235,6 @@ class InterestViewSet(ListModelMixin, GenericViewSet):
     queryset = Interest.objects.all()
 
 
-from rest_framework.views import APIView
-
-
 class ConfirmReservationViewset(APIView):
 
     http_method_names = ["post"]
@@ -292,7 +290,7 @@ class PaymentIntentViewset(APIView):
             amount_to_balance = total_amount - 50
 
             payment_intent = stripe.PaymentIntent.create(
-                amount=50,
+                amount=settings.RESERVATION_UPFRONT_AMOUNT,
                 currency="usd",
                 description="Payment for event reservation",
             )
