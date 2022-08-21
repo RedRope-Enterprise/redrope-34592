@@ -56,6 +56,11 @@ async function addEventToFavorite(payload) {
   return response.data
 }
 
+async function removeEventFromFavorite(id) {
+  const response = await api.delete(`/api/v1/events/favorite/${id}/`, {})
+  return response.data
+}
+
 async function markEventAsInterested(payload) {
   console.log("payload ", payload)
   const response = await api.post("/api/v1/events/register-event/", payload)
@@ -78,5 +83,6 @@ export {
   addEventToFavorite,
   markEventAsInterested,
   registerForEvent,
-  getIntrests
+  getIntrests,
+  removeEventFromFavorite
 }

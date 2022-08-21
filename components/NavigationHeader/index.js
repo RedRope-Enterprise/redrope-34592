@@ -14,6 +14,8 @@ import { Colors, Typography, Mixins } from "../../styles"
 import ArrowLeft from "./../../assets/images/ArrowLeft.png"
 import ShareImg from "../../assets/naviigation/share.png"
 import HeartImg from "../../assets/naviigation/heart.png"
+import Like from "../../assets/naviigation/like.png"
+
 
 const { width, height } = Dimensions.get("window")
 

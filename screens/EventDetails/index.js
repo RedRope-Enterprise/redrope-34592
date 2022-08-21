@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import {
-
   Alert,
   View,
   TouchableOpacity,
@@ -13,11 +12,11 @@ import {
   ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal } from "../../components"
+import { Button, Input, CustomModal, LoaderComponent } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
-import {Image} from "react-native-elements"
-import FastImage from 'react-native-fast-image';
+import { Image } from "react-native-elements"
+import FastImage from "react-native-fast-image"
 
 import { useNavigation } from "@react-navigation/native"
 import {
@@ -34,12 +33,21 @@ import { useRoute } from "@react-navigation/native"
 import {
   getEventDetails,
   markEventAsInterested,
-  addEventToFavorite
+  addEventToFavorite,
+  removeEventFromFavorite
 } from "../../services/events"
+
+import HeartImg from "../../assets/naviigation/heart.png"
+import Like from "../../assets/naviigation/like.png"
 
 const EventDetailsScreen = () => {
   const route = useRoute()
   const [event, setEvent] = useState()
+  const [loadingDetails, setLoadingDetails] = useState(true)
+  const [showFavModal, setShowFavModal] = useState(false)
+  const [currentUser, setCurrentUser] = useState()
+
+  const [isFavEvent, setIsFavEvent] = useState(false)
 
   const navigation = useNavigation()
 
@@ -47,10 +55,28 @@ const EventDetailsScreen = () => {
     getEventData()
   }, [])
 
+  const getUser = async () => {
+    const user = await getDataStorage("@user")
+    if (user) {
+      setCurrentUser(user)
+    }
+  }
+
   const getEventData = async () => {
+    setLoadingDetails(true)
     const resp = await getEventDetails(route?.params?.event?.id)
-    console.log("event details ", resp)
     setEvent(resp)
+    await getUser()
+    if (resp.favorite && resp.favorite.length > 0) {
+      for (const item of resp.favorite) {
+        if (item.user == user.pk) {
+          setIsFavEvent(true)
+          break
+        }
+      }
+    }
+
+    setLoadingDetails(false)
   }
 
   return (
@@ -58,21 +84,37 @@ const EventDetailsScreen = () => {
       <NavigationHeader
         showLeftBtn1={!global?.user?.event_planner}
         showLeftBtn2={!global?.user?.event_planner}
+        iconRight2={isFavEvent ? Like : HeartImg}
         onLeftBtn2={async () => {
+          if (isFavEvent) {
+            const resp = await removeEventFromFavorite(event.id)
+            if (resp) {
+              setIsFavEvent(false)
+            }
+            console.log("Already in fav list ")
+            return
+          }
           const resp = await addEventToFavorite({
             event: event.id
           })
+          if (resp) {
+            setIsFavEvent(true)
+          }
           console.log("adding to favt resp ", resp)
         }}
       ></NavigationHeader>
 
       <FastImage
-      containerStyle={{ backgroundColor: Colors.BLACK }}
-        style={{ width: "100%", height: height * 0.3, backgroundColor: Colors.BLACK }}
+        containerStyle={{ backgroundColor: Colors.BLACK }}
+        style={{
+          width: "100%",
+          height: height * 0.3,
+          backgroundColor: Colors.BLACK
+        }}
         source={{
           uri: event?.event_images ? event?.event_images[0].image : ""
         }}
-        PlaceholderContent={<ActivityIndicator color={Colors.BUTTON_RED}/>}
+        PlaceholderContent={<ActivityIndicator color={Colors.BUTTON_RED} />}
       />
       <View style={{ marginHorizontal: "5%" }}>
         <View style={{ flexDirection: "row", marginTop: "5%" }}>
@@ -94,7 +136,7 @@ const EventDetailsScreen = () => {
               fontWeight: Typography.FONT_WEIGHT_BOLD,
               color: Colors.PRIMARY_1
             }}
-          >{`$${event?.price}`}</Text>
+          >{`$${event?.price ?? ""}`}</Text>
         </View>
 
         <View style={{ flexDirection: "row", marginTop: "8%" }}>
@@ -136,7 +178,26 @@ const EventDetailsScreen = () => {
       />
 
       <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
-        {/* <Image source={require("../../assets/eventDetails/Group.png")} /> */}
+        {event?.going.map((goingPerson, index) => {
+          return (
+            <View
+              style={{
+                borderRadius: 1000,
+                borderWidth: 1,
+                overflow: "hidden",
+                borderColor: Colors.WHITE,
+                left: index === 0 ? 0 : -10 * index,
+                zIndex: index === 0 ? 10000 : 1 * -index
+              }}
+            >
+              <FastImage
+                style={{ width: 32, height: 32 }}
+                source={{ uri: goingPerson?.profile_picture }}
+              />
+            </View>
+          )
+        })}
+        {/* <Image style={{width : 20, height : 20}}source={require("../../assets/eventDetails/Group.png")} /> */}
         <Text
           style={{
             marginLeft: "5%",
@@ -350,43 +411,51 @@ const EventDetailsScreen = () => {
             </Text>
           </TouchableOpacity>
 
-          {event?.bottle_services.length > 0 && <TouchableOpacity
-            onPress={() => navigation.navigate("EventMenu", { event })}
-            style={{
-              flexDirection: "row",
-              backgroundColor: Colors.BUTTON_RED,
-              alignItems: "center",
-              marginTop: "5%",
-              borderRadius: 10
-            }}
-          >
-            <Text
+          {event?.bottle_services.length > 0 && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("EventMenu", { event })}
               style={{
-                fontSize: Typography.FONT_SIZE_16,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                fontWeight: Typography.FONT_WEIGHT_BOLD,
-                color: Colors.WHITE,
-                marginHorizontal: "5%",
-                marginVertical: "5%",
-                flex: 1
+                flexDirection: "row",
+                backgroundColor: Colors.BUTTON_RED,
+                alignItems: "center",
+                marginTop: "5%",
+                borderRadius: 10
               }}
             >
-              Reserve
-            </Text>
-            <Text
-              style={{
-                fontSize: Typography.FONT_SIZE_24,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                fontWeight: Typography.FONT_WEIGHT_600,
-                color: Colors.WHITE,
-                marginHorizontal: "5%"
-              }}
-            >
-              {">"}
-            </Text>
-          </TouchableOpacity>}
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_16,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD,
+                  color: Colors.WHITE,
+                  marginHorizontal: "5%",
+                  marginVertical: "5%",
+                  flex: 1
+                }}
+              >
+                Reserve
+              </Text>
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_24,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_600,
+                  color: Colors.WHITE,
+                  marginHorizontal: "5%"
+                }}
+              >
+                {">"}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
+      {loadingDetails && <LoaderComponent></LoaderComponent>}
+      <CustomModal
+        isVisible={showFavModal}
+        text={"Added To favourite"}
+        onClose={() => setShowFavModal(false)}
+      ></CustomModal>
     </ScrollView>
   )
 }
