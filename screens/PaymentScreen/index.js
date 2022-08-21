@@ -15,7 +15,13 @@ import {
   ActivityIndicator
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, CustomImageModal, LoaderComponent } from "../../components"
+import {
+  Button,
+  Input,
+  CustomModal,
+  CustomImageModal,
+  LoaderComponent
+} from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
@@ -48,6 +54,8 @@ import {
   getCardsList
 } from "../../services/Payment"
 
+import { useApplePay } from "@stripe/stripe-react-native"
+
 const { width, height } = Dimensions.get("window")
 
 const PaymentScreen = () => {
@@ -59,6 +67,7 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const { confirmPayment } = useConfirmPayment()
+  const { presentApplePay, confirmApplePayPayment } = useApplePay()
 
   async function getCardsData(params = "") {
     setLoading(true)
@@ -78,7 +87,72 @@ const PaymentScreen = () => {
   const renderPaymentMethod = (title, icon) => {
     return (
       <View style={styles.center}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={async () => {
+            if (title == "Apple Pay") {
+              setLoading(true)
+              if (event?.id && event.bottle_services.length > 0) {
+                try {
+                  let response = await createPaymentIntent({
+                    event: event?.id,
+                    attendee: attendeeCount,
+                    bottle_service: event?.bottle_services[0].id
+                  })
+                  console.log("customerid: ", JSON.stringify(response, null, 2))
+                  console.log("client secret: ", response?.client_secret)
+                  if (
+                    response.id &&
+                    response.client_secret &&
+                    response.amount
+                  ) {
+                    // payment intent id
+
+                    const { error, paymentMethod } = await presentApplePay({
+                      cartItems: [
+                        {
+                          label: "payment label",
+                          amount: response.amount, // amount as string
+                          type: "final"
+                        }
+                      ],
+                      country: "US", // enter any country code supported by stripe,
+                      currency: "USD" // enter any currency supported by stripe,
+                    })
+                    if (error) {
+                      Alert.alert(error.code, error.message)
+                    } else {
+                      const { error: confirmApplePayError } =
+                        await confirmApplePayPayment(response.client_secret)
+                      if (confirmApplePayError) {
+                        Alert.alert(
+                          confirmApplePayError.code,
+                          confirmApplePayError.message
+                        )
+                      } else {
+                        Alert.alert(
+                          "Success",
+                          "The payment was confirmed      successfully!"
+                        )
+                      }
+                    }
+
+                    // let result = await confirmReservation({
+                    //   payment_intent_id: response.id
+                    // })
+                    // console.log(JSON.stringify(result, null, 2))
+                  }
+                } catch (error) {
+                  Alert.alert(
+                    "Payment process",
+                    "Unable to complete payment process at the moment. Pleae try again later."
+                  )
+                  setLoading(false)
+                }
+              }
+              setLoading(false)
+            }
+          }}
+        >
           <View style={styles.itemContainer}>
             <View style={styles.itemImgContainer}>
               <Image
@@ -259,9 +333,7 @@ const PaymentScreen = () => {
         image={SuccessPopupImg}
         onClose={() => setIsModalVisible(false)}
       ></CustomImageModal>
-      {loading && (
-        <LoaderComponent></LoaderComponent>
-      )}
+      {loading && <LoaderComponent></LoaderComponent>}
     </SafeAreaView>
   )
 }

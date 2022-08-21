@@ -63,7 +63,10 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <StripeProvider publishableKey={STRIPE_PUBLISHABLE}>
+        <StripeProvider
+          publishableKey={STRIPE_PUBLISHABLE}
+          merchantIdentifier="merchant.com.crowdbotics.redrope-34592"
+        >
           <Navigation />
         </StripeProvider>
         {/* <MainLoader /> */}
