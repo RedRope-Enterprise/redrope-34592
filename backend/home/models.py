@@ -151,6 +151,8 @@ class UserEventRegistration(BaseModel):
         "home.BottleService",
         verbose_name=_("Event"),
         related_name="event_registration",
+        blank=True,
+        null=True,
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
