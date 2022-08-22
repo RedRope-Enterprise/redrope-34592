@@ -99,30 +99,34 @@ const ProfileScreen = () => {
   }
 
   setupUserProfile = async () => {
+    console.log("userImage ", userImage)
+    debugger
     let likes = await getInterestsIds()
     console.log("likesss ", likes)
     const data = new FormData()
     data.append("name", name)
     data.append("bio", about)
-    data.append("profile_picture", {
-      uri: userImage,
-      type: "image/jpeg",
-      name: Date.now() + "photo.jpg"
-    })
+    if (!userImage.includes("http")) {
+      data.append("profile_picture", {
+        uri: userImage,
+        type: "image/jpeg",
+        name: Date.now() + "photo.jpg"
+      })
+    }
 
     let resp = await updateUser(data)
+
     if (resp) {
-      resp = await updateUser({interests:likes})
+      resp = await updateUser({ interests: likes })
       console.log("resp ", resp)
       await setDataStorage("@user", resp)
       global.user = resp
-      if(route?.params?.initialSetup){
+      if (route?.params?.initialSetup) {
         navigation.reset({
           index: 0,
-          routes: [{name: 'Dashboard'}],
-        });
-      }else
-        Alert.alert("Info", "Profile Updated successfully")
+          routes: [{ name: "Dashboard" }]
+        })
+      } else Alert.alert("Info", "Profile Updated successfully")
     }
   }
 
@@ -130,11 +134,11 @@ const ProfileScreen = () => {
     // await clearStorage()
     let data = await getDataStorage("@user")
     data = JSON.parse(data)
+    debugger
     if (data) {
       setUserInterests(data.likes)
       setUpdateInterests(Date.now())
     }
-
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>

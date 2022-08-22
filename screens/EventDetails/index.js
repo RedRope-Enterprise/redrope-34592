@@ -46,6 +46,7 @@ const EventDetailsScreen = () => {
   const [loadingDetails, setLoadingDetails] = useState(true)
   const [showFavModal, setShowFavModal] = useState(false)
   const [currentUser, setCurrentUser] = useState()
+  const [favEventData, setFavEventData] = useState(null)
 
   const [isFavEvent, setIsFavEvent] = useState(false)
 
@@ -59,6 +60,7 @@ const EventDetailsScreen = () => {
     const user = await getDataStorage("@user")
     if (user) {
       setCurrentUser(user)
+      return user
     }
   }
 
@@ -66,14 +68,17 @@ const EventDetailsScreen = () => {
     setLoadingDetails(true)
     const resp = await getEventDetails(route?.params?.event?.id)
     setEvent(resp)
-    await getUser()
+    const u = await getUser()
+    debugger
     if (resp.favorite && resp.favorite.length > 0) {
-      for (const item of resp.favorite) {
+      debugger
+      resp.favorite.forEach(item => {
         if (item.user == user.pk) {
+          debugger
           setIsFavEvent(true)
-          break
+          setFavEventData(item)
         }
-      }
+      })
     }
 
     setLoadingDetails(false)
@@ -87,10 +92,9 @@ const EventDetailsScreen = () => {
         iconRight2={isFavEvent ? Like : HeartImg}
         onLeftBtn2={async () => {
           if (isFavEvent) {
-            const resp = await removeEventFromFavorite(event.id)
-            if (resp) {
-              setIsFavEvent(false)
-            }
+            const resp = await removeEventFromFavorite(favEventData?.id)
+            setFavEventData(null)
+            setIsFavEvent(false)
             console.log("Already in fav list ")
             return
           }
@@ -98,6 +102,7 @@ const EventDetailsScreen = () => {
             event: event.id
           })
           if (resp) {
+            setFavEventData(resp)
             setIsFavEvent(true)
           }
           console.log("adding to favt resp ", resp)
