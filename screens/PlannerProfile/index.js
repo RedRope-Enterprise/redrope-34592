@@ -64,8 +64,8 @@ const PlannerProfileScreen = () => {
 
   setInitialValues = async () => {
     let eUser = await global.user
-    const primaryLocation = getDataStorage("@PRIMARY_LOCATION")
-
+    const primaryLocation = await getDataStorage("@PRIMARY_LOCATION")
+    debugger
     setExistingUser(eUser)
     if (!eUser?.likes) {
       setIsModalVisible(true)

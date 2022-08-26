@@ -9,14 +9,23 @@ import {
   ImageBackground,
   Switch
 } from "react-native"
+
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
 import FastImage from "react-native-fast-image"
+import { activeDeactiveEvent } from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
 const HomeEventItem = props => {
   const { event, onPress } = props
+  const [toggle, setToggle] = useState(event?.active)
+
+  useEffect(async () => {
+    if (event) {
+      setToggle(event?.active)
+    }
+  }, [event])
 
   return (
     <TouchableOpacity
@@ -49,17 +58,39 @@ const HomeEventItem = props => {
           style={{ width: "100%", height: "100%" }}
         >
           <View style={{ marginHorizontal: "5%", flex: 1 }}>
-            <Text
-              style={{
-                fontSize: Typography.FONT_SIZE_24,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                fontWeight: Typography.FONT_WEIGHT_BOLD,
-                color: Colors.WHITE,
-                marginTop: "5%"
-              }}
-            >
-              {event?.title}
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text
+                style={{
+                  flex: 1,
+                  fontSize: Typography.FONT_SIZE_24,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD,
+                  color: Colors.WHITE,
+                  marginTop: "5%"
+                }}
+              >
+                {event?.title}
+              </Text>
+              {global?.user?.event_planner && (
+                <TouchableOpacity
+                  onPress={() =>
+                    props.navigation.navigate("AddNewEventScreen", {
+                      event: event
+                    })
+                  }
+                >
+                  <Image source={require("../../assets/Edit.png")} />
+                </TouchableOpacity>
+              )}
+              {global?.user?.event_planner && (
+                <TouchableOpacity
+                  style={{ marginHorizontal: 5 }}
+                  onPress={() => props?.deleteEvent(event?.id)}
+                >
+                  <Image source={require("../../assets/delete.png")} />
+                </TouchableOpacity>
+              )}
+            </View>
 
             <View style={{ flexDirection: "row", marginTop: "2%", flex: 1 }}>
               {event?.event_categories?.[0] && (
@@ -138,15 +169,21 @@ const HomeEventItem = props => {
               </View>
             )}
 
-            <Switch
-              trackColor={{ false: "#767577", true: "##83d475" }}
-              thumbColor={true ? Colors.WHITE : Colors.WHITE}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={() => {}}
-              value={true}
-              activeText={"On"}
-              inActiveText={"Off"}
-            />
+            {global?.user?.event_planner && (
+              <Switch
+                trackColor={{ false: "#767577", true: "##83d475" }}
+                thumbColor={toggle ? Colors.WHITE : Colors.WHITE}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={async value => {
+                  activeDeactiveEvent({ id: event?.id, status: value })
+                  setToggle(value)
+                }}
+                value={toggle}
+                activeText={"On"}
+                inActiveText={"Off"}
+                style={{ marginBottom: 10 }}
+              />
+            )}
           </View>
         </LinearGradient>
       </FastImage>

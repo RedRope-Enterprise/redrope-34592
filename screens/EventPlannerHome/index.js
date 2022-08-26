@@ -26,7 +26,12 @@ import {
   clearStorage
 } from "../../utils/storage"
 import { data } from "../../data"
-import { getCategories, getEvents, getMyEvents } from "../../services/events"
+import {
+  getCategories,
+  getEvents,
+  getMyEvents,
+  deleteEvent
+} from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
@@ -44,8 +49,8 @@ const EventPlannerHomeScreen = () => {
   const [user, setUser] = useState("")
 
   useEffect(async () => {
-    const events = data.getEvents()
-    setEvents(events)
+    // const events = data.getEvents()
+    // setEvents(events)
     getUser()
   }, [])
 
@@ -68,6 +73,11 @@ const EventPlannerHomeScreen = () => {
     getEventsFromBackend()
   }, [])
 
+  const deleteEventNow = async id => {
+    await deleteEvent(id)
+    getEventsFromBackend()
+  }
+
   const getEventsFromBackend = async () => {
     let resp = await getMyEvents()
     console.log("events ", resp.results)
@@ -87,7 +97,13 @@ const EventPlannerHomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <ScrollView>
-        <View style={{ flexDirection: "row", margin: "5%", justifyContent: "center"}}>
+        <View
+          style={{
+            flexDirection: "row",
+            margin: "5%",
+            justifyContent: "center"
+          }}
+        >
           <View style={{ flex: 1 }}>
             <Text
               style={{
@@ -173,6 +189,8 @@ const EventPlannerHomeScreen = () => {
                 extraData={searchedEvents}
                 renderItem={({ item }) => (
                   <HomeEventItem
+                    deleteEvent={deleteEventNow}
+                    navigation={navigation}
                     event={item}
                     onPress={() =>
                       navigation.navigate("EventDetails", { event: item })

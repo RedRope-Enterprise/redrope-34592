@@ -10,8 +10,7 @@ import {
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
-import FastImage from 'react-native-fast-image';
-
+import FastImage from "react-native-fast-image"
 
 const { width, height } = Dimensions.get("window")
 
@@ -68,7 +67,7 @@ const UserBookingsItem = props => {
                 ? event?.event_title.slice(0, 11) + "..."
                 : event?.event_title}
             </Text>
-            {(event?.event_price || event?.price) && (
+            {/* {(event?.event_price || event?.price) && (
               <Text
                 style={{
                   fontSize: Typography.FONT_SIZE_18,
@@ -77,7 +76,7 @@ const UserBookingsItem = props => {
                   color: Colors.PRIMARY_1
                 }}
               >{`$${event?.event_price || event?.price}`}</Text>
-            )}
+            )} */}
           </View>
 
           <View style={{ flexDirection: "row", marginTop: "2%" }}>
@@ -147,10 +146,42 @@ const UserBookingsItem = props => {
             )}
           </View>
 
-          <Image
-            style={{ marginTop: "7%" }}
-            source={require("../../assets/eventDetails/Group.png")}
-          />
+          {!global?.user?.event_planner && (
+            <View style={{ flexDirection: "row", marginVertical: "5%" }}>
+              {event?.going.map((goingPerson, index) => {
+                return (
+                  <View
+                    style={{
+                      borderRadius: 1000,
+                      borderWidth: 1,
+                      overflow: "hidden",
+                      borderColor: Colors.WHITE,
+                      left: index === 0 ? 0 : -10 * index,
+                      zIndex: index === 0 ? 10000 : 1 * -index
+                    }}
+                  >
+                    <FastImage
+                      style={{ width: 32, height: 32 }}
+                      source={{ uri: goingPerson?.profile_picture }}
+                    />
+                  </View>
+                )
+              })}
+              {/* <Image style={{width : 20, height : 20}}source={require("../../assets/eventDetails/Group.png")} /> */}
+              <Text
+                style={{
+                  marginLeft: "5%",
+                  alignSelf: "center",
+                  fontSize: Typography.FONT_SIZE_16,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_500,
+                  color: Colors.PRIMARY_1
+                }}
+              >
+                {`${event?.going_count} going`}
+              </Text>
+            </View>
+          )}
 
           <View
             style={{

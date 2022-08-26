@@ -34,6 +34,12 @@ import CalendarImg from "../../assets/images/table_select/calendar.png"
 import PersonImg from "../../assets/images/table_select/person.png"
 import RatioImage from "../../assets/images/table_select/Date.png"
 import { Slider } from "@miblanchard/react-native-slider"
+import {
+  getEventDetails,
+  markEventAsInterested,
+  addEventToFavorite,
+  removeEventFromFavorite
+} from "../../services/events"
 
 import { data } from "../../data"
 
@@ -114,7 +120,24 @@ const TableConfirmScreen = () => {
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
         showLeftBtn1={true}
-        showLeftBtn2={true}
+        // showLeftBtn2={true}
+        // onLeftBtn2={async () => {
+        //   if (isFavEvent) {
+        //     const resp = await removeEventFromFavorite(favEventData?.id)
+        //     setFavEventData(null)
+        //     setIsFavEvent(false)
+        //     console.log("Already in fav list ")
+        //     return
+        //   }
+        //   const resp = await addEventToFavorite({
+        //     event: event.id
+        //   })
+        //   if (resp) {
+        //     setFavEventData(resp)
+        //     setIsFavEvent(true)
+        //   }
+        //   console.log("adding to favt resp ", resp)
+        // }}
       ></NavigationHeader>
       {/* <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>Disclaimer</Text>

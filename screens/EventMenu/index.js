@@ -233,7 +233,7 @@ const EventMenuScreen = () => {
           />
           <NavigationHeader
             showLeftBtn1={true}
-            showLeftBtn2={true}
+            // showLeftBtn2={true}
           ></NavigationHeader>
           {pagination()}
         </View>
