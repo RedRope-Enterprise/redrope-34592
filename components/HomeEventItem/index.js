@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  ImageBackground
+  ImageBackground,
+  Switch
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
-import FastImage from 'react-native-fast-image';
-
+import FastImage from "react-native-fast-image"
 
 const { width, height } = Dimensions.get("window")
 
@@ -37,7 +37,7 @@ const HomeEventItem = props => {
         resizeMode="cover"
         source={{
           uri: event?.event_images ? event?.event_images[0].image : "",
-          priority: FastImage.priority.high,
+          priority: FastImage.priority.high
         }}
       >
         <LinearGradient
@@ -62,21 +62,23 @@ const HomeEventItem = props => {
             </Text>
 
             <View style={{ flexDirection: "row", marginTop: "2%", flex: 1 }}>
-              {event?.event_categories?.[0] && <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: Colors.WHITE,
-                  borderRadius: 10,
-                  marginRight: "3%",
-                  height: 30
-                }}
-              >
-                <Text style={{ color: Colors.WHITE, margin: 5 }}>
-                  {event?.event_categories?.length > 0
-                    ? event?.event_categories[0].name
-                    : ""}
-                </Text>
-              </View>}
+              {event?.event_categories?.[0] && (
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors.WHITE,
+                    borderRadius: 10,
+                    marginRight: "3%",
+                    height: 30
+                  }}
+                >
+                  <Text style={{ color: Colors.WHITE, margin: 5 }}>
+                    {event?.event_categories?.length > 0
+                      ? event?.event_categories[0].name
+                      : ""}
+                  </Text>
+                </View>
+              )}
 
               <View
                 style={{
@@ -102,42 +104,49 @@ const HomeEventItem = props => {
               </View>
             </View>
 
-            <View
-              style={{
-                marginBottom: "5%",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
+            {!global?.user?.event_planner && (
               <View
-                style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+                style={{
+                  marginBottom: "5%",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
               >
-                <Image
-                  source={require("../../assets/images/home/location.png")}
-                />
-                <Text
+                <View
                   style={{
-                    fontSize: Typography.FONT_SIZE_12,
-                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                    fontWeight: Typography.FONT_WEIGHT_400,
-                    color: Colors.WHITE,
-                    marginLeft: 5
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "center"
                   }}
                 >
-                  {event?.location}
-                </Text>
+                  <Image
+                    source={require("../../assets/images/home/location.png")}
+                  />
+                  <Text
+                    style={{
+                      fontSize: Typography.FONT_SIZE_12,
+                      fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                      fontWeight: Typography.FONT_WEIGHT_400,
+                      color: Colors.WHITE,
+                      marginLeft: 5
+                    }}
+                  >
+                    {event?.location}
+                  </Text>
+                </View>
               </View>
+            )}
 
-              {/* <Text
-                style={{
-                  fontSize: Typography.FONT_SIZE_18,
-                  fontFamily: Typography.FONT_FAMILY_POPPINS_MEDIUM,
-                  fontWeight: Typography.FONT_WEIGHT_BOLD,
-                  color: Colors.PRIMARY_1
-                }}
-              >{`$${event.price}`}</Text> */}
-            </View>
+            <Switch
+              trackColor={{ false: "#767577", true: "##83d475" }}
+              thumbColor={true ? Colors.WHITE : Colors.WHITE}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={() => {}}
+              value={true}
+              activeText={"On"}
+              inActiveText={"Off"}
+            />
           </View>
         </LinearGradient>
       </FastImage>

@@ -58,20 +58,22 @@ const AddNewEventScreen = () => {
   const [bottleServices, setBottleServices] = useState([])
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [refreshNow, setRefreshNow] = useState(Date.now())
+  const [location, setLocation] = useState(null)
+  const [primaryLocation, setPrimaryLocation] = useState(null)
 
   const [loading, setLoading] = useState(false)
 
   const onCreateEventPress = async () => {
     setLoading(true)
     const fromData = new FormData()
-    fromData.append("price", price)
+    fromData.append("price", 0)
     fromData.append("start_date", "2022-08-12")
     fromData.append("end_date", "2022-08-17")
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
     fromData.append("desc", eventDescription)
-    fromData.append("location", "Nigeria")
+    fromData.append("location", checkBox ? primaryLocation : location)
     fromData.append("images", {
       uri: eventImage,
       type: "image/jpeg",
@@ -133,8 +135,36 @@ const AddNewEventScreen = () => {
   }
 
   useEffect(() => {
-
+    getSavedLocation()
   }, [])
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getSavedLocation()
+
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
+  const getSavedLocation = async () => {
+    const savedLocation = await getDataStorage("@LOCATION")
+    if (savedLocation) {
+      setLocation(
+        `${savedLocation.street} ${savedLocation.city}, ${savedLocation.country} ${savedLocation.zip}`
+      )
+    }
+
+    const pLocation = await getDataStorage("@PRIMARY_LOCATION")
+    if (pLocation) {
+      setPrimaryLocation(
+        `${pLocation.street} ${pLocation.city}, ${pLocation.country} ${pLocation.zip}`
+      )
+    }
+  }
 
   updateCategories = data => {
     console.log("submit data ", data)
@@ -216,7 +246,7 @@ const AddNewEventScreen = () => {
               style={[
                 styles.FONT_16,
                 styles.flex1,
-                { color: Colors.NETURAL_2, marginHorizontal: "6%" }
+                { color: Colors.WHITE, marginHorizontal: "6%" }
               ]}
             >
               {title}
@@ -252,12 +282,14 @@ const AddNewEventScreen = () => {
         style={{ flex: 1, width: "90%" }}
         contentContainerStyle={[{ flexGrow: 1, alignItems: "center" }]}
       >
-        {loading && <Spinner
-          indicatorStyle={{ color: Colors.PRIMARY_1 }}
-          overlayColor={Colors.BLACK_OPACITY_50}
-          visible={true}
-          textStyle={{ color: Colors.PRIMARY_1 }}
-        />}
+        {loading && (
+          <Spinner
+            indicatorStyle={{ color: Colors.PRIMARY_1 }}
+            overlayColor={Colors.BLACK_OPACITY_50}
+            visible={true}
+            textStyle={{ color: Colors.PRIMARY_1 }}
+          />
+        )}
         <View style={styles.flex1}>
           {renderEventImageView()}
           <View style={styles.shortFieldContainer}>
@@ -270,7 +302,7 @@ const AddNewEventScreen = () => {
             />
           </View>
 
-          <View
+          {/* <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <View style={styles.shortDividedFieldContainer}>
@@ -308,7 +340,7 @@ const AddNewEventScreen = () => {
                 source={ImgArrow}
               ></Image>
             </View>
-          </View>
+          </View> */}
 
           <View style={styles.shortFieldContainer}>
             <TouchableOpacity
@@ -438,42 +470,48 @@ const AddNewEventScreen = () => {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                marginVertical: "4%",
-                alignItems: "flex-start"
-              }}
-            >
-              <BouncyCheckbox
-                size={25}
-                fillColor={Colors.PRIMARY_1}
-                iconImageStyle={{ tintColor: Colors.NETURAL_5 }}
-                iconStyle={{ borderColor: Colors.PRIMARY_1, borderRadius: 4 }}
-                useNativeDriver={true}
-                isChecked={checkBox}
-                onPress={isChecked => {
-                  setCheckBox(isChecked)
+            {primaryLocation && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginVertical: "4%",
+                  alignItems: "flex-start"
                 }}
-              />
-              <View>
-                <Text
-                  style={[
-                    styles.FONT_16,
-                    { color: Colors.WHITE, marginBottom: "4%" }
-                  ]}
-                >
-                  Use Primary Location
-                </Text>
-                <Text style={[styles.FONT_14_2, { color: Colors.WHITE }]}>
-                  (LA Artstation - Park area 1523)
-                </Text>
+              >
+                <BouncyCheckbox
+                  size={25}
+                  fillColor={Colors.PRIMARY_1}
+                  iconImageStyle={{ tintColor: Colors.NETURAL_5 }}
+                  iconStyle={{ borderColor: Colors.PRIMARY_1, borderRadius: 4 }}
+                  useNativeDriver={true}
+                  isChecked={checkBox}
+                  onPress={isChecked => {
+                    setCheckBox(isChecked)
+                  }}
+                />
+                <View>
+                  <Text
+                    style={[
+                      styles.FONT_16,
+                      { color: Colors.WHITE, marginBottom: "4%" }
+                    ]}
+                  >
+                    Use Primary Location
+                  </Text>
+                  <Text style={[styles.FONT_14_2, { color: Colors.WHITE }]}>
+                    ({primaryLocation})
+                  </Text>
+                </View>
               </View>
-            </View>
-            <Text style={[styles.FONT_16, { color: Colors.NETURAL_2 }]}>
+            )}
+            {!checkBox && <Text style={[styles.FONT_16, { color: Colors.NETURAL_2 }]}>
               or select new location below
-            </Text>
-            {renderGenericItem("New York, USA", ImgLocation, true)}
+            </Text>}
+            {!checkBox && renderGenericItem(
+              location ? location : "Add Location",
+              ImgLocation,
+              true
+            )}
           </View>
 
           <View style={styles.nextBtnContainer}>

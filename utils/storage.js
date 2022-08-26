@@ -15,10 +15,7 @@ export const getDataStorage = async key => {
     if (value !== null) {
       if (isJsonParse(value)) {
         value = JSON.parse(value)
-        if (isJsonParse(value) && key != "@key") {
-          return JSON.parse(value)
-        } else return value
-      } else {
+       
         return value
       }
     } else {

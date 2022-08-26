@@ -64,6 +64,8 @@ const PlannerProfileScreen = () => {
 
   setInitialValues = async () => {
     let eUser = await global.user
+    const primaryLocation = getDataStorage("@PRIMARY_LOCATION")
+
     setExistingUser(eUser)
     if (!eUser?.likes) {
       setIsModalVisible(true)
@@ -76,7 +78,10 @@ const PlannerProfileScreen = () => {
     setUserImage(eUser.profile_picture)
     setPhone(eUser.phone)
     setWebsite(eUser.website)
-    // setLocation()
+    if (primaryLocation)
+      setLocation(
+        `${primaryLocation.street} ${primaryLocation.city}, ${primaryLocation.country} ${primaryLocation.zip}`
+      )
   }
 
   return (
@@ -254,7 +259,11 @@ Please setup your profile`}
           <TouchableOpacity
             style={{ width: "90%" }}
             disabled={profileView}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("AddNewLocationScreen", {
+                isPrimaryLocation : true
+              })
+            }}
           >
             <Input
               editable={false}

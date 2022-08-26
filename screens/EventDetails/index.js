@@ -134,41 +134,43 @@ const EventDetailsScreen = () => {
           >
             {event?.title}
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: Typography.FONT_SIZE_24,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
               fontWeight: Typography.FONT_WEIGHT_BOLD,
               color: Colors.PRIMARY_1
             }}
-          >{`$${event?.price ?? ""}`}</Text>
+          >{`$${event?.price ?? ""}`}</Text> */}
         </View>
 
-        <View style={{ flexDirection: "row", marginTop: "8%" }}>
-          <Image source={{ uri: event?.organizer?.profile_picture }} />
-          <View style={{ marginLeft: "4%", justifyContent: "center" }}>
-            <Text
-              style={{
-                fontSize: Typography.FONT_SIZE_13,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                fontWeight: Typography.FONT_WEIGHT_500,
-                color: Colors.WHITE
-              }}
-            >
-              {event?.organizer?.name != "null" ? event?.organizer?.name : ""}
-            </Text>
-            <Text
-              style={{
-                fontSize: Typography.FONT_SIZE_13,
-                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                fontWeight: Typography.FONT_WEIGHT_BOLD,
-                color: Colors.GREY
-              }}
-            >
-              {"Organizer"}
-            </Text>
+        {!global?.user?.event_planner && (
+          <View style={{ flexDirection: "row", marginTop: "8%" }}>
+            <Image source={{ uri: event?.organizer?.profile_picture }} />
+            <View style={{ marginLeft: "4%", justifyContent: "center" }}>
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_13,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_500,
+                  color: Colors.WHITE
+                }}
+              >
+                {event?.organizer?.name != "null" ? event?.organizer?.name : ""}
+              </Text>
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_13,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD,
+                  color: Colors.GREY
+                }}
+              >
+                {"Organizer"}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
       </View>
       <View
         style={{
@@ -182,40 +184,42 @@ const EventDetailsScreen = () => {
         }}
       />
 
-      <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
-        {event?.going.map((goingPerson, index) => {
-          return (
-            <View
-              style={{
-                borderRadius: 1000,
-                borderWidth: 1,
-                overflow: "hidden",
-                borderColor: Colors.WHITE,
-                left: index === 0 ? 0 : -10 * index,
-                zIndex: index === 0 ? 10000 : 1 * -index
-              }}
-            >
-              <FastImage
-                style={{ width: 32, height: 32 }}
-                source={{ uri: goingPerson?.profile_picture }}
-              />
-            </View>
-          )
-        })}
-        {/* <Image style={{width : 20, height : 20}}source={require("../../assets/eventDetails/Group.png")} /> */}
-        <Text
-          style={{
-            marginLeft: "5%",
-            alignSelf: "center",
-            fontSize: Typography.FONT_SIZE_16,
-            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-            fontWeight: Typography.FONT_WEIGHT_500,
-            color: Colors.PRIMARY_1
-          }}
-        >
-          {`${event?.going_count} going`}
-        </Text>
-      </View>
+      {!global?.user?.event_planner && (
+        <View style={{ flexDirection: "row", marginHorizontal: "5%" }}>
+          {event?.going.map((goingPerson, index) => {
+            return (
+              <View
+                style={{
+                  borderRadius: 1000,
+                  borderWidth: 1,
+                  overflow: "hidden",
+                  borderColor: Colors.WHITE,
+                  left: index === 0 ? 0 : -10 * index,
+                  zIndex: index === 0 ? 10000 : 1 * -index
+                }}
+              >
+                <FastImage
+                  style={{ width: 32, height: 32 }}
+                  source={{ uri: goingPerson?.profile_picture }}
+                />
+              </View>
+            )
+          })}
+          {/* <Image style={{width : 20, height : 20}}source={require("../../assets/eventDetails/Group.png")} /> */}
+          <Text
+            style={{
+              marginLeft: "5%",
+              alignSelf: "center",
+              fontSize: Typography.FONT_SIZE_16,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontWeight: Typography.FONT_WEIGHT_500,
+              color: Colors.PRIMARY_1
+            }}
+          >
+            {`${event?.going_count} going`}
+          </Text>
+        </View>
+      )}
 
       <View
         style={{

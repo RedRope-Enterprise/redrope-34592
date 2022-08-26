@@ -12,6 +12,7 @@ import {
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button } from "../../components"
+import { useRoute } from "@react-navigation/native"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -26,12 +27,31 @@ const { width, height } = Dimensions.get("window")
 
 const AddNewLocationScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
 
-  const [country, setCountry] = useState("")
+  const [country, setCountry] = useState("USA")
   const [street, setStreet] = useState("")
   const [city, setCity] = useState("")
   const [zip, setZip] = useState("")
   const [state, setState] = useState("")
+
+  useEffect(() => {
+    setInitialValues()
+  }, [])
+
+  const setInitialValues = async() => {
+    debugger
+    if (route?.params?.isPrimaryLocation) {
+      const primaryLocation  = await getDataStorage("@PRIMARY_LOCATION")
+      if(primaryLocation){
+        setCountry(primaryLocation?.country)
+        setStreet(primaryLocation?.street)
+        setCity(primaryLocation?.city)
+        setZip(primaryLocation?.zip)
+        setState(primaryLocation?.state)
+      }
+    }
+  }
 
   return (
     <SafeAreaView
@@ -133,7 +153,27 @@ const AddNewLocationScreen = () => {
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_14
               }}
-              onPress={() => {}}
+              onPress={async () => {
+                if (route?.params?.isPrimaryLocation) {
+                  await setDataStorage("@PRIMARY_LOCATION", {
+                    country,
+                    street,
+                    city,
+                    zip,
+                    state
+                  })
+                } else {
+                  await setDataStorage("@LOCATION", {
+                    country,
+                    street,
+                    city,
+                    zip,
+                    state
+                  })
+                }
+
+                navigation.goBack()
+              }}
             >
               Save
             </Button>
