@@ -86,7 +86,7 @@ const AddNewEventScreen = () => {
     }))
     setCategories(cat)
     setLocation(eventData?.location)
-    setBottleServices(eventData?.bottle_services)
+    setBottleServices(eventData?.event_bottle_services)
   }
 
   const onCreateEventPress = async () => {
@@ -146,8 +146,6 @@ const AddNewEventScreen = () => {
   }
 
   const onUpdateEventPressed = async () => {
-   
-
     setLoading(true)
     const fromData = new FormData()
     fromData.append("price", 0)
@@ -158,14 +156,17 @@ const AddNewEventScreen = () => {
     fromData.append("title", eventTitle)
     fromData.append("desc", eventDescription)
     fromData.append("location", checkBox ? primaryLocation : location)
-    fromData.append("images", {
-      uri: eventImage,
-      type: "image/jpeg",
-      name: Date.now() + "photo.jpg"
-    })
+
+    if (!eventImage.includes("http")) {
+      fromData.append("images", {
+        uri: eventImage,
+        type: "image/jpeg",
+        name: Date.now() + "photo.jpg"
+      })
+    }
 
     bottleServices.forEach(element => {
-      fromData.append("bottle_services", element)
+      fromData.append("bottle_services", element.id)
     })
 
     categories.forEach(element => {

@@ -90,7 +90,7 @@ async function deleteEvent(payload) {
 
 async function updateEvent(payload, id) {
   console.log("payload ", payload)
-  const response = await api.put(`/api/v1/events/${id}/`, payload)
+  const response = await api.patch(`/api/v1/events/${id}/`, payload)
   return response.data
 }
 

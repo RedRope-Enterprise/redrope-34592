@@ -69,12 +69,9 @@ const EventDetailsScreen = () => {
     const resp = await getEventDetails(route?.params?.event?.id)
     setEvent(resp)
     const u = await getUser()
-    debugger
     if (resp.favorite && resp.favorite.length > 0) {
-      debugger
       resp.favorite.forEach(item => {
         if (item.user == user.pk) {
-          debugger
           setIsFavEvent(true)
           setFavEventData(item)
         }
@@ -146,7 +143,7 @@ const EventDetailsScreen = () => {
 
         {!global?.user?.event_planner && (
           <View style={{ flexDirection: "row", marginTop: "8%" }}>
-            <Image source={{ uri: event?.organizer?.profile_picture }} />
+            <Image  style={{width: 50, height: 50, borderRadius: 1000}} source={{ uri: event?.organizer?.profile_picture }} />
             <View style={{ marginLeft: "4%", justifyContent: "center" }}>
               <Text
                 style={{
@@ -156,7 +153,7 @@ const EventDetailsScreen = () => {
                   color: Colors.WHITE
                 }}
               >
-                {event?.organizer?.name != "null" ? event?.organizer?.name : ""}
+                {event?.organizer?.username != "null" ? event?.organizer?.username : ""}
               </Text>
               <Text
                 style={{

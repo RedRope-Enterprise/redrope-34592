@@ -84,7 +84,7 @@ const TableConfirmScreen = () => {
     })
 
     arr.push({
-      title: "4/12 Filled",
+      title: `0/${event?.bottle_services[0]?.person} Filled`,
       desc: "Final price not confirmed until total party confirmed 12 hours prior to event.",
       image: PersonImg
     })
