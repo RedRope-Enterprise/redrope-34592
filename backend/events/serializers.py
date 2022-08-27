@@ -27,6 +27,7 @@ class EventImageSerializer(serializers.ModelSerializer):
 class EventListSerializer(serializers.ModelSerializer):
     images = serializers.ImageField(write_only=True)
     event_categories = serializers.SerializerMethodField()
+    event_bottle_services = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
     favorite = serializers.SerializerMethodField()
 
@@ -38,7 +39,10 @@ class EventListSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "categories": {
                 "write_only": True,
-            }
+            },
+            "bottle_services": {
+                "write_only": True,
+            },
         }
 
     def validate(self, attrs):
@@ -57,6 +61,10 @@ class EventListSerializer(serializers.ModelSerializer):
             )
 
         return attrs
+
+    def get_event_bottle_services(self, obj):
+        if hasattr(obj, "bottle_services"):
+            return BottleServiceSerializer(obj.bottle_services, many=True).data
 
     def get_event_images(self, obj):
         if hasattr(obj, "images"):
