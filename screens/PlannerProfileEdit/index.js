@@ -42,15 +42,21 @@ const PlannerProfileEditScreen = () => {
   const [phone, setPhone] = useState("")
   const [website, setWebsite] = useState("")
   const [about, setAbout] = useState("")
-  const [location, setLocation] = useState("New York, USA")
+  const [location, setLocation] = useState("")
   const [bAccount, setBAccount] = useState("")
 
   const [profileView, setProfileView] = useState(false)
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", async () => {
       // The screen is focused
       // Call any action
+      const primaryLocation = await getDataStorage("@PRIMARY_LOCATION")
+      if (primaryLocation) {
+        setLocation(
+          `${primaryLocation.street} ${primaryLocation.city}, ${primaryLocation.country} ${primaryLocation.zip}`
+        )
+      }
     })
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -70,6 +76,12 @@ const PlannerProfileEditScreen = () => {
     setAbout(eUser.bio)
     setBName(eUser.business_name)
     setUserImage(eUser.profile_picture)
+    const primaryLocation = await getDataStorage("@PRIMARY_LOCATION")
+    if (primaryLocation) {
+      setLocation(
+        `${primaryLocation.street} ${primaryLocation.city}, ${primaryLocation.country} ${primaryLocation.zip}`
+      )
+    }
   }
 
   onPickImagePress = async () => {
@@ -96,14 +108,14 @@ const PlannerProfileEditScreen = () => {
     data.append("business_name", bName)
     data.append("phone", phone)
     data.append("address_longitude", "-73.935242"),
-    data.append("address_latitude", "40.730610")
+      data.append("address_latitude", "40.730610")
 
     try {
       const resp = await updateUser(data)
       if (resp) {
         console.log("user update resposne ", resp)
         global.user = resp
-        
+
         navigation.navigate("EventPlannerDashboard")
       }
     } catch (error) {
@@ -113,7 +125,7 @@ const PlannerProfileEditScreen = () => {
         console.log(error.response.data)
 
         let key = Object.keys(error.response?.data)
-        if(key.length > 0)
+        if (key.length > 0)
           Alert.alert(key[0], error.response?.data[key[0]]?.[0])
 
         console.log(error.response.status)
@@ -305,7 +317,11 @@ Please setup your profile`}
           <TouchableOpacity
             style={{ width: "90%" }}
             disabled={profileView}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("AddNewLocationScreen", {
+                isPrimaryLocation: true
+              })
+            }}
           >
             <Input
               editable={false}

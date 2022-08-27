@@ -12,7 +12,8 @@ import {
   FlatList,
   ImageBackground,
   ScrollView,
-  TextInput
+  TextInput,
+  Platform
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, CustomImageModal } from "../../components"
@@ -193,7 +194,7 @@ const AddNewCardScreen = () => {
               <CardField
               dangerouslyGetFullCardDetails={true}
                 postalCodeEnabled={false}
-                cardStyle={{
+                cardStyle={ Platform.OS !== "android" && {
                   backgroundColor: Colors.NETURAL_5,
                   textColor: Colors.WHITE
                 }}

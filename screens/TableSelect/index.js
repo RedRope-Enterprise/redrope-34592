@@ -34,6 +34,7 @@ const TableSelectScreen = () => {
   const [datasource, setDatasource] = useState([1])
 
   const { event } = route?.params
+  debugger
 
   const increaseCircleCount = () => {
     setDatasource([...datasource, 1])
@@ -48,20 +49,20 @@ const TableSelectScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
         showLeftBtn1={true}
-        showLeftBtn2={true}
+        // showLeftBtn2={true}
       ></NavigationHeader>
       <View style={{ justifyContent: "center", alignContent: "center" }}>
         <Text style={[styles.title, { color: Colors.PRIMARY_2 }]}>
           PartySlate
         </Text>
-        <Text style={[styles.title, { color: Colors.WHITE }]}>
+        {/* <Text style={[styles.title, { color: Colors.WHITE }]}>
           {event?.name}
-        </Text>
+        </Text> */}
         <Text style={[styles.desc, { color: Colors.WHITE }]}>
           {event?.location}
         </Text>
         <Text style={[styles.desc2, { color: Colors.NETURAL_2 }]}>
-          {event?.location}
+          {event?.title}
         </Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
@@ -115,7 +116,7 @@ const TableSelectScreen = () => {
                 {`${datasource.length} person`}
               </Text>
               <Text style={[styles.pricenperson, { color: Colors.NETURAL_2 }]}>
-                {`$${event?.price * datasource.length}`}
+                {`$${event?.bottle_services[0].price * datasource.length}`}
               </Text>
             </View>
 
@@ -156,7 +157,7 @@ const TableSelectScreen = () => {
             navigation.navigate("TableConfirm", {
               event: {
                 ...event,
-                price: event?.price * datasource.length,
+                price: event?.bottle_services[0].price * datasource.length,
                 attendeeCount: datasource.length
               }
             })

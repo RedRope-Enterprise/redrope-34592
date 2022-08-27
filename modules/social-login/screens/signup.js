@@ -106,7 +106,7 @@ const SignupScreen = ({}) => {
       })
       .catch(err => {
         let error = mapErrorMessage(err)
-        if (error.code == "403") {
+        if (error.code == "400") {
           Alert.alert("INFO", "Email already in use!")
         } else {
           Alert.alert("INFO", error.message)

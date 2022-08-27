@@ -34,8 +34,10 @@ import ImgBottle from "../../assets/images/bottle.png"
 import ImgArrow from "../../assets/images/arrow.png"
 import ImgLocation from "../../assets/images/location.png"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import { createEvent } from "../../services/events"
+import { createEvent, updateEvent } from "../../services/events"
 import Spinner from "react-native-loading-spinner-overlay"
+import { useRoute } from "@react-navigation/native"
+import FastImage from "react-native-fast-image"
 
 import { data } from "../../data"
 
@@ -43,6 +45,7 @@ const { width, height } = Dimensions.get("window")
 
 const AddNewEventScreen = () => {
   const navigation = useNavigation()
+  const route = useRoute()
 
   //     const [isModalVisible, setIsModalVisible] = useState(false)
   //     const [name, setName] = useState("")
@@ -58,20 +61,45 @@ const AddNewEventScreen = () => {
   const [bottleServices, setBottleServices] = useState([])
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [refreshNow, setRefreshNow] = useState(Date.now())
+  const [location, setLocation] = useState(null)
+  const [primaryLocation, setPrimaryLocation] = useState(null)
+  const [event, setEvent] = useState(null)
 
   const [loading, setLoading] = useState(false)
+
+  useEffect(async () => {
+    if (route.params?.event && !event) {
+      setEvent(route.params?.event)
+      setEventPreviousValues(route.params?.event)
+    }
+  }, [])
+
+  const setEventPreviousValues = async eventData => {
+    setEventImage(eventData?.event_images[0].image)
+    setEventTitle(eventData?.title)
+    setEventDate(eventData?.start_date)
+    setEventDescription(eventData?.desc)
+
+    let cat = eventData?.event_categories.map(item => ({
+      ...item,
+      isEnabled: true
+    }))
+    setCategories(cat)
+    setLocation(eventData?.location)
+    setBottleServices(eventData?.event_bottle_services)
+  }
 
   const onCreateEventPress = async () => {
     setLoading(true)
     const fromData = new FormData()
-    fromData.append("price", price)
+    fromData.append("price", 0)
     fromData.append("start_date", "2022-08-12")
     fromData.append("end_date", "2022-08-17")
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
     fromData.append("desc", eventDescription)
-    fromData.append("location", "Nigeria")
+    fromData.append("location", checkBox ? primaryLocation : location)
     fromData.append("images", {
       uri: eventImage,
       type: "image/jpeg",
@@ -117,6 +145,66 @@ const AddNewEventScreen = () => {
     }
   }
 
+  const onUpdateEventPressed = async () => {
+    setLoading(true)
+    const fromData = new FormData()
+    fromData.append("price", 0)
+    fromData.append("start_date", "2022-08-12")
+    fromData.append("end_date", "2022-08-17")
+
+    // fromData.append("categories", 4)
+    fromData.append("title", eventTitle)
+    fromData.append("desc", eventDescription)
+    fromData.append("location", checkBox ? primaryLocation : location)
+
+    if (!eventImage.includes("http")) {
+      fromData.append("images", {
+        uri: eventImage,
+        type: "image/jpeg",
+        name: Date.now() + "photo.jpg"
+      })
+    }
+
+    bottleServices.forEach(element => {
+      fromData.append("bottle_services", element.id)
+    })
+
+    categories.forEach(element => {
+      fromData.append("categories", element.id)
+    })
+
+    try {
+      const resp = await updateEvent(fromData, event?.id)
+      setLoading(false)
+
+      console.log("update event response ", resp)
+      navigation.goBack()
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+
+        let key = Object.keys(error.response?.data)
+        if (key.length > 0)
+          Alert.alert(key[0], error.response?.data[key[0]]?.[0])
+
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message)
+      }
+    }
+  }
+
   const showDatePicker = () => {
     setDatePickerVisibility(true)
   }
@@ -133,16 +221,44 @@ const AddNewEventScreen = () => {
   }
 
   useEffect(() => {
-
+    getSavedLocation()
   }, [])
 
-  updateCategories = data => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getSavedLocation()
+
+      // The screen is focused
+      // Call any action
+    })
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe
+  }, [navigation])
+
+  const getSavedLocation = async () => {
+    const savedLocation = await getDataStorage("@LOCATION")
+    if (savedLocation) {
+      setLocation(
+        `${savedLocation.street} ${savedLocation.city}, ${savedLocation.country} ${savedLocation.zip}`
+      )
+    }
+
+    const pLocation = await getDataStorage("@PRIMARY_LOCATION")
+    if (pLocation) {
+      setPrimaryLocation(
+        `${pLocation.street} ${pLocation.city}, ${pLocation.country} ${pLocation.zip}`
+      )
+    }
+  }
+
+  const updateCategories = data => {
     console.log("submit data ", data)
     setCategories(data)
     setRefreshNow(Date.now())
   }
 
-  addNewBottleServices = data => {
+  const addNewBottleServices = data => {
     let allBottleServices = bottleServices
     allBottleServices.push(data)
     setRefreshNow(Date.now())
@@ -164,7 +280,7 @@ const AddNewEventScreen = () => {
           onPress={() => openImagePicker()}
         >
           {eventImage.length > 0 ? (
-            <Image
+            <FastImage
               resizeMode="cover"
               style={styles.full}
               source={{
@@ -216,7 +332,7 @@ const AddNewEventScreen = () => {
               style={[
                 styles.FONT_16,
                 styles.flex1,
-                { color: Colors.NETURAL_2, marginHorizontal: "6%" }
+                { color: Colors.WHITE, marginHorizontal: "6%" }
               ]}
             >
               {title}
@@ -242,7 +358,9 @@ const AddNewEventScreen = () => {
     >
       <NavigationHeader></NavigationHeader>
       <View style={styles.titleContainer}>
-        <Text style={[styles.title, { color: Colors.WHITE }]}>Add Event</Text>
+        <Text style={[styles.title, { color: Colors.WHITE }]}>
+          {event ? "Edit Event" : "Add Event"}
+        </Text>
       </View>
       <KeyboardAwareScrollView
         enableOnAndroid={true}
@@ -252,12 +370,14 @@ const AddNewEventScreen = () => {
         style={{ flex: 1, width: "90%" }}
         contentContainerStyle={[{ flexGrow: 1, alignItems: "center" }]}
       >
-        {loading && <Spinner
-          indicatorStyle={{ color: Colors.PRIMARY_1 }}
-          overlayColor={Colors.BLACK_OPACITY_50}
-          visible={true}
-          textStyle={{ color: Colors.PRIMARY_1 }}
-        />}
+        {loading && (
+          <Spinner
+            indicatorStyle={{ color: Colors.PRIMARY_1 }}
+            overlayColor={Colors.BLACK_OPACITY_50}
+            visible={true}
+            textStyle={{ color: Colors.PRIMARY_1 }}
+          />
+        )}
         <View style={styles.flex1}>
           {renderEventImageView()}
           <View style={styles.shortFieldContainer}>
@@ -270,7 +390,7 @@ const AddNewEventScreen = () => {
             />
           </View>
 
-          <View
+          {/* <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <View style={styles.shortDividedFieldContainer}>
@@ -308,7 +428,7 @@ const AddNewEventScreen = () => {
                 source={ImgArrow}
               ></Image>
             </View>
-          </View>
+          </View> */}
 
           <View style={styles.shortFieldContainer}>
             <TouchableOpacity
@@ -438,42 +558,51 @@ const AddNewEventScreen = () => {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                marginVertical: "4%",
-                alignItems: "flex-start"
-              }}
-            >
-              <BouncyCheckbox
-                size={25}
-                fillColor={Colors.PRIMARY_1}
-                iconImageStyle={{ tintColor: Colors.NETURAL_5 }}
-                iconStyle={{ borderColor: Colors.PRIMARY_1, borderRadius: 4 }}
-                useNativeDriver={true}
-                isChecked={checkBox}
-                onPress={isChecked => {
-                  setCheckBox(isChecked)
+            {primaryLocation && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginVertical: "4%",
+                  alignItems: "flex-start"
                 }}
-              />
-              <View>
-                <Text
-                  style={[
-                    styles.FONT_16,
-                    { color: Colors.WHITE, marginBottom: "4%" }
-                  ]}
-                >
-                  Use Primary Location
-                </Text>
-                <Text style={[styles.FONT_14_2, { color: Colors.WHITE }]}>
-                  (LA Artstation - Park area 1523)
-                </Text>
+              >
+                <BouncyCheckbox
+                  size={25}
+                  fillColor={Colors.PRIMARY_1}
+                  iconImageStyle={{ tintColor: Colors.NETURAL_5 }}
+                  iconStyle={{ borderColor: Colors.PRIMARY_1, borderRadius: 4 }}
+                  useNativeDriver={true}
+                  isChecked={checkBox}
+                  onPress={isChecked => {
+                    setCheckBox(isChecked)
+                  }}
+                />
+                <View>
+                  <Text
+                    style={[
+                      styles.FONT_16,
+                      { color: Colors.WHITE, marginBottom: "4%" }
+                    ]}
+                  >
+                    Use Primary Location
+                  </Text>
+                  <Text style={[styles.FONT_14_2, { color: Colors.WHITE }]}>
+                    ({primaryLocation})
+                  </Text>
+                </View>
               </View>
-            </View>
-            <Text style={[styles.FONT_16, { color: Colors.NETURAL_2 }]}>
-              or select new location below
-            </Text>
-            {renderGenericItem("New York, USA", ImgLocation, true)}
+            )}
+            {!checkBox && (
+              <Text style={[styles.FONT_16, { color: Colors.NETURAL_2 }]}>
+                or select new location below
+              </Text>
+            )}
+            {!checkBox &&
+              renderGenericItem(
+                location ? location : "Add Location",
+                ImgLocation,
+                true
+              )}
           </View>
 
           <View style={styles.nextBtnContainer}>
@@ -491,7 +620,9 @@ const AddNewEventScreen = () => {
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_14
               }}
-              onPress={() => onCreateEventPress()}
+              onPress={() =>
+                event ? onUpdateEventPressed() : onCreateEventPress()
+              }
             >
               Save
             </Button>

@@ -7,7 +7,7 @@ async function getCategories() {
   return response.data
 }
 
-async function getIntrests(){
+async function getIntrests() {
   const response = await api.get("/api/v1/events/interests/", {
     params: {}
   })
@@ -73,6 +73,27 @@ async function registerForEvent(payload) {
   return response.data
 }
 
+async function activeDeactiveEvent(payload) {
+  console.log("payload ", payload)
+  const response = await api.put(
+    `/api/v1/events/${payload.id}/activate-deactivate/`,
+    { active: payload.status }
+  )
+  return response.data
+}
+
+async function deleteEvent(payload) {
+  console.log("payload ", payload)
+  const response = await api.delete(`/api/v1/events/${payload}/delete/`, {})
+  return response.data
+}
+
+async function updateEvent(payload, id) {
+  console.log("payload ", payload)
+  const response = await api.patch(`/api/v1/events/${id}/`, payload)
+  return response.data
+}
+
 export {
   getCategories,
   getEvents,
@@ -84,5 +105,8 @@ export {
   markEventAsInterested,
   registerForEvent,
   getIntrests,
-  removeEventFromFavorite
+  removeEventFromFavorite,
+  activeDeactiveEvent,
+  deleteEvent,
+  updateEvent
 }

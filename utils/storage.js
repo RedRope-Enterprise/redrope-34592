@@ -11,9 +11,13 @@ export const setDataStorage = async (key, value) => {
 
 export const getDataStorage = async key => {
   try {
-    const value = await AsyncStorage.getItem(key)
+    let value = await AsyncStorage.getItem(key)
     if (value !== null) {
-      return isJsonParse(value) ? JSON.parse(value) : value
+      if (isJsonParse(value)) {
+        value = JSON.parse(value)
+       
+        return value
+      }
     } else {
       return null
     }
@@ -22,9 +26,9 @@ export const getDataStorage = async key => {
   }
 }
 
-function isJsonParse(value) {
+async function isJsonParse(value) {
   try {
-    JSON.parse(value)
+    await JSON.parse(value)
   } catch (error) {
     return false
   }
