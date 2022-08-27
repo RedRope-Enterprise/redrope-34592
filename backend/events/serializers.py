@@ -148,6 +148,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 class MyEventSerializer(serializers.ModelSerializer):
     event_categories = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
+    event_bottle_service = serializers.SerializerMethodField()
     going_count = serializers.IntegerField(source="event.going.count")
     event_price = serializers.CharField(source="event.price")
     event_title = serializers.CharField(source="event.title")
@@ -171,6 +172,9 @@ class MyEventSerializer(serializers.ModelSerializer):
             "event",
         )
         read_only_fields = ("id",)
+
+    def get_event_bottle_service(self, obj):
+        return BottleServiceSerializer(obj.bottle_service).data
 
     def get_event_images(self, obj):
         if hasattr(obj.event, "images"):
