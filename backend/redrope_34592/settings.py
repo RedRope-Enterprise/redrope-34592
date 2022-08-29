@@ -220,6 +220,8 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
+    "DATETIME_FORMAT": "%m-%d-%Y %H:%M",
+    "DATE_FORMAT": "%m-%d-%Y",
 }
 
 STRIPE_API_KEY = env.str("STRIPE_API_KEY", "")

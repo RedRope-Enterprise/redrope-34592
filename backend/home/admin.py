@@ -35,8 +35,28 @@ class UserEventRegistrationAdmin(admin.ModelAdmin):
     # event_cost.short_description = "Event Cost"
 
 
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = (
+        "event_organizer",
+        "title",
+        "location",
+        "country",
+        "active",
+        "start_date",
+        "start_time",
+        "end_date",
+        "end_time",
+    )
+
+    def event_organizer(self, obj):
+        return f"{obj.user.name}" if obj.user.name else "Unspecified"
+
+    event_organizer.short_description = "Organizer"
+
+
 admin.site.register(Notification)
-admin.site.register(Event)
+# admin.site.register(Event)
 admin.site.register(FavoriteEvent)
 admin.site.register(Category)
 admin.site.register(Interest)

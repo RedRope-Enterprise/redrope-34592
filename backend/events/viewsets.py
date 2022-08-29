@@ -53,7 +53,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class EventViewset(ModelViewSet):
     serializer_class = EventListSerializer
     permission_classes = (IsAuthenticated, IsEventPlannerOrReadOnly, IsOwnerAndReadOnly)
-    queryset = Event.objects.filter(active=True).order_by("-id")
+    queryset = Event.objects.all().order_by("-id")
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = [
         "title",
@@ -79,7 +79,11 @@ class EventViewset(ModelViewSet):
         #     .filter(categories__in=self.request.user.interests.all())
         #     .distinct()
         # )
-        queryset = filter_events_with_get_param(self.queryset, self.request)
+        queryset = self.queryset
+        if not self.request.user.event_planner:
+            queryset = self.queryset.filter(active=True)
+
+        queryset = filter_events_with_get_param(queryset, self.request)
         return queryset
 
     @action(methods=["get"], detail=True)

@@ -214,6 +214,12 @@ class RegisterEventSerializer(serializers.ModelSerializer):
         )
 
 
+class GoingEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserEventRegistration
+        fields = ("user",)
+
+
 class ReserveSerializer(serializers.ModelSerializer):
     attendee = serializers.IntegerField()
     # percentage_upfront = serializers.IntegerField()
