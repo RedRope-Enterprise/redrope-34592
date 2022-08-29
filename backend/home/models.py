@@ -203,7 +203,7 @@ class Interested(BaseModel):
     user = models.ForeignKey(
         "users.User",
         verbose_name=_("User"),
-        related_name="going_event",
+        related_name="interested_event",
         on_delete=models.CASCADE,
     )
 
