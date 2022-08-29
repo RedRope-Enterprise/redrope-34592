@@ -76,7 +76,7 @@ class Notification(BaseModel):
 
 class Event(BaseModel):
     user = models.ForeignKey(
-        "users.User", verbose_name=_("Creator"), on_delete=models.CASCADE
+        "users.User", verbose_name=_("Organizer"), on_delete=models.CASCADE
     )
     title = models.CharField(_("Event title"), max_length=50, blank=True, null=True)
     desc = models.TextField(_("Event description"), blank=True, null=True)
