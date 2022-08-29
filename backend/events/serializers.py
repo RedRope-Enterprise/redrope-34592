@@ -134,9 +134,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     def get_going(self, obj):
         if hasattr(obj, "going"):
-            return UserSerializer(
-                obj.going.values_list("user", flat=True), many=True
-            ).data
+            return GoingEventSerializer(obj.going.filter(reserved=True), many=True).data
 
     def get_favorite(self, obj):
         user = self.context["request"].user
@@ -155,7 +153,7 @@ class MyEventSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source="event.location")
     date = serializers.CharField(source="event.start_date")
     going = serializers.SerializerMethodField()
-    organizer = UserSerializer(source="user")
+    organizer = UserSerializer(source="event.user")
     favorite = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
@@ -186,8 +184,8 @@ class MyEventSerializer(serializers.ModelSerializer):
 
     def get_going(self, obj):
         if hasattr(obj.event, "going"):
-            return UserSerializer(
-                obj.event.going.values_list("user", flat=True), many=True
+            return GoingEventSerializer(
+                obj.event.going.filter(reserved=True), many=True
             ).data
 
     def get_favorite(self, obj):
@@ -217,7 +215,10 @@ class RegisterEventSerializer(serializers.ModelSerializer):
 class GoingEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserEventRegistration
-        fields = ("user",)
+        exclude = "__all__"
+
+    def to_representation(self, instance):
+        return UserSerializer(instance.user).data
 
 
 class ReserveSerializer(serializers.ModelSerializer):

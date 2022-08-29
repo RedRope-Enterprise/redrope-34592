@@ -11,6 +11,7 @@ from events.serializers import (
     MyEventSerializer,
     ReserveSerializer,
     ConfirmReservationSerializer,
+    GoingEventSerializer,
 )
 from home.models import (
     Event,
@@ -91,12 +92,12 @@ class EventViewset(ModelViewSet):
         """Retieve users going for an event"""
 
         try:
-            going = self.get_object().going.values_list("user", flat=True)
+            going = self.get_object().going.all()
             page = self.paginate_queryset(going)
             if page is not None:
-                serializer = UserSerializer(page, many=True)
+                serializer = GoingEventSerializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
-            serializer = UserSerializer(going, many=True)
+            serializer = GoingEventSerializer(going, many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -121,7 +122,7 @@ class EventViewset(ModelViewSet):
             except Exception as e:
                 return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            """Retrieve events enrolled by user"""
+            """Retrieve events interested in or booked by user"""
 
             try:
                 my_events = UserEventRegistration.objects.filter(user=request.user)
@@ -150,7 +151,9 @@ class EventViewset(ModelViewSet):
         """Retrieve events enrolled by user"""
 
         try:
-            my_bookings = UserEventRegistration.objects.filter(event__user=request.user)
+            my_bookings = UserEventRegistration.objects.filter(
+                event__user=request.user, reserved=True
+            )
             page = self.paginate_queryset(my_bookings)
             if page is not None:
                 serializer = MyEventSerializer(
