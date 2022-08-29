@@ -149,7 +149,7 @@ class UserEventRegistration(BaseModel):
     )
     bottle_service = models.ForeignKey(
         "home.BottleService",
-        verbose_name=_("Event"),
+        verbose_name=_("Bottle Service"),
         related_name="event_registration",
         blank=True,
         null=True,
@@ -191,6 +191,29 @@ class UserEventRegistration(BaseModel):
 
     class Meta:
         unique_together = ["user", "event"]
+
+
+class Interested(BaseModel):
+    event = models.ForeignKey(
+        "home.Event",
+        verbose_name=_("Event"),
+        related_name="interested",
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        "users.User",
+        verbose_name=_("User"),
+        related_name="going_event",
+        on_delete=models.CASCADE,
+    )
+
+    notification = GenericRelation(Notification)
+
+    class Meta:
+        unique_together = [
+            "event",
+            "user",
+        ]
 
 
 class BottleService(BaseModel):
