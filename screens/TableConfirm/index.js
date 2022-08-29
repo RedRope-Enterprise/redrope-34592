@@ -261,7 +261,7 @@ const TableConfirmScreen = () => {
               fontWeight: Typography.FONT_WEIGHT_400
             }}
           >
-            {`$${50}`}
+            {`$${event?.attendeeCount * 50}`}
           </Text>
         </View>
         {/* <Text style={styles.downpaymentPayText}>

@@ -25,12 +25,25 @@ import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { SwipeListView } from "react-native-swipe-list-view"
+import { getAllNotifications } from "../../services/notifications"
+import moment from "moment"
 
 const NotificationScreen = () => {
   const navigation = useNavigation()
   const [notifications, setNotifications] = useState([])
 
+  useEffect(async () => {
+    getNotificationsFromBackend()
+  }, [])
+
+  const getNotificationsFromBackend = async () => {
+    const resp = await getAllNotifications()
+    setNotifications(resp.results)
+  }
+
   const NotificationItem = ({ notification }) => {
+    const parts = notification?.verb?.split(" is")
+
     return (
       <TouchableOpacity style={{ flex: 1 }}>
         <View
@@ -41,7 +54,7 @@ const NotificationScreen = () => {
             marginVertical: "3%"
           }}
         >
-          <Image style={{}} source={notification.userImage} />
+          <Image style={{}} source={{uri : notification.sender_avatar}} />
 
           <View
             style={{
@@ -53,7 +66,7 @@ const NotificationScreen = () => {
           >
             <Text
               style={{
-                color: Colors.WHITE,
+                color: Colors.PRIMARY_1,
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_13,
                 fontWeight: Typography.FONT_WEIGHT_500,
@@ -62,14 +75,26 @@ const NotificationScreen = () => {
               }}
               multiline={true}
             >
-              {notification.text1}
-              <Text style={{ color: Colors.PRIMARY_1 }}>
-                {notification.text2}
-              </Text>
-              <Text>{notification.text3}</Text>
+              {parts[0]}
+              {parts[1] && (
+                <Text style={{ color: Colors.WHITE }}>{` is ${parts[1]}`}</Text>
+              )}
             </Text>
           </View>
         </View>
+
+        <Text
+          style={{
+            color: Colors.GREY,
+            fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+            fontSize: Typography.FONT_SIZE_12,
+            fontWeight: Typography.FONT_WEIGHT_400,
+            alignSelf: "flex-end",
+            marginRight: "5%"
+          }}
+        >
+          {moment(notification.created_at).fromNow()}
+        </Text>
 
         <View
           style={{
@@ -101,40 +126,7 @@ const NotificationScreen = () => {
             source={require("../../assets/images/NoNotification.png")}
           />
 
-          <TouchableOpacity
-            onPress={() =>
-              setNotifications([
-                {
-                  key: 1,
-                  text1: "Janet Jones  is interested to go to",
-                  text2: " venue.event",
-                  text3: " with you",
-                  userImage: require("../../assets/notifications/user1.png")
-                },
-                {
-                  key: 2,
-                  text1: "Mark Kubic is interested to go to",
-                  text2: " Boat tour",
-                  text3: " with you",
-                  userImage: require("../../assets/notifications/user2.png")
-                },
-                {
-                  key: 3,
-                  text1: "Jacob Jones  is interested to go to",
-                  text2: " Beach party",
-                  text3: " with you",
-                  userImage: require("../../assets/notifications/user3.png")
-                },
-                {
-                  key: 4,
-                  text1: "Group of people for",
-                  text2: "  Justin Timberlake concert",
-                  text3: " is gathered click here to book",
-                  userImage: require("../../assets/notifications/group_user.png")
-                }
-              ])
-            }
-          >
+          <TouchableOpacity>
             <Text
               style={{
                 fontSize: Typography.FONT_SIZE_16,
@@ -192,44 +184,7 @@ const NotificationScreen = () => {
         //   onRightAction={value => console.log(value)}
         // />
         <View style={{ flex: 1 }}>
-          <TouchableOpacity
-            onPress={() => {
-              if (notifications.length === 0) {
-                setNotifications([
-                  {
-                    key: 1,
-                    text1: "Janet Jones  is interested to go to",
-                    text2: " venue.event",
-                    text3: " with you",
-                    userImage: require("../../assets/notifications/user1.png")
-                  },
-                  {
-                    key: 2,
-                    text1: "Mark Kubic is interested to go to",
-                    text2: " Boat tour",
-                    text3: " with you",
-                    userImage: require("../../assets/notifications/user2.png")
-                  },
-                  {
-                    key: 3,
-                    text1: "Jacob Jones  is interested to go to",
-                    text2: " Beach party",
-                    text3: " with you",
-                    userImage: require("../../assets/notifications/user3.png")
-                  },
-                  {
-                    key: 4,
-                    text1: "Group of people for",
-                    text2: "  Justin Timberlake concert",
-                    text3: " is gathered click here to book",
-                    userImage: require("../../assets/notifications/group_user.png")
-                  }
-                ])
-              } else {
-                setNotifications([])
-              }
-            }}
-          >
+          <TouchableOpacity onPress={() => {}}>
             <Text
               style={{
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,

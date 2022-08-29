@@ -323,7 +323,7 @@ const PaymentScreen = () => {
             // setIsModalVisible(true)
           }}
         >
-          {`PAY $${50}`}
+          {`PAY $${event?.attendeeCount * 50}`}
         </Button>
       </View>
 

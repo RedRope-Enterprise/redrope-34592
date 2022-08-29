@@ -236,7 +236,8 @@ Please setup your profile`}
             borderWidth: 1
           }}
         >
-          <View
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Interests")}
             style={{
               marginHorizontal: "5%",
               marginVertical: "5%",
@@ -254,7 +255,7 @@ Please setup your profile`}
               Select Interest
             </Text>
 
-            <TouchableOpacity onPress={() => navigation.navigate("Interests")}>
+            <View>
               <Text
                 style={{
                   fontSize: Typography.FONT_SIZE_24,
@@ -264,8 +265,8 @@ Please setup your profile`}
               >
                 {">"}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
 
           <View
             style={{ flexDirection: "row", flexWrap: "wrap" }}

@@ -14,6 +14,7 @@ import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
 import FastImage from "react-native-fast-image"
 import { activeDeactiveEvent } from "../../services/events"
+import moment from "moment"
 
 const { width, height } = Dimensions.get("window")
 
@@ -130,7 +131,7 @@ const HomeEventItem = props => {
                     margin: 5
                   }}
                 >
-                  {event?.start_date}
+                  {moment(event?.start_date).format("MM-DD-YYYY")}
                 </Text>
               </View>
             </View>
