@@ -104,7 +104,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     event_categories = serializers.SerializerMethodField()
     bottle_services = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
-    going_count = serializers.IntegerField(source="going.count")
+    going_count = serializers.SerializerMethodField()
     going = serializers.SerializerMethodField()
     organizer = UserSerializer(source="user")
     favorite = serializers.SerializerMethodField()
@@ -136,6 +136,10 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         if hasattr(obj, "going"):
             return GoingEventSerializer(obj.going.filter(reserved=True), many=True).data
 
+    def get_going_count(self, obj):
+        if hasattr(obj, "going"):
+            return obj.going.filter(reserved=True).count()
+
     def get_favorite(self, obj):
         user = self.context["request"].user
         return FavoriteEventSerializer(
@@ -147,7 +151,7 @@ class MyEventSerializer(serializers.ModelSerializer):
     event_categories = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
     event_bottle_service = serializers.SerializerMethodField()
-    going_count = serializers.IntegerField(source="event.going.count")
+    going_count = serializers.SerializerMethodField()
     event_price = serializers.CharField(source="event.price")
     event_title = serializers.CharField(source="event.title")
     location = serializers.CharField(source="event.location")
@@ -187,6 +191,10 @@ class MyEventSerializer(serializers.ModelSerializer):
             return GoingEventSerializer(
                 obj.event.going.filter(reserved=True), many=True
             ).data
+
+    def get_going_count(self, obj):
+        if hasattr(obj.event, "going"):
+            return obj.event.going.filter(reserved=True).count()
 
     def get_favorite(self, obj):
         user = self.context["request"].user
