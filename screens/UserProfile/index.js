@@ -36,22 +36,31 @@ import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { TabView, SceneMap, TabBar } from "react-native-tab-view"
+import { getMyEvents } from "../../services/events"
 
 const UserProfileScreen = () => {
   const navigation = useNavigation()
 
   const [name, setName] = React.useState("")
   const [user, setUser] = React.useState("")
+  const [myEvents, setMyEvents] = React.useState([])
 
+  useEffect(() => {
+    getUser()
+    getEventsFromBE()
+  }, [])
 
-    useEffect(() => {
-      getUser()
-    }, [])
+  const getEventsFromBE = async () => {
+    const events = await getMyEvents()
+    console.log("MY events ", events)
 
-    const getUser = async () => {
-      let user = await getDataStorage("@user")
-      setUser(user)
-    }
+    if (events) setMyEvents(events.results)
+  }
+
+  const getUser = async () => {
+    let user = await getDataStorage("@user")
+    setUser(user)
+  }
 
   const [index, setIndex] = React.useState(0)
 
@@ -84,39 +93,35 @@ const UserProfileScreen = () => {
 
     return (
       <View style={{ marginHorizontal: "5%" }}>
-        <Text style={styles.aboutText}>
-         {user?.bio || ""}
-        </Text>
+        <Text style={styles.aboutText}>{user?.bio || ""}</Text>
 
         <View>
           <Text style={styles.interestsText}>Interests</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {userInterests?.map(
-              (element, i) =>
-                  <View
-                    style={{
-                      alignItems: "center",
-                      marginHorizontal: 10,
-                      backgroundColor: "#423a28",
-                      borderRadius: 10,
-                      borderWidth: 1,
-                      borderColor: Colors.PRIMARY_1,
-                      marginBottom: 10
-                    }}
-                  >
-                    <Text
-                      style={{
-                        margin: 5,
-                        fontSize: Typography.FONT_SIZE_14,
-                        fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                        color: Colors.PRIMARY_1
-                      }}
-                    >
-                      {element.name}
-                    </Text>
-                  </View>
-                )
-            }
+            {userInterests?.map((element, i) => (
+              <View
+                style={{
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                  backgroundColor: "#423a28",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: Colors.PRIMARY_1,
+                  marginBottom: 10
+                }}
+              >
+                <Text
+                  style={{
+                    margin: 5,
+                    fontSize: Typography.FONT_SIZE_14,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    color: Colors.PRIMARY_1
+                  }}
+                >
+                  {element.name}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
       </View>
@@ -138,15 +143,10 @@ const UserProfileScreen = () => {
           }}
           contentContainerStyle={{ marginHorizontal: "5%" }}
           numColumns={1}
-          data={events}
-          extraData={events}
+          data={myEvents}
+          extraData={myEvents}
           renderItem={({ item }) => (
-            <HomeEventItem
-              event={item}
-              onPress={() =>
-                navigation.navigate("EventDetails", { event: item })
-              }
-            />
+            <HomeEventItem event={item} onPress={() => {}} />
           )}
           keyExtractor={(item, index) => index}
         />
@@ -173,7 +173,7 @@ const UserProfileScreen = () => {
         <View style={styles.userImageContainer}>
           <Image
             style={styles.userImage}
-            source={{uri : user?.profile_picture}}
+            source={{ uri: user?.profile_picture }}
           />
         </View>
         <Text style={styles.nameText}>{user?.name}</Text>
@@ -202,7 +202,7 @@ let styles = StyleSheet.create({
     flex: 1
   },
   userImageContainer: {
-    borderWidth:1,
+    borderWidth: 1,
     borderRadius: 1000,
     overflow: "hidden",
     width: 140,
