@@ -232,7 +232,7 @@ class GoingEventSerializer(serializers.ModelSerializer):
 class ReserveSerializer(serializers.ModelSerializer):
     attendee = serializers.IntegerField()
     # percentage_upfront = serializers.IntegerField()
-    # chargeable_card = serializers.CharField()
+    payment_method = serializers.CharField()
 
     class Meta:
         model = UserEventRegistration
@@ -240,7 +240,7 @@ class ReserveSerializer(serializers.ModelSerializer):
             "event",
             "bottle_service",
             "attendee",
-            # "chargeable_card",
+            "payment_method",
             # "percentage_upfront",
         )
 
