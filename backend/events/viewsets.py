@@ -27,6 +27,7 @@ from rest_framework import status
 from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db import IntegrityError
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
@@ -203,11 +204,30 @@ class EventViewset(ModelViewSet):
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class RegisterEventViewset(CreateModelMixin, UpdateModelMixin, GenericViewSet):
+class RegisterEventViewset(
+    CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet
+):
     serializer_class = RegisterEventSerializer
+    permission_classes = (IsAuthenticated, IsOwnerAndReadOnly)
+    queryset = UserEventRegistration.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+        except IntegrityError as e:
+            return Response(
+                "You're already interested in this event",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class BottleServiceViewset(ModelViewSet):
@@ -300,6 +320,7 @@ class PaymentIntentViewset(APIView):
                 amount=settings.RESERVATION_UPFRONT_AMOUNT,
                 currency="usd",
                 description="Payment for event reservation",
+                confirm=True,
             )
 
             # if charge_card.status == "succeeded":
