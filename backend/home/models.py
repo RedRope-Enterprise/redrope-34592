@@ -173,19 +173,14 @@ class UserEventRegistration(BaseModel):
     payment_intent_id = models.CharField(
         _("Payment Intent ID"), max_length=50, blank=True, null=True
     )
-    transaction_id = models.CharField(
-        _("Transaction ID"), max_length=50, blank=True, null=True
-    )
+    # transaction_id = models.CharField(
+    #     _("Transaction ID"), max_length=50, blank=True, null=True
+    # )
     payment_status = models.CharField(
         _("Payment Status"),
         max_length=50,
         blank=True,
         null=True,
-        choices=(
-            ("Pending", "pending"),
-            ("Succeeded", "succeeded"),
-            ("Failed", "failed"),
-        ),
     )
     notification = GenericRelation(Notification)
 
