@@ -88,12 +88,9 @@ class SignupSerializer(serializers.ModelSerializer):
         write_only=True, required=True, style={"input_type": "password"}
     )
 
-    token = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = (
-            "token",
             "id",
             "name",
             "email",
@@ -152,28 +149,24 @@ class SignupSerializer(serializers.ModelSerializer):
                 )
         return attrs
 
-    def get_token(self, instance):
-        token, created = Token.objects.get_or_create(user=instance)
-        return token.key
+    # def create(self, validated_data):
+    #     validated_data.pop("password2")
+    #     password = validated_data.pop("password")
+    #     user = User(
+    #         **validated_data,
+    #         username=generate_unique_username(
+    #             [validated_data.get("name"), validated_data.get("email"), "user"]
+    #         ),
+    #     )
+    #     user.set_password(password)
+    #     user.save()
+    #     request = self._get_request()
+    #     setup_user_email(request, user, [])
+    #     return user
 
-    def create(self, validated_data):
-        validated_data.pop("password2")
-        password = validated_data.pop("password")
-        user = User(
-            **validated_data,
-            username=generate_unique_username(
-                [validated_data.get("name"), validated_data.get("email"), "user"]
-            ),
-        )
-        user.set_password(password)
-        user.save()
-        request = self._get_request()
-        setup_user_email(request, user, [])
-        return user
-
-    def save(self, request=None):
-        """rest_auth passes request so we must override to accept it"""
-        return super().save()
+    # def save(self, request=None):
+    #     """rest_auth passes request so we must override to accept it"""
+    #     return super().save()
 
 
 # class UserSerializer(serializers.ModelSerializer):
@@ -204,6 +197,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "bio",
             "likes",
             "profile_picture",
+            "alt_profile_picture",
             "email",
             "interests",
             "event_planner",
@@ -244,7 +238,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
         return InterestSerializer(obj.interests, many=True).data
 
 
-class CustomSocialLoginSerializer(SocialLoginSerializer):
+class CustomSocialLoginSerializer(serializers.Serializer):
     event_planner = serializers.BooleanField(required=False)
     accept_tc = serializers.BooleanField(required=False)
     business_name = serializers.CharField(required=False)
@@ -252,36 +246,56 @@ class CustomSocialLoginSerializer(SocialLoginSerializer):
 
     def validate(self, attrs):
 
-        attrs = super().validate(attrs)
-        user = attrs["user"]
+        # attrs = super().validate(attrs)
+        # user = attrs["user"]
 
-        if not user.is_active:
-            raise serializers.ValidationError(_("User account is not active."))
+        # if not user.is_active:
+        #     raise serializers.ValidationError(_("User account is not active."))
 
-        if not user.accept_tc:
-            if not attrs.get("accept_tc"):
+        # if not user.accept_tc:
+        #     if not attrs.get("accept_tc"):
+        #         raise serializers.ValidationError(
+        #             {"accept_tc": "Please accept terms and conditions"}
+        #         )
+        #     user.accept_tc = attrs.get("accept_tc")
+
+        if attrs.get("event_planner"):
+            if not attrs.get("business_name") or not attrs.get("business_reg_no"):
                 raise serializers.ValidationError(
-                    {"accept_tc": "Please accept terms and conditions"}
-                )
-            user.accept_tc = attrs.get("accept_tc")
-
-            if attrs.get("event_planner"):
-                if not attrs.get("business_name") or not attrs.get("business_reg_no"):
-                    raise serializers.ValidationError(
-                        _(
+                    {
+                        "business_details_error": _(
                             "Please provide your business name and business registration number"
                         )
-                    )
-                user.event_planner = attrs.get("event_planner")
-                user.business_name = attrs.get("business_name")
-                user.business_reg_no = attrs.get("business_reg_no")
-
-            user.save()
+                    }
+                )
         return attrs
 
 
-class AppleLoginSerializer(SocialLoginSerializer):
-    id_token = serializers.CharField(required=False)
+class CustomAppleSocialLoginSerializer(SocialLoginSerializer):
+    access_token = serializers.CharField(required=False, allow_blank=True)
+    code = serializers.CharField(required=False, allow_blank=True)
+    id_token = serializers.CharField(required=False, allow_blank=True)
+
+    def _get_request(self):
+        request = self.context.get("request")
+        if not isinstance(request, HttpRequest):
+            request = request._request
+        return request
+
+    def get_social_login(self, adapter, app, token, response):
+        """
+        :param adapter: allauth.socialaccount Adapter subclass.
+            Usually OAuthAdapter or Auth2Adapter
+        :param app: `allauth.socialaccount.SocialApp` instance
+        :param token: `allauth.socialaccount.SocialToken` instance
+        :param response: Provider's response for OAuth1. Not used in the
+        :returns: A populated instance of the
+            `allauth.socialaccount.SocialLoginView` instance
+        """
+        request = self._get_request()
+        social_login = adapter.complete_login(request, app, token, response=response)
+        social_login.token = token
+        return social_login
 
     def validate(self, attrs):
         view = self.context.get("view")
@@ -289,13 +303,12 @@ class AppleLoginSerializer(SocialLoginSerializer):
 
         if not view:
             raise serializers.ValidationError(
-                _("View is not defined, pass it as a context variable")
+                "View is not defined, pass it as a context variable"
             )
 
         adapter_class = getattr(view, "adapter_class", None)
-
         if not adapter_class:
-            raise serializers.ValidationError(_("Define adapter_class in view"))
+            raise serializers.ValidationError("Define adapter_class in view")
 
         adapter = adapter_class(request)
         app = adapter.get_provider().get_app(request)
@@ -306,9 +319,7 @@ class AppleLoginSerializer(SocialLoginSerializer):
         # Case 1: We received the access_token
         if attrs.get("access_token"):
             access_token = attrs.get("access_token")
-
-        if attrs.get("id_token"):
-            id_token = attrs.get("id_token")
+            token = {"access_token": access_token}
 
         # Case 2: We received the authorization code
         elif attrs.get("code"):
@@ -316,9 +327,9 @@ class AppleLoginSerializer(SocialLoginSerializer):
             self.client_class = getattr(view, "client_class", None)
 
             if not self.callback_url:
-                raise serializers.ValidationError(_("Define callback_url in view"))
+                raise serializers.ValidationError("Define callback_url in view")
             if not self.client_class:
-                raise serializers.ValidationError(_("Define client_class in view"))
+                raise serializers.ValidationError("Define client_class in view")
 
             code = attrs.get("code")
 
@@ -332,52 +343,50 @@ class AppleLoginSerializer(SocialLoginSerializer):
                 adapter.access_token_url,
                 self.callback_url,
                 scope,
+                key=app.key,
+                cert=app.cert,
             )
             token = client.get_access_token(code)
             access_token = token["access_token"]
-            id_token = token["id_token"]
 
         else:
             raise serializers.ValidationError(
-                _("Incorrect input. access_token or code is required.")
+                "Incorrect input. access_token or code is required."
             )
 
-        social_token = adapter.parse_token(
-            {
-                "access_token": access_token,
-                "id_token": id_token,
-            }
-        )
-        social_token.app = app
+        # Custom changes introduced to handle apple login on allauth
+        try:
+            social_token = adapter.parse_token(
+                {
+                    "access_token": access_token,
+                    "id_token": attrs.get("id_token"),  # For apple login
+                }
+            )
+            social_token.app = app
+        except OAuth2Error as err:
+            raise serializers.ValidationError(str(err)) from err
 
         try:
             login = self.get_social_login(adapter, app, social_token, access_token)
             complete_social_login(request, login)
         except HTTPError:
-            raise serializers.ValidationError(_("Incorrect value"))
+            raise serializers.ValidationError("Incorrect value")
 
         if not login.is_existing:
             # We have an account already signed up in a different flow
-            # with the same email address: raise an exception.
-            # This needs to be handled in the frontend. We can not just
-            # link up the accounts due to security constraints
-            if allauth_settings.UNIQUE_EMAIL:
-                # Do we have an account already with this email address?
-                account_exists = (
-                    get_user_model()
-                    .objects.filter(
-                        email=login.user.email,
-                    )
-                    .exists()
-                )
-                if account_exists:
-                    raise serializers.ValidationError(
-                        _("User is already registered with this e-mail.")
-                    )
+            # with the same email address: raise an exception, for security reasons.
+            # If you decide to follow up with this flow, checkout allauth implementation:
+            # add login.connect(request, email_address.user)
+            # https://github.com/pennersr/django-allauth/issues/1149
+            #
+            # if allauth_settings.UNIQUE_EMAIL:
+            #     # Do we have an account already with this email address?
+            #     if get_user_model().objects.filter(email=login.user.email).exists():
+            #         raise serializers.ValidationError(
+            #             'E-mail already registered using different signup method.')
 
             login.lookup()
             login.save(request, connect=True)
 
         attrs["user"] = login.account.user
-
         return attrs
