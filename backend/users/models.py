@@ -32,6 +32,9 @@ class User(AbstractUser):
     profile_picture = models.ImageField(
         _("Profile Picture"), max_length=300, blank=True, null=True
     )
+    alt_profile_picture = models.CharField(
+        _("Alt Profile Picture"), max_length=200, null=True, blank=True
+    )
     interests = models.ManyToManyField(
         "home.Interest",
         verbose_name=_("Interest"),
@@ -40,7 +43,7 @@ class User(AbstractUser):
     )
     phone = models.CharField(_("Phone number"), max_length=15, null=True)
     website = models.URLField(_("Website"), max_length=200, null=True)
-    accept_tc = models.BooleanField(_("Accept Terms and Conditions"), default=False)
+    accept_tc = models.BooleanField(_("Accept Terms and Conditions"), default=True)
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     event_planner = models.BooleanField(_("Event planner"), default=False)

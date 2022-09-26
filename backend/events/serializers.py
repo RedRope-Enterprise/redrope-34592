@@ -108,6 +108,8 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     going = serializers.SerializerMethodField()
     organizer = UserSerializer(source="user")
     favorite = serializers.SerializerMethodField()
+    interested_count = serializers.SerializerMethodField()
+    paid_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -146,6 +148,14 @@ class EventDetailsSerializer(serializers.ModelSerializer):
             getattr(obj, "favorited").filter(user=user), many=True
         ).data
 
+    def get_interested_count(self, obj):
+        if hasattr(obj, "going"):
+            return obj.going.count()
+
+    def get_paid_count(self, obj):
+        if hasattr(obj, "going"):
+            return obj.going.filter(reserved=True).count()
+
 
 class MyEventSerializer(serializers.ModelSerializer):
     event_categories = serializers.SerializerMethodField()
@@ -170,7 +180,6 @@ class MyEventSerializer(serializers.ModelSerializer):
             "reserved",
             "amount_paid",
             "amount_left",
-            "transaction_id",
             "event",
         )
         read_only_fields = ("id",)

@@ -39,9 +39,9 @@ urlpatterns = [
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),
     path("rest-auth/registration/", include("rest_auth.registration.urls")),
     # Social auth
-    url("rest-auth/facebook/$", FacebookLogin.as_view(), name="fb_login"),
-    url("rest-auth/google/$", GoogleLogin.as_view(), name="google_login"),
-    url("rest-auth/apple/$", AppleLogin.as_view(), name="apple_login"),
+    url("facebook/login/", FacebookLogin.as_view(), name="social_facebook_login"),
+    url("google/login/", GoogleLogin.as_view(), name="social_google_login"),
+    url("apple/login/", AppleLogin.as_view(), name="social_apple_login"),
 ]
 
 admin.site.site_header = "RedRope"
