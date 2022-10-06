@@ -44,6 +44,12 @@ async function addBottleService(payload) {
   return response.data
 }
 
+async function updateBottleService(payload, id) {
+  console.log("payload ", payload)
+  const response = await api.put(`/api/v1/events/bottle-service/${id}/`, payload)
+  return response.data
+}
+
 async function createEvent(payload) {
   console.log("payload ", payload)
   const response = await api.post("/api/v1/events/", payload)
@@ -108,5 +114,6 @@ export {
   removeEventFromFavorite,
   activeDeactiveEvent,
   deleteEvent,
-  updateEvent
+  updateEvent,
+  updateBottleService
 }

@@ -41,6 +41,7 @@ const ProfileScreen = () => {
 
   const [userInterests, setUserInterests] = useState()
   const [updateInterests, setUpdateInterests] = useState(Date.now())
+  const[isLoading, setIsLoading] = useState(false)
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -315,9 +316,13 @@ Please setup your profile`}
             fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
             fontSize: Typography.FONT_SIZE_14
           }}
+          loading={isLoading}
           // loading={props.loading}
-          onPress={() => {
-            setupUserProfile()
+          onPress={async () => {
+            setIsLoading(true)
+            await setupUserProfile()
+            setIsLoading(false)
+
           }}
         >
           SAVE

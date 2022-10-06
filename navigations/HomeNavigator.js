@@ -7,6 +7,7 @@ import TableConfirmScreen from "../screens/TableConfirm"
 import PaymentScreen from "../screens/PaymentScreen"
 import FaqScreen from "../screens/FAQ"
 import EventMenuScreen from "../screens/EventMenu"
+import EventByCategoryScreen from "../screens/EventsByCategory"
 
 const Stack = createStackNavigator()
 
@@ -14,6 +15,7 @@ const HomeNavigator = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="EventByCategoryScreen" component={EventByCategoryScreen} />
       <Stack.Screen name="TableSelectScreen" component={TableSelectScreen} />
       <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
       <Stack.Screen name="TableConfrimScreen" component={TableConfirmScreen} />

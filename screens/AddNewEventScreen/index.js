@@ -266,6 +266,20 @@ const AddNewEventScreen = () => {
     setBottleServices(allBottleServices)
   }
 
+  const updateBottleService = data => {
+    let allBottleServices = bottleServices
+
+    for (let i =0 ; i< allBottleServices.length ; i++) {
+      if(allBottleServices[i].id === data.id){
+        allBottleServices[i] = data
+      }
+    }
+
+    setRefreshNow(Date.now())
+
+    setBottleServices(allBottleServices)
+  }
+
   const openImagePicker = async () => {
     await ImagePicker.openPicker({}).then(image => {
       setEventImage(image.path)
@@ -313,13 +327,20 @@ const AddNewEventScreen = () => {
     )
   }
 
-  const renderGenericItem = (title, img, isLocation = false) => {
+  const renderGenericItem = (title, img, bottleService, isLocation = false) => {
     return (
       <View style={[styles.shortFieldContainer, { aspectRatio: 5.02 }]}>
         {/* AddNewLocationScreen */}
         <TouchableOpacity
           onPress={() => {
-            if (!isLocation) return
+            if (!isLocation) {
+              navigation.navigate("AddNewBottleScreen", {
+                onSubmit: addNewBottleServices,
+                onUpdate: updateBottleService,
+                bottleService: bottleService
+              })
+              return
+            }
             navigation.navigate("AddNewLocationScreen")
           }}
         >
@@ -545,7 +566,11 @@ const AddNewEventScreen = () => {
 
             {refreshNow &&
               bottleServices.map(bottleService => {
-                return renderGenericItem(bottleService.name, ImgBottle)
+                return renderGenericItem(
+                  bottleService.name,
+                  ImgBottle,
+                  bottleService
+                )
               })}
             {/* {renderGenericItem("Empty Bottle Service", ImgBottle)} */}
             {/* {renderGenericItem("Garden Tables", ImgBottle)} */}

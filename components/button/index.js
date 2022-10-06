@@ -62,7 +62,7 @@ const Button = ({
   }
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} disabled={disabled}>
       <View style={[containerCommonStyle, border]}>
         {loading ? (
           <ActivityIndicator

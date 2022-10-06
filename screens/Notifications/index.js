@@ -138,7 +138,7 @@ const NotificationScreen = () => {
               No Notifications
             </Text>
           </TouchableOpacity>
-          <Text
+          {/* <Text
             style={{
               fontSize: Typography.FONT_SIZE_14,
               fontWeight: Typography.FONT_WEIGHT_400,
@@ -151,7 +151,7 @@ const NotificationScreen = () => {
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
             eiusmod tempor
-          </Text>
+          </Text> */}
         </View>
       )}
 

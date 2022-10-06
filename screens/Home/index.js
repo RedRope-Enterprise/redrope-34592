@@ -16,7 +16,13 @@ import {
   LogBox
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { Button, Input, CustomModal, HomeEventItem, LoaderComponent } from "../../components"
+import {
+  Button,
+  Input,
+  CustomModal,
+  HomeEventItem,
+  LoaderComponent
+} from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
@@ -115,6 +121,26 @@ const HomeScreen = () => {
 
   const CategoryRender = ({ event }) => (
     <TouchableOpacity
+      onPress={() => {
+        const eventsToBe = []
+
+        for (const ev of events) {
+          for (const category of ev.event_categories) {
+            if (category.name === event.name) {
+              eventsToBe.push(ev)
+            }
+          }
+        }
+
+
+        events.filter(ev => ev.event_categories.map(evCategory=> {
+          return evCategory.name === "Love"
+        }))
+
+        navigation.navigate("EventByCategoryScreen", {
+          events: eventsToBe, category : event.name
+        })
+      }}
       style={{
         height: 190,
         width: 160,
@@ -278,7 +304,7 @@ const HomeScreen = () => {
           </View>
         )}
       </ScrollView>
-      {isLoading &&<LoaderComponent></LoaderComponent>}
+      {isLoading && <LoaderComponent></LoaderComponent>}
     </SafeAreaView>
   )
 }

@@ -66,6 +66,7 @@ const AddNewCardScreen = () => {
   const [cvv, setCvv] = useState("")
   const [brand, setBrand] = useState("")
   const [screenTitle, setScreenTitle] = useState("Add New Card")
+  const [isLoading, setIsLoading] = useState(false)
 
   const [card, setCard] = useState(CardFieldInput.Details | null)
   const { confirmPayment, handleCardAction } = useStripe()
@@ -232,10 +233,14 @@ const AddNewCardScreen = () => {
                   fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                   fontSize: Typography.FONT_SIZE_14
                 }}
+                loading={isLoading}
                 onPress={async () => {
                   try {
+                    setIsLoading(true);
                     const token = await createToken({ type: "Card", ...card })
                     const result = await createCard({ token: token.token.id })
+                    setIsLoading(false);
+
                     navigation.goBack()
                   } catch (e) {}
                 }}

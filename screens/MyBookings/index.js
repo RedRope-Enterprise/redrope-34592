@@ -129,7 +129,7 @@ const MyBookingsScreen = () => {
             <UserBookingsItem
               event={item}
               onPress={() => {
-                // navigation.navigate("EventDetails", { event: item })
+                navigation.navigate("EventDetails", { event: item })
               }}
             />
           )}

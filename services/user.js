@@ -13,4 +13,10 @@ async function updateUser(payload) {
   return response.data
 }
 
-export { getUser, updateUser }
+async function deleteAccount(payload) {
+  const response = await api.post("/api/v1/delete-account/", payload)
+  return response.data
+}
+
+
+export { getUser, updateUser, deleteAccount }

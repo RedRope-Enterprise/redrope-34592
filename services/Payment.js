@@ -32,6 +32,11 @@ async function createPaymentIntent(params = {}) {
   return response.data
 }
 
+async function makeReservation(params = {}) {
+  const response = await api.post("/api/v1/events/make-reservation/", params)
+  return response.data
+}
+
 async function confirmReservation(params = {}) {
   const response = await api.post("/api/v1/events/confirm-reservation/", params)
   return response.data
@@ -43,5 +48,6 @@ export {
   updateCard,
   deleteCard,
   createPaymentIntent,
-  confirmReservation
+  confirmReservation,
+  makeReservation
 }

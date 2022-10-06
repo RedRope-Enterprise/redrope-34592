@@ -23,7 +23,7 @@ import {
   clearStorage
 } from "../../utils/storage"
 import ImgArrow from "../../assets/images/arrow.png"
-import { addBottleService } from "../../services/events"
+import { addBottleService, updateBottleService } from "../../services/events"
 
 const { width, height } = Dimensions.get("window")
 
@@ -32,11 +32,16 @@ const AddNewBottleScreen = () => {
   const route = useRoute()
 
   const { onSubmit } = route?.params
+  const { onUpdate } = route?.params
 
-  const [name, setName] = useState("")
-  const [price, setPrice] = useState("")
-  const [person, setPerson] = useState("")
-  const [description, setDescription] = useState("")
+  const {bottleService} = route?.params
+
+  const [name, setName] = useState(bottleService ? bottleService.name : "")
+  const [price, setPrice] = useState(bottleService ? bottleService.price : "")
+  const [person, setPerson] = useState(bottleService ? bottleService.person +"": "")
+  const [description, setDescription] = useState(bottleService? bottleService.desc: "")
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const createNewBottleService = async () => {
     if (!name || name.length === 0) {
@@ -177,6 +182,7 @@ const AddNewBottleScreen = () => {
                 borderColor: Colors.facebook,
                 marginBottom: 2
               }}
+              loading={isLoading}
               height={35}
               textFontWeight={Typography.FONT_WEIGHT_600}
               textStyle={{
@@ -184,7 +190,22 @@ const AddNewBottleScreen = () => {
                 fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
                 fontSize: Typography.FONT_SIZE_14
               }}
-              onPress={() => createNewBottleService()}
+              onPress={async() => {
+                if(bottleService){
+                  setIsLoading(true);
+                  const resp = await updateBottleService({
+                    name: name,
+                    price: price,
+                    person: parseInt(person),
+                    desc: description
+                  }, bottleService.id)
+
+                  onUpdate(resp)
+                  setIsLoading(false);
+                  navigation.goBack()
+
+                }else
+                createNewBottleService()}}
             >
               Save
             </Button>

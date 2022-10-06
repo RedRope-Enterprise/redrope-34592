@@ -143,7 +143,10 @@ const EventDetailsScreen = () => {
 
         {!global?.user?.event_planner && (
           <View style={{ flexDirection: "row", marginTop: "8%" }}>
-            <Image  style={{width: 50, height: 50, borderRadius: 1000}} source={{ uri: event?.organizer?.profile_picture }} />
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 1000 }}
+              source={{ uri: event?.organizer?.profile_picture }}
+            />
             <View style={{ marginLeft: "4%", justifyContent: "center" }}>
               <Text
                 style={{
@@ -153,7 +156,9 @@ const EventDetailsScreen = () => {
                   color: Colors.WHITE
                 }}
               >
-                {event?.organizer?.username != "null" ? event?.organizer?.username : ""}
+                {event?.organizer?.username != "null"
+                  ? event?.organizer?.username
+                  : ""}
               </Text>
               <Text
                 style={{
@@ -380,8 +385,15 @@ const EventDetailsScreen = () => {
 
           <TouchableOpacity
             onPress={async () => {
-              const resp = await markEventAsInterested({ event: event.id })
-              console.log(" interested event response ", resp)
+              try {
+                const resp = await markEventAsInterested({ event: event.id })
+                console.log(" interested event response ", resp)
+                Alert.alert("Thank you for your interest", "Check My Event")
+              } catch (error) {
+                if(error === "You're already interested in this event")
+                  Alert.alert(error)
+                
+              }
             }}
             style={{
               flexDirection: "row",

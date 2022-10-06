@@ -11,6 +11,8 @@ import {
   StyleSheet,
   ScrollView
 } from "react-native"
+import DateTimePickerModal from "react-native-modal-datetime-picker"
+
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
@@ -35,6 +37,9 @@ const FiltersScreen = () => {
   const [dateTabSelection, setDateTabSelection] = useState(-1)
   const [selectedDuration, setSelectedDuration] = useState(0)
   const [priceRangeValue, setPriceRangeValue] = useState([0, 1000])
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+  const [eventDate, setEventDate] = useState(null)
+
 
   const { hasFilters, filterObj } = useSelector(state => state.home)
 
@@ -45,6 +50,20 @@ const FiltersScreen = () => {
     { id: 2, type: "Bottle Service" },
     { id: 3, type: "Pool Parties" }
   ]
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false)
+  }
+  const showDatePicker = () => {
+    setDatePickerVisibility(true)
+  }
+
+  const handleConfirm = date => {
+    const dateOnly =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+    setEventDate(dateOnly)
+    hideDatePicker()
+  }
 
   useEffect(() => {
     console.log("filter>>>>: ", hasFilters, filterObj)
@@ -176,7 +195,7 @@ const FiltersScreen = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => setDateTabSelection(0)}
+          onPress={() => showDatePicker()}
           style={[
             styles.unselectedBoxStyle,
             {
@@ -202,7 +221,7 @@ const FiltersScreen = () => {
               flex: 1
             }}
           >
-            Choose from calender
+            {eventDate ? eventDate : "Choose from calender"}
           </Text>
 
           <Text
@@ -451,7 +470,7 @@ const FiltersScreen = () => {
         </TouchableOpacity>
 
         {timeDateSection()}
-        {locationSection()}
+        {/* {locationSection()} */}
         {selectedEvent === 1 && durationSection()}
         {selectedEvent === 1 && lengthSection()}
 
@@ -574,6 +593,9 @@ const FiltersScreen = () => {
               if (selectedEvent > 0) {
                 params.categories = eventTypes[selectedEvent - 1].type
               }
+              if(eventDate){
+                params.start_date = eventDate
+              }
               dispatch(applyFilter(params))
               navigation.goBack()
             }}
@@ -593,6 +615,13 @@ const FiltersScreen = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     </SafeAreaView>
   )
 }

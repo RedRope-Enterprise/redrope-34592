@@ -21,6 +21,7 @@ import {
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
+import { deleteAccount } from "../../services/user"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
@@ -29,6 +30,7 @@ const { width, height } = Dimensions.get("window")
 const SettingsScreen = () => {
   const navigation = useNavigation()
   const [user, setUser] = useState(global.user)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -48,7 +50,10 @@ const SettingsScreen = () => {
     {
       key: 0,
       text: "Profile Settings",
-      onPress: () => user?.event_planner ? navigation.navigate("PlannerProfileEdit") :  navigation.navigate("Profile")
+      onPress: () =>
+        user?.event_planner
+          ? navigation.navigate("PlannerProfileEdit")
+          : navigation.navigate("Profile")
     },
     {
       key: 1,
@@ -77,7 +82,7 @@ const SettingsScreen = () => {
           url: "https://app.termly.io/document/privacy-policy/ffe5e1d0-ab91-4d33-956c-57bdbdd99d59"
         })
     },
-    { key: 1, text: "About us", onPress: () => navigation.navigate("AboutUs")}
+    { key: 1, text: "About us", onPress: () => navigation.navigate("AboutUs") }
   ]
 
   return (
@@ -97,7 +102,9 @@ const SettingsScreen = () => {
               source={{ uri: user?.profile_picture }}
             />
           </View>
-          <Text style={styles.nameText}>{user?.event_planner ? user?.business_name : user?.name}</Text>
+          <Text style={styles.nameText}>
+            {user?.event_planner ? user?.business_name : user?.name}
+          </Text>
         </View>
 
         {settingsMenu.map(menuItem => {
@@ -151,13 +158,29 @@ const SettingsScreen = () => {
               marginBottom: 2,
               alignSelf: "center"
             }}
+            loading={deleteLoading}
             height={35}
             textFontWeight={Typography.FONT_WEIGHT_600}
             textStyle={{
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
               fontSize: Typography.FONT_SIZE_14
             }}
-            onPress={() => {}}
+            onPress={async () => {
+              try {
+                setDeleteLoading(true)
+                const resp = await deleteAccount()
+                setDeleteLoading(false)
+                if (resp.success) {
+                  await clearStorage()
+                  navigation.replace("login")
+                }
+
+                console.log("delete account resp ", resp)
+              } catch (error) {
+                setDeleteLoading(false)
+
+              }
+            }}
           >
             DELETE ACCOUNT
           </Button>

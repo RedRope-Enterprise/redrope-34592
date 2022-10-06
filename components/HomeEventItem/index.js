@@ -131,7 +131,7 @@ const HomeEventItem = props => {
                     margin: 5
                   }}
                 >
-                  {moment(event?.start_date).format("MM-DD-YYYY")}
+                  {event?.start_date}
                 </Text>
               </View>
             </View>
