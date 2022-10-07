@@ -258,6 +258,10 @@ class ReserveSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"bottle_services": "Event doesn't have selected bottle service."}
             )
+        if attrs.get("attendee") > attrs.get("bottle_service").person:
+            raise serializers.ValidationError(
+                {"error": "The number of attendees exceeds the limit."}
+            )
         return attrs
 
 
