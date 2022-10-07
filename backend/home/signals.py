@@ -18,7 +18,7 @@ def user_registered_for_event(sender, instance, created, **kwargs):
             notify = instance.notification.create(
                 target=instance.event.user,
                 from_user=instance.user,
-                verb=f"{instance.user.name} is interested to go to {instance.event.title} with you",
+                verb=f"{instance.user.name} is interested in going to {instance.event.title} with you.",
                 content_type=content_type,
             )
 
