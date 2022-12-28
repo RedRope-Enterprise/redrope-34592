@@ -298,7 +298,7 @@ class CardPaymentViewset(APIView):
     http_method_names = ["post"]
 
     def post(self, request):
-        serializer = ReserveSerializer(data=request.data)
+        serializer = ReserveSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         try:
             # Collect post data
