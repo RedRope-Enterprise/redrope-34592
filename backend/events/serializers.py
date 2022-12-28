@@ -132,7 +132,11 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     def get_bottle_services(self, obj):
         if hasattr(obj, "bottle_services"):
-            return BottleServiceSerializer(obj.bottle_services, many=True).data
+            return BottleServiceSerializer(
+                obj.bottle_services,
+                context={"event": obj, "user": self.context["request"].user},
+                many=True,
+            ).data
 
     def get_going(self, obj):
         if hasattr(obj, "going"):
@@ -254,14 +258,27 @@ class ReserveSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
+        try:
+            user = self.context["request"].user
+            user_reservation = UserEventRegistration.objects.get(
+                user=user,
+                bottle_service=attrs.get("bottle_service"),
+                event=attrs.get("event"),
+            )
+            if user_reservation.available_slots < attrs.get("attendee"):
+                raise serializers.ValidationError(
+                    {"error": "The number of attendees exceeds the maximum limit."}
+                )
+        except:
+            if attrs.get("attendee") > attrs.get("bottle_service").person:
+                raise serializers.ValidationError(
+                    {"error": "The number of attendees exceeds the maximum limit."}
+                )
         if attrs.get("bottle_service") not in attrs.get("event").bottle_services.all():
             raise serializers.ValidationError(
                 {"bottle_services": "Event doesn't have selected bottle service."}
             )
-        if attrs.get("attendee") > attrs.get("bottle_service").person:
-            raise serializers.ValidationError(
-                {"error": "The number of attendees exceeds the limit."}
-            )
+
         return attrs
 
 
@@ -283,7 +300,20 @@ class InterestSerializer(serializers.ModelSerializer):
 
 
 class BottleServiceSerializer(serializers.ModelSerializer):
+    available_slots = serializers.SerializerMethodField()
+
     class Meta:
         model = BottleService
         fields = "__all__"
         read_only_fields = ("user",)
+
+    def get_available_slots(self, obj):
+        try:
+            event = self.context["event"]
+            user = self.context["user"]
+            user_reservation = UserEventRegistration.objects.get(
+                user=user, bottle_service=obj, event=event
+            )
+            return user_reservation.available_slots
+        except:
+            return obj.person
