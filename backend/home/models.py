@@ -164,6 +164,9 @@ class UserEventRegistration(BaseModel):
     attendee = models.PositiveIntegerField(_("Number of attendees"), default=1)
     interested = models.BooleanField(_("Interested"), default=True)
     reserved = models.BooleanField(_("Reserved"), default=False)
+    available_slots = models.PositiveIntegerField(
+        _("Number of available_slots"), default=1
+    )
     amount_paid = models.DecimalField(
         _("Amount paid"), max_digits=8, default=0, decimal_places=2
     )
@@ -183,6 +186,10 @@ class UserEventRegistration(BaseModel):
         null=True,
     )
     notification = GenericRelation(Notification)
+
+    def save(self, *args, **kwargs):
+        self.available_slots = int(self.bottle_service.person) - int(self.attendee)
+        super(UserEventRegistration, self).save(*args, **kwargs)
 
     class Meta:
         unique_together = ["user", "event"]
