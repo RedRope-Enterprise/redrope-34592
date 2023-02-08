@@ -179,7 +179,8 @@ const EventMenuScreen = () => {
               onPress={
                 () =>
                   navigation.navigate("TableSelect", {
-                    event: route.params?.event
+                    event: route.params?.event,
+                    bottle_service : item
                   })
                 // changeExpansion(index)
               }
@@ -204,7 +205,7 @@ const EventMenuScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={{ flexDirection: "row", marginBottom: "3%" }}>
-            {renderMainDetails(`${item.person} Guest`)}
+            {renderMainDetails(`${item.available_slots} Guest`)}
             {renderMainDetails(`$${item?.price} minimum`)}
             {item.isSoldOut &&
               renderMainDetails("SOLD OUT", Colors.PRIMARY_2, true)}

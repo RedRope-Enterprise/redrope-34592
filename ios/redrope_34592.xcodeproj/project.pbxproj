@@ -16,11 +16,11 @@
 		30F58C34285A4CF4004022F4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		30F58C3B285A5847004022F4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F58C3A285A5846004022F4 /* File.swift */; };
 		30F58C3C285A5847004022F4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F58C3A285A5846004022F4 /* File.swift */; };
+		3E43E24A31711299C0B02403 /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B1894FF7D648350536224B8A /* libPods-redrope_34592-redrope_34592Tests.a */; };
 		47F7D3948B804BBB9792B3D6 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 215F8AC67136489BA31AE305 /* Poppins-Medium.ttf */; };
-		597433A3808AB006E278EC30 /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC97997EF736B9B9E60323C3 /* libPods-redrope_34592-redrope_34592Tests.a */; };
 		59F75262CF4749A8A0E02DCF /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F5F1E124CA5487DB38C2B93 /* Poppins-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		B9CAED358A814846CEDBF5D2 /* libPods-redrope_34592.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E7878CD1004E53164CBC687 /* libPods-redrope_34592.a */; };
+		928AE0A3A1D29AA3A132A997 /* libPods-redrope_34592.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3BB5D041E92F53EEC83573 /* libPods-redrope_34592.a */; };
 		F91D94F2DAEC424694DC3F6E /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92AC1255842B42DDBDDDBF54 /* Poppins-Light.ttf */; };
 /* End PBXBuildFile section */
 
@@ -35,10 +35,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00790B7C5EE92AB7E67A6302 /* Pods-redrope_34592.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.debug.xcconfig"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* redrope_34592Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = redrope_34592Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* redrope_34592Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = redrope_34592Tests.m; sourceTree = "<group>"; };
-		07C002B99C32119DE759B8A8 /* Pods-redrope_34592.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.release.xcconfig"; sourceTree = "<group>"; };
 		106150A0880642C1A2DDE5E6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* redrope_34592.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redrope_34592.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = redrope_34592/AppDelegate.h; sourceTree = "<group>"; };
@@ -46,6 +46,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = redrope_34592/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = redrope_34592/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = redrope_34592/main.m; sourceTree = "<group>"; };
+		157AD110EBE6F93EF5C330FA /* Pods-redrope_34592.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.release.xcconfig"; sourceTree = "<group>"; };
 		18DDAC07A03C47AEAEEADED2 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		215F8AC67136489BA31AE305 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		2724C41AA657400F84BBF7BB /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
@@ -55,26 +56,25 @@
 		30F58C39285A5846004022F4 /* redrope_34592Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "redrope_34592Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		30F58C3A285A5846004022F4 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		3A8B80E5B85E4793B5259030 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		3E7878CD1004E53164CBC687 /* libPods-redrope_34592.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D1F6F1A8E8848D7A1888546 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		4E94A48AE88743BBAB39B3D1 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		58E954E14C434F0A8D728721 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		6B7F1159FDA770481D8FAD12 /* Pods-redrope_34592.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592/Pods-redrope_34592.debug.xcconfig"; sourceTree = "<group>"; };
+		6788E346DB2677386D32504A /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; sourceTree = "<group>"; };
 		7BA58573C9D04FEB964F4139 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		7F5F1E124CA5487DB38C2B93 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		7FEB5B000AA2468FB6D041D1 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = redrope_34592/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8780B9D3CFDD4C278583CE5D /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		92AC1255842B42DDBDDDBF54 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
+		AA3BB5D041E92F53EEC83573 /* libPods-redrope_34592.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD2BF5C20F0B4191B06845EB /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		B1894FF7D648350536224B8A /* libPods-redrope_34592-redrope_34592Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592-redrope_34592Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CB01800CFB4F729A296BA0 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		BBCEA942BD854E96B4AE6023 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		BC5171DF3A3A712AE860E51F /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		D136B2DBF05CA89DA5307E3E /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.release.xcconfig"; sourceTree = "<group>"; };
 		D23CDA33BF58421E9B30E797 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		D57D6A657EBA4B49898FE5B1 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		DB80355DC6414944A4C69304 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		EC97997EF736B9B9E60323C3 /* libPods-redrope_34592-redrope_34592Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-redrope_34592-redrope_34592Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0FCF8A4A9F0DC9CDDA64387 /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EFFEADCC954B4B26AAE7A348 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				597433A3808AB006E278EC30 /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */,
+				3E43E24A31711299C0B02403 /* libPods-redrope_34592-redrope_34592Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30F58C34285A4CF4004022F4 /* JavaScriptCore.framework in Frameworks */,
-				B9CAED358A814846CEDBF5D2 /* libPods-redrope_34592.a in Frameworks */,
+				928AE0A3A1D29AA3A132A997 /* libPods-redrope_34592.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,8 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3E7878CD1004E53164CBC687 /* libPods-redrope_34592.a */,
-				EC97997EF736B9B9E60323C3 /* libPods-redrope_34592-redrope_34592Tests.a */,
+				AA3BB5D041E92F53EEC83573 /* libPods-redrope_34592.a */,
+				B1894FF7D648350536224B8A /* libPods-redrope_34592-redrope_34592Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -207,10 +207,10 @@
 		B14B408FE9D2F7380BF4EEFC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6B7F1159FDA770481D8FAD12 /* Pods-redrope_34592.debug.xcconfig */,
-				07C002B99C32119DE759B8A8 /* Pods-redrope_34592.release.xcconfig */,
-				BC5171DF3A3A712AE860E51F /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */,
-				D136B2DBF05CA89DA5307E3E /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */,
+				00790B7C5EE92AB7E67A6302 /* Pods-redrope_34592.debug.xcconfig */,
+				157AD110EBE6F93EF5C330FA /* Pods-redrope_34592.release.xcconfig */,
+				E0FCF8A4A9F0DC9CDDA64387 /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */,
+				6788E346DB2677386D32504A /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -222,11 +222,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "redrope_34592Tests" */;
 			buildPhases = (
-				2E346CC992B05F86686163F5 /* [CP] Check Pods Manifest.lock */,
+				2B07DE6338FB695C4E9DBDCA /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C5BADF03B9EF9453ECD83F07 /* [CP] Copy Pods Resources */,
+				302DF7780447C227E0E1EE93 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -242,13 +242,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "redrope_34592" */;
 			buildPhases = (
-				14AA8CB14E7FF7B44059EAC3 /* [CP] Check Pods Manifest.lock */,
+				0BB5789207B966DE16578E3E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				E1CF4A7058FD3B394B4D690F /* [CP] Copy Pods Resources */,
+				EF83C284F39AE962EBB093D0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -334,7 +334,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		14AA8CB14E7FF7B44059EAC3 /* [CP] Check Pods Manifest.lock */ = {
+		0BB5789207B966DE16578E3E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -356,7 +356,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2E346CC992B05F86686163F5 /* [CP] Check Pods Manifest.lock */ = {
+		2B07DE6338FB695C4E9DBDCA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -378,7 +378,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C5BADF03B9EF9453ECD83F07 /* [CP] Copy Pods Resources */ = {
+		302DF7780447C227E0E1EE93 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -395,7 +395,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E1CF4A7058FD3B394B4D690F /* [CP] Copy Pods Resources */ = {
+		EF83C284F39AE962EBB093D0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -467,7 +467,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BC5171DF3A3A712AE860E51F /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */;
+			baseConfigurationReference = E0FCF8A4A9F0DC9CDDA64387 /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -499,7 +499,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D136B2DBF05CA89DA5307E3E /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */;
+			baseConfigurationReference = 6788E346DB2677386D32504A /* Pods-redrope_34592-redrope_34592Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -527,7 +527,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B7F1159FDA770481D8FAD12 /* Pods-redrope_34592.debug.xcconfig */;
+			baseConfigurationReference = 00790B7C5EE92AB7E67A6302 /* Pods-redrope_34592.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -536,6 +536,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 6YKR59QXKM;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6YKR59QXKM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = redrope_34592/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -551,6 +552,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.crowdbotics.redrope-34592";
 				PRODUCT_NAME = redrope_34592;
 				PROVISIONING_PROFILE_SPECIFIER = "Redrope v1.01";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Redrope v1.01";
 				SWIFT_OBJC_BRIDGING_HEADER = "redrope_34592-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -560,7 +562,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07C002B99C32119DE759B8A8 /* Pods-redrope_34592.release.xcconfig */;
+			baseConfigurationReference = 157AD110EBE6F93EF5C330FA /* Pods-redrope_34592.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -569,6 +571,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 6YKR59QXKM;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6YKR59QXKM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = redrope_34592/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -584,6 +587,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.crowdbotics.redrope-34592";
 				PRODUCT_NAME = redrope_34592;
 				PROVISIONING_PROFILE_SPECIFIER = "Redrope v1.01";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Redrope v1.01";
 				SWIFT_OBJC_BRIDGING_HEADER = "redrope_34592-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

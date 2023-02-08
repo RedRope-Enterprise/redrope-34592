@@ -33,10 +33,12 @@ const TableSelectScreen = () => {
 
   const [datasource, setDatasource] = useState([1])
 
-  const { event } = route?.params
-  debugger
+  const { event, bottle_service } = route?.params
 
   const increaseCircleCount = () => {
+    if(datasource.length + 1 > bottle_service?.available_slots)
+      return
+
     setDatasource([...datasource, 1])
   }
 
@@ -116,7 +118,7 @@ const TableSelectScreen = () => {
                 {`${datasource.length} person`}
               </Text>
               <Text style={[styles.pricenperson, { color: Colors.NETURAL_2 }]}>
-                {`$${event?.bottle_services[0].price * datasource.length}`}
+                {`$${bottle_service?.price * datasource.length}`}
               </Text>
             </View>
 
@@ -157,7 +159,7 @@ const TableSelectScreen = () => {
             navigation.navigate("TableConfirm", {
               event: {
                 ...event,
-                price: event?.bottle_services[0].price * datasource.length,
+                price: bottle_service.price * datasource.length,
                 attendeeCount: datasource.length
               }
             })
