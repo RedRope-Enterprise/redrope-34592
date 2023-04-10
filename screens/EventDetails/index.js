@@ -248,10 +248,10 @@ const EventDetailsScreen = () => {
           </Text>
           <Text
             style={{
-              fontSize: Typography.FONT_SIZE_13,
+              fontSize: Typography.FONT_SIZE_16,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontWeight: Typography.FONT_WEIGHT_500,
-              color: Colors.GREY
+              fontWeight: Typography.FONT_WEIGHT_BOLD,
+              color: Colors.WHITE
             }}
           >
             {event?.start_date}
@@ -271,7 +271,7 @@ const EventDetailsScreen = () => {
           resizeMode="contain"
           source={require("../../assets/eventDetails/Location.png")}
         />
-        <View style={{ marginLeft: "5%" }}>
+        <View style={{ marginLeft: "5%", justifyContent: "center" }}>
           <Text
             style={{
               fontSize: Typography.FONT_SIZE_16,
@@ -282,7 +282,7 @@ const EventDetailsScreen = () => {
           >
             {event?.location}
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: Typography.FONT_SIZE_13,
               fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
@@ -291,7 +291,7 @@ const EventDetailsScreen = () => {
             }}
           >
             {event?.location}
-          </Text>
+          </Text> */}
         </View>
       </View>
 

@@ -67,13 +67,13 @@ const TableConfirmScreen = () => {
     let arr = []
     arr.push({
       title: event?.start_date,
-      desc: event?.start_date,
+      // desc: event?.start_date,
       image: CalendarImg
     })
 
     arr.push({
       title: event?.location,
-      desc: event?.location,
+      // desc: event?.location,
       image: LocationImg
     })
 
@@ -101,7 +101,8 @@ const TableConfirmScreen = () => {
           </View>
           <View
             style={{
-              flex: 1
+              flex: 1,
+              justifyContent: 'center',
             }}
           >
             <Text style={[styles.desc, { color: Colors.WHITE }]}>

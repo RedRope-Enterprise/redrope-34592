@@ -38,6 +38,7 @@ import { createEvent, updateEvent } from "../../services/events"
 import Spinner from "react-native-loading-spinner-overlay"
 import { useRoute } from "@react-navigation/native"
 import FastImage from "react-native-fast-image"
+import moment from "moment"
 
 import { data } from "../../data"
 
@@ -90,11 +91,14 @@ const AddNewEventScreen = () => {
   }
 
   const onCreateEventPress = async () => {
+    let originalDate = moment(eventDate, 'MM-DD-YYYY');
+    let newDate = originalDate.format('YYYY-MM-DD');
+
     setLoading(true)
     const fromData = new FormData()
     fromData.append("price", 0)
-    fromData.append("start_date", "2022-08-12")
-    fromData.append("end_date", "2022-08-17")
+    fromData.append("start_date", newDate)
+    fromData.append("end_date", newDate)
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
@@ -146,11 +150,14 @@ const AddNewEventScreen = () => {
   }
 
   const onUpdateEventPressed = async () => {
+    let originalDate = moment(eventDate, 'MM-DD-YYYY');
+    let newDate = originalDate.format('YYYY-MM-DD');
+
     setLoading(true)
     const fromData = new FormData()
     fromData.append("price", 0)
-    fromData.append("start_date", "2022-08-12")
-    fromData.append("end_date", "2022-08-17")
+    fromData.append("start_date", newDate)
+    fromData.append("end_date", newDate)
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
@@ -215,7 +222,7 @@ const AddNewEventScreen = () => {
 
   const handleConfirm = date => {
     const dateOnly =
-      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+      date.getMonth() + 1 + "-" + date.getDate() + "-" + date.getFullYear()
     setEventDate(dateOnly)
     hideDatePicker()
   }
@@ -269,8 +276,8 @@ const AddNewEventScreen = () => {
   const updateBottleService = data => {
     let allBottleServices = bottleServices
 
-    for (let i =0 ; i< allBottleServices.length ; i++) {
-      if(allBottleServices[i].id === data.id){
+    for (let i = 0; i < allBottleServices.length; i++) {
+      if (allBottleServices[i].id === data.id) {
         allBottleServices[i] = data
       }
     }
@@ -626,6 +633,7 @@ const AddNewEventScreen = () => {
               renderGenericItem(
                 location ? location : "Add Location",
                 ImgLocation,
+                null,
                 true
               )}
           </View>

@@ -7,8 +7,12 @@ import {
   Text,
   Dimensions,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  StyleSheet
 } from "react-native"
+import ImgLocation from "../../assets/images/location.png"
+import ImgArrow from "../../assets/images/arrow.png"
+
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
@@ -74,6 +78,8 @@ const PlannerProfileEditScreen = () => {
     setEmail(eUser.email)
     setName(eUser.name)
     setAbout(eUser.bio)
+    setPhone(eUser.phone)
+    setWebsite(eUser.website)
     setBName(eUser.business_name)
     setUserImage(eUser.profile_picture)
     const primaryLocation = await getDataStorage("@PRIMARY_LOCATION")
@@ -95,6 +101,47 @@ const PlannerProfileEditScreen = () => {
     })
   }
 
+  const renderGenericItem = (title, img, bottleService, isLocation = false) => {
+    return (
+      <View style={[styles.shortFieldContainer, { aspectRatio: 5.02 }]}>
+        <TouchableOpacity
+          onPress={() => {
+            if (!isLocation) {
+              navigation.navigate("AddNewBottleScreen", {
+                onSubmit: addNewBottleServices,
+                onUpdate: updateBottleService,
+                bottleService: bottleService
+              })
+              return
+            }
+            navigation.navigate("AddNewLocationScreen")
+          }}
+        >
+          <View style={styles.genericItemContainer}>
+            <Image
+              style={{ width: "8%", height: undefined, aspectRatio: 1 }}
+              source={img}
+            ></Image>
+            <Text
+              style={[
+                styles.FONT_16,
+                styles.flex1,
+                { color: Colors.WHITE, marginHorizontal: "6%" , flex:1}
+              ]}
+            >
+              {title}
+            </Text>
+            <Image
+              resizeMode="contain"
+              style={styles.imgArrow}
+              source={ImgArrow}
+            ></Image>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   setupUserProfile = async () => {
     const data = new FormData()
     data.append("name", name)
@@ -114,6 +161,7 @@ const PlannerProfileEditScreen = () => {
       const resp = await updateUser(data)
       if (resp) {
         console.log("user update resposne ", resp)
+        await setDataStorage("@user", resp)
         global.user = resp
 
         navigation.navigate("EventPlannerDashboard")
@@ -205,7 +253,7 @@ Please setup your profile`}
         </View>
 
         <Input
-          editable={!profileView}
+          editable={profileView}
           width={"90%"}
           onChangeText={value => setBName(value)}
           value={bName}
@@ -303,56 +351,12 @@ Please setup your profile`}
           isMultiLine={true}
         />
 
-        <View>
-          <Text
-            style={{
-              color: Colors.PRIMARY_1,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontSize: Typography.FONT_SIZE_14,
-              fontWeight: Typography.FONT_WEIGHT_600
-            }}
-          >
-            Location
-          </Text>
-          <TouchableOpacity
-            style={{ width: "90%" }}
-            disabled={profileView}
-            onPress={() => {
-              navigation.navigate("AddNewLocationScreen", {
-                isPrimaryLocation: true
-              })
-            }}
-          >
-            <Input
-              editable={false}
-              onChangeText={value => setLocation(value)}
-              value={location}
-              placeholder={profileView ? "..." : "Add location"}
-              selectedBorderColor={Colors.PRIMARY_1}
-              height={Mixins.scaleHeight(50)}
-              iconLeft={
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/login_signup/web.png")}
-                />
-              }
-              iconRight={
-                !profileView && (
-                  <Image
-                    style={{ width: 24, height: 24, margin: 10 }}
-                    source={require("../../assets/images/RightArrow.png")}
-                  />
-                )
-              }
-              iconHighlighted={
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/login_signup/web_active.png")}
-                />
-              }
-            />
-          </TouchableOpacity>
-        </View>
+        {renderGenericItem(
+          location ? location : "Add Location",
+          ImgLocation,
+          null,
+          true
+        )}
 
         {/* <View>
           <Text
@@ -429,3 +433,31 @@ Please setup your profile`}
 }
 
 export default PlannerProfileEditScreen
+
+let styles = StyleSheet.create({
+  shortFieldContainer: {
+    width: "90%",
+    height: undefined,
+    aspectRatio: 6.84,
+    borderRadius: 12,
+    backgroundColor: Colors.NETURAL_4,
+    justifyContent: "center"
+  },
+  genericItemContainer: {
+    marginHorizontal: "6%",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  FONT_16: {
+    fontSize: Typography.FONT_SIZE_16,
+    fontWeight: Typography.FONT_WEIGHT_400,
+    lineHeight: Typography.LINE_HEIGHT_20,
+    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR
+  },
+  imgArrow: {
+    width: "6%",
+    height: undefined,
+    aspectRatio: 1,
+    transform: [{ rotate: "270deg" }]
+  },
+})

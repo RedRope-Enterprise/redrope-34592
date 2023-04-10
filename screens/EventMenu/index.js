@@ -119,7 +119,8 @@ const EventMenuScreen = () => {
           </View>
           <View
             style={{
-              flex: 1
+              flex: 1,
+              justifyContent: 'center',
             }}
           >
             <Text style={[styles.desc, { color: Colors.WHITE }]}>
@@ -245,12 +246,12 @@ const EventMenuScreen = () => {
           {renderDetailItem({
             image: CalendarImg,
             title: event?.start_date,
-            desc: event?.start_date
+            // desc: event?.start_date
           })}
           {renderDetailItem({
             image: LocationImg,
             title: event?.location,
-            desc: event?.location
+            // desc: event?.location
           })}
         </View>
         <View style={[styles.center, { flex: 1, marginTop: "6%" }]}>

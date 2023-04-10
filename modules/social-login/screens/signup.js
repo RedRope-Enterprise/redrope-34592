@@ -56,42 +56,15 @@ const SignupScreen = ({}) => {
   const layout = useWindowDimensions()
 
   const onSignupPress = async payload => {
-    // setValidationError({ email: "", password: "", username: "" })
-    // if (!fullName) {
-    //   setValidationError({
-    //     username: "Please enter your name"
-    //   })
-    // }
-    // if (!validateEmail.test(email))
-    //   setValidationError({
-    //     ...validationError,
-    //     email: "Please enter a valid email address."
-    //   })
-
-    // if (!password)
-    //   setValidationError({
-    //     ...validationError,
-    //     password: "Please enter a valid password"
-    //   })
-
-    // if (password !== repassword)
-    //   setValidationError({
-    //     ...validationError,
-    //     password: "Confirm password and password do not match."
-    //   })
-
-    // console.log("validationError ", validationError)
-    // if (
-    //   validationError.email != "" ||
-    //   validationError.password != "" ||
-    //   validationError.username != ""
-    // )
-    //   return validationError
-
     dispatch(signupRequest(payload))
       .then(unwrapResult)
       .then(res => {
         console.log("signup data ", res)
+
+        if (res.error) {
+          Alert.alert("INFO", res.error)
+          return
+        }
         setDataStorage("@key", res?.token)
         setDataStorage("@user", res)
 

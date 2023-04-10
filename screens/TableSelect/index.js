@@ -55,7 +55,7 @@ const TableSelectScreen = () => {
       ></NavigationHeader>
       <View style={{ justifyContent: "center", alignContent: "center" }}>
         <Text style={[styles.title, { color: Colors.PRIMARY_2 }]}>
-          PartySlate
+          {bottle_service?.name}
         </Text>
         {/* <Text style={[styles.title, { color: Colors.WHITE }]}>
           {event?.name}

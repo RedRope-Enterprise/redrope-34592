@@ -122,9 +122,10 @@ const PaymentScreen = () => {
                       }
                     ],
                     country: "US", // enter any country code supported by stripe,
-                    currency: "USD" // enter any currency supported by stripe,
+                    currency: "USD", // enter any currency supported by stripe,
                   })
                   if (error) {
+                    console.log("apple pay error ", error)
                     Alert.alert(error.code, error.message)
                   } else {
                     setIsModalVisible(true)
