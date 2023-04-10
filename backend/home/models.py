@@ -84,6 +84,7 @@ class Event(BaseModel):
         _("Event location"), max_length=50, blank=True, null=True
     )
     # primary_location = models.BooleanField(_("Use primary location"), default=False)
+    venue_name = models.CharField(_("Venue name"), max_length=50, blank=True, null=True)
     country = models.CharField(_("Country"), max_length=50, blank=True, null=True)
     street = models.CharField(_("Street"), max_length=300, blank=True, null=True)
     city = models.CharField(_("City"), max_length=50, blank=True, null=True)
