@@ -65,6 +65,7 @@ const AddNewEventScreen = () => {
   const [location, setLocation] = useState(null)
   const [primaryLocation, setPrimaryLocation] = useState(null)
   const [event, setEvent] = useState(null)
+  const [venueName, setVenueName] = useState("")
 
   const [loading, setLoading] = useState(false)
 
@@ -80,6 +81,7 @@ const AddNewEventScreen = () => {
     setEventTitle(eventData?.title)
     setEventDate(eventData?.start_date)
     setEventDescription(eventData?.desc)
+    setVenueName(eventData?.venue_name)
 
     let cat = eventData?.event_categories.map(item => ({
       ...item,
@@ -99,6 +101,7 @@ const AddNewEventScreen = () => {
     fromData.append("price", 0)
     fromData.append("start_date", newDate)
     fromData.append("end_date", newDate)
+    fromData.append("venue_name", venueName)
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
@@ -158,6 +161,7 @@ const AddNewEventScreen = () => {
     fromData.append("price", 0)
     fromData.append("start_date", newDate)
     fromData.append("end_date", newDate)
+    fromData.append("venue_name", venueName)
 
     // fromData.append("categories", 4)
     fromData.append("title", eventTitle)
@@ -415,6 +419,16 @@ const AddNewEventScreen = () => {
               placeholderTextColor={Colors.NETURAL_2}
               onChangeText={newText => setEventTitle(newText)}
               defaultValue={eventTitle}
+            />
+          </View>
+
+          <View style={styles.shortFieldContainer}>
+            <TextInput
+              style={[styles.FONT_16_2, { marginHorizontal: "4%" }]}
+              placeholder={"Event Venue"}
+              placeholderTextColor={Colors.NETURAL_2}
+              onChangeText={newText => setVenueName(newText)}
+              defaultValue={venueName}
             />
           </View>
 

@@ -119,7 +119,7 @@ const EventDetailsScreen = () => {
         PlaceholderContent={<ActivityIndicator color={Colors.BUTTON_RED} />}
       />
       <View style={{ marginHorizontal: "5%" }}>
-        <View style={{ flexDirection: "row", marginTop: "5%" }}>
+        <View style={{ flexDirection: "column", marginTop: "5%" }}>
           <Text
             style={{
               fontSize: Typography.FONT_SIZE_24,
@@ -131,14 +131,16 @@ const EventDetailsScreen = () => {
           >
             {event?.title}
           </Text>
-          {/* <Text
-            style={{
-              fontSize: Typography.FONT_SIZE_24,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontWeight: Typography.FONT_WEIGHT_BOLD,
-              color: Colors.PRIMARY_1
-            }}
-          >{`$${event?.price ?? ""}`}</Text> */}
+          {event?.venue_name && (
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_18,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.GREY
+              }}
+            >{`${event?.venue_name}`}</Text>
+          )}
         </View>
 
         {!global?.user?.event_planner && (
@@ -390,9 +392,8 @@ const EventDetailsScreen = () => {
                 console.log(" interested event response ", resp)
                 Alert.alert("Thank you for your interest", "Check My Event")
               } catch (error) {
-                if(error === "You're already interested in this event")
+                if (error === "You're already interested in this event")
                   Alert.alert(error)
-                
               }
             }}
             style={{

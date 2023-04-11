@@ -22,7 +22,7 @@ import {
   setDataStorage,
   clearStorage
 } from "../../utils/storage"
-import FastImage from 'react-native-fast-image';
+import FastImage from "react-native-fast-image"
 
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
@@ -120,7 +120,7 @@ const EventMenuScreen = () => {
           <View
             style={{
               flex: 1,
-              justifyContent: 'center',
+              justifyContent: "center"
             }}
           >
             <Text style={[styles.desc, { color: Colors.WHITE }]}>
@@ -181,7 +181,7 @@ const EventMenuScreen = () => {
                 () =>
                   navigation.navigate("TableSelect", {
                     event: route.params?.event,
-                    bottle_service : item
+                    bottle_service: item
                   })
                 // changeExpansion(index)
               }
@@ -242,15 +242,30 @@ const EventMenuScreen = () => {
         <View style={styles.container}>
           <Text style={styles.title}>{event?.title}</Text>
         </View>
+        {event?.venue_name && (
+          <View style={styles.container}>
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_18,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                lineHeight: Typography.LINE_HEIGHT_36,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                color: Colors.GREY
+              }}
+            >
+              {event?.venue_name}
+            </Text>
+          </View>
+        )}
         <View>
           {renderDetailItem({
             image: CalendarImg,
-            title: event?.start_date,
+            title: event?.start_date
             // desc: event?.start_date
           })}
           {renderDetailItem({
             image: LocationImg,
-            title: event?.location,
+            title: event?.location
             // desc: event?.location
           })}
         </View>
