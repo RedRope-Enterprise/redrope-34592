@@ -87,6 +87,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "drf_yasg",
     "storages",
+    "push_notifications",
 ]
 MODULES_APPS = get_modules()
 
@@ -177,6 +178,12 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+
+# Push-Notifiction Settings
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": env.str("FCM_API_KEY", ""),
+    "FCM_ERROR_TIMEOUT": 60,
+}
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [

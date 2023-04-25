@@ -36,6 +36,7 @@ from rest_framework.mixins import (
     ListModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
+    RetrieveModelMixin
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from utils.custom_permissions import (
@@ -46,11 +47,53 @@ from utils.custom_permissions import (
 from rest_framework.permissions import IsAuthenticated
 from utils.custom_filters import filter_events_with_get_param
 from users.serializers import UserSerializer
+from django.contrib.contenttypes.models import ContentType
+from push_notifications.models import GCMDevice
+from pyfcm import FCMNotification
+import logging
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # Create your views here.
+def send_notification(notification_type, obj):
+    try:
+        if notification_type == "new_reservation":
+            message_body = f"You are booked. Event title: {obj.title}, Number of people: {obj.attendee} see details."
+            content_type = ContentType.objects.get_for_model(obj)
+            notify = obj.notification.create(
+                target=obj.event.user,
+                from_user=obj.user,
+                verb=message_body,
+                notification_type="new_reservation",
+                content_type=content_type,
+            )
+
+
+            push_service = FCMNotification(api_key=settings.PUSH_NOTIFICATIONS_SETTINGS["FCM_API_KEY"])
+
+            registration_ids = [device.registration_id for device in GCMDevice.objects.filter(user=obj.event.user, active=True)]
+
+            if registration_ids:
+                data_message = {
+                    "notification_type":"new_reservation",
+                    "reservation_id":obj.id,
+                }
+                try:
+                    result = push_service.notify_multiple_devices(
+                        registration_ids=registration_ids, 
+                        message_title="New Reservation", 
+                        message_body=message_body, 
+                        data_message=data_message
+                        )
+                except Exception as e:
+                    logging.warning(e)
+            else:
+                logging.warning("No devices found for the user.")
+
+    except Exception as e:
+        raise Exception(e)
+    
 
 
 class EventViewset(ModelViewSet):
@@ -62,7 +105,6 @@ class EventViewset(ModelViewSet):
         "title",
         "desc",
         "location",
-        "price",
         "date",
         "images",
         "categories",
@@ -206,7 +248,11 @@ class EventViewset(ModelViewSet):
 
 
 class RegisterEventViewset(
-    CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet
+    CreateModelMixin, 
+    UpdateModelMixin, 
+    DestroyModelMixin, 
+    RetrieveModelMixin, 
+    GenericViewSet
 ):
     serializer_class = RegisterEventSerializer
     permission_classes = (IsAuthenticated, IsOwnerAndReadOnly)
@@ -340,7 +386,7 @@ class CardPaymentViewset(APIView):
 
             if event_registration.reserved:
                 return Response(
-                    {"error": "Reservation has already been made."},
+                    {"error": "Reservation already exists."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -358,7 +404,7 @@ class CardPaymentViewset(APIView):
             event_registration.payment_intent_id = payment_intent.id
             event_registration.payment_status = payment_intent.status
             event_registration.save()
-
+            send_notification(notification_type="new_reservation", obj=event_registration)
             return Response(payment_intent, status=status.HTTP_200_OK)
 
         except ObjectDoesNotExist as e:

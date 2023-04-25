@@ -23,7 +23,9 @@ from allauth.socialaccount.providers.apple.views import AppleOAuth2Adapter
 from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
 from allauth.socialaccount.models import SocialAccount, SocialApp
 from rest_auth.registration.views import SocialLoginView
+from rest_framework.viewsets import ModelViewSet
 from notifications.serializers import NotificationSerializer
+from push_notifications.models import GCMDevice
 from home.models import Event, Notification
 from home.api.v1.serializers import (
     CustomUserDetailSerializer,
@@ -32,14 +34,20 @@ from home.api.v1.serializers import (
 )
 from rest_framework.status import (
     HTTP_200_OK,
+    HTTP_201_CREATED,
     HTTP_403_FORBIDDEN,
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 from rest_framework.response import Response
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, GCMDeviceSerializer, \
+    BankAccountSerializer, WithdrawalSerializer
 from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import EventDetailsSerializer
+from django.db import IntegrityError
+from users.models import BankAccount, Withdrawal
+import logging
+
 
 User = get_user_model()
 
@@ -281,3 +289,61 @@ class NotificationViewset(
 
     def get_queryset(self):
         return self.queryset.filter(target=self.request.user)
+
+
+class GCMDeviceRegistrationViewset(ModelViewSet):
+    http_method_names = ['get', 'post']
+    queryset = GCMDevice.objects.all()
+    serializer_class = GCMDeviceSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class BankAccountViewset(ModelViewSet):
+    http_method_names = ['post']
+    queryset = BankAccount.objects.all()
+    serializer_class = BankAccountSerializer
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError as e:
+            logging.warning(e)
+            pass
+
+
+class WithdrawalViewset(ModelViewSet):
+    http_method_names = ['post', 'get']
+
+    queryset = Withdrawal.objects.all()
+    serializer_class = WithdrawalSerializer
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save(bank_account=self.request.user.bank_account)
+        except IntegrityError as e:
+            logging.warning(e)
+            pass
+
+    def get_queryset(self):
+        return self.queryset.filter(bank_account=self.request.user.bank_account).order_by("-timestamp")
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        amount = serializer.validated_data['amount']
+        try:
+            bank_account = request.user.bank_account
+        except:
+            return Response({'detail': 'No bank connected'}, status=HTTP_400_BAD_REQUEST)
+        
+        # Check for sufficient balance before making the withdrawal
+        # wallet = {}
+        # if wallet.balance >= amount:
+
+        #     wallet.balance -= amount
+        #     self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
+        # else:
+        #     return Response({'detail': 'Insufficient balance'}, status=HTTP_400_BAD_REQUEST)

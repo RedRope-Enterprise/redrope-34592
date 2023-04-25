@@ -14,10 +14,17 @@ class NotificationSerializer(serializers.ModelSerializer):
             "sender_avatar",
             "redirect_url",
             "verb",
+            "notification_type",
             "read",
             "created_at",
         )
-        read_only_fields = ("redirect_url", "verb")
+        read_only_fields = ("redirect_url", "verb", "notification_type")
 
     def get_sender_avatar(self, obj):
         return UserSerializer(obj.from_user).data["profile_picture"]
+    
+    def to_representation(self, instance):
+        data = super(NotificationSerializer, self).to_representation(instance)
+        if instance.notification_type == "new_reservation":
+            data["reservation_id"] = instance.content_object.id
+        return data
