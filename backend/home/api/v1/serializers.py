@@ -15,7 +15,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from requests.exceptions import HTTPError
 from allauth.socialaccount.helpers import complete_social_login
-
+from users.serializers import BankAccountSerializer
 User = get_user_model()
 
 
@@ -187,6 +187,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
     """
 
     likes = serializers.SerializerMethodField()
+    bank_account = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -206,6 +207,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "stripe_customer_id",
             "phone",
             "website",
+            "bank_account",
         )
         read_only_fields = ("email", "event_planner")
 
@@ -236,6 +238,13 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return InterestSerializer(obj.interests, many=True).data
+    
+    def get_bank_account(self, obj):
+        try:
+            return BankAccountSerializer(obj.bank_account).data
+        except:
+            return {}
+
 
 
 class CustomSocialLoginSerializer(serializers.Serializer):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from push_notifications.models import GCMDevice
 # from django.contrib.admin import SimpleListFilter
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model

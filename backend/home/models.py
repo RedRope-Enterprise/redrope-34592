@@ -1,4 +1,5 @@
 from django.db import models
+import logging
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
@@ -60,7 +61,7 @@ class Notification(BaseModel):
     redirect_url = models.URLField(_("Redirect URL"), null=True, max_length=200)
     # statement describing the notification (ex: "You have a new service request")
     verb = models.CharField(max_length=255, unique=False, blank=True, null=True)
-
+    notification_type = models.CharField(_("Notification Type"), max_length=50, null=True, blank=True)
     # Some notifications can be marked as "read". (I used "read" instead of "active". I think its more appropriate)
     read = models.BooleanField(default=False)
 
@@ -90,7 +91,6 @@ class Event(BaseModel):
     city = models.CharField(_("City"), max_length=50, blank=True, null=True)
     zip_code = models.CharField(_("Zip code"), max_length=8, blank=True, null=True)
     state = models.CharField(_("State"), max_length=50, blank=True, null=True)
-    price = models.DecimalField(_("Event price"), max_digits=8, decimal_places=2)
     categories = models.ManyToManyField(
         "home.Category",
         verbose_name=_("Event category"),
@@ -189,8 +189,14 @@ class UserEventRegistration(BaseModel):
     notification = GenericRelation(Notification)
 
     def save(self, *args, **kwargs):
-        self.available_slots = int(self.bottle_service.person) - int(self.attendee)
+        try:
+            if self.reserved is True:
+                self.available_slots = int(self.bottle_service.person) - int(self.attendee)
+        except Exception as e:
+            logging.warning(e)
+            pass
         super(UserEventRegistration, self).save(*args, **kwargs)
+
 
     class Meta:
         unique_together = ["user", "event"]
