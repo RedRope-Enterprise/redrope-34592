@@ -187,7 +187,6 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
     """
 
     likes = serializers.SerializerMethodField()
-    bank_account = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -205,11 +204,18 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "address_longitude",
             "address_latitude",
             "stripe_customer_id",
+            "stripe_connect_account_id",
+            "stripe_bank_account_id",
             "phone",
             "website",
-            "bank_account",
+            
         )
-        read_only_fields = ("email", "event_planner")
+        read_only_fields = (
+            "email", 
+            "event_planner",
+            "stripe_customer_id",
+            "stripe_connect_account_id"
+            )
 
         extra_kwargs = {
             "username": {
@@ -238,12 +244,6 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return InterestSerializer(obj.interests, many=True).data
-    
-    def get_bank_account(self, obj):
-        try:
-            return BankAccountSerializer(obj.bank_account).data
-        except:
-            return {}
 
 
 

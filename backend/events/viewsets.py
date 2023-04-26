@@ -58,38 +58,44 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 def send_notification(notification_type, obj):
     try:
+        message_body = ""
+        message_title = ""
         if notification_type == "new_reservation":
-            message_body = f"You are booked. Event title: {obj.title}, Number of people: {obj.attendee} see details."
-            content_type = ContentType.objects.get_for_model(obj)
-            notify = obj.notification.create(
-                target=obj.event.user,
-                from_user=obj.user,
-                verb=message_body,
-                notification_type="new_reservation",
-                content_type=content_type,
-            )
+            message_body = f"You are booked. Event title: {obj.event.title}, Number of people: {obj.attendee} see details."
+            message_title = "New Reservation"
+        if notification_type == "interest_in_event":
+            message_body = f"Someone is interested in event. Event title: {obj.event.title}, see details."
+            message_title = "Interest In Event"
+        content_type = ContentType.objects.get_for_model(obj)
+        notify = obj.notification.create(
+            target=obj.event.user,
+            from_user=obj.user,
+            verb=message_body,
+            notification_type=notification_type,
+            content_type=content_type,
+        )
 
 
-            push_service = FCMNotification(api_key=settings.PUSH_NOTIFICATIONS_SETTINGS["FCM_API_KEY"])
+        push_service = FCMNotification(api_key=settings.PUSH_NOTIFICATIONS_SETTINGS["FCM_API_KEY"])
 
-            registration_ids = [device.registration_id for device in GCMDevice.objects.filter(user=obj.event.user, active=True)]
+        registration_ids = [device.registration_id for device in GCMDevice.objects.filter(user=obj.event.user, active=True)]
 
-            if registration_ids:
-                data_message = {
-                    "notification_type":"new_reservation",
-                    "reservation_id":obj.id,
-                }
-                try:
-                    result = push_service.notify_multiple_devices(
-                        registration_ids=registration_ids, 
-                        message_title="New Reservation", 
-                        message_body=message_body, 
-                        data_message=data_message
-                        )
-                except Exception as e:
-                    logging.warning(e)
-            else:
-                logging.warning("No devices found for the user.")
+        if registration_ids:
+            data_message = {
+                "notification_type":notification_type,
+                "reservation_id":obj.id,
+            }
+            try:
+                result = push_service.notify_multiple_devices(
+                    registration_ids=registration_ids, 
+                    message_title=message_title, 
+                    message_body=message_body, 
+                    data_message=data_message
+                    )
+            except Exception as e:
+                logging.warning(e)
+        else:
+            logging.warning("No devices found for the user.")
 
     except Exception as e:
         raise Exception(e)
@@ -259,13 +265,14 @@ class RegisterEventViewset(
     queryset = UserEventRegistration.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        return serializer.save(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            self.perform_create(serializer)
+            instance = self.perform_create(serializer)
+            send_notification("interest_in_event", instance)
         except IntegrityError as e:
             return Response(
                 "You're already interested in this event",
@@ -349,6 +356,11 @@ class CardPaymentViewset(APIView):
         try:
             # Collect post data
             event = Event.objects.get(pk=serializer.data.get("event"))
+            if event.user == request.user:
+                return Response(
+                    {"error": "Cannot complete this request."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             bottle_service = BottleService.objects.get(
                 pk=serializer.data.get("bottle_service")
             )
@@ -389,23 +401,49 @@ class CardPaymentViewset(APIView):
                     {"error": "Reservation already exists."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+            # Create a charge on the customer's card
+            stripe_account_id = event.user.stripe_connect_account_id
+            if not stripe_account_id:
+                return Response({'detail': 'User does not have a Stripe Connect Account'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # payment_intent = stripe.PaymentIntent.create(
+            #     customer=stripe_customer_id,
+            #     amount=settings.RESERVATION_UPFRONT_AMOUNT,
+            #     currency="usd",
+            #     description="Payment for event reservation",
+            #     payment_method=payment_method,
+            #     confirm=True,
+            #     transfer_data={
+            #         'destination': stripe_account_id,
+            #     },
+            # )
 
-            payment_intent = stripe.PaymentIntent.create(
+            # event_registration.reserved = True
+            # event_registration.amount_paid = payment_intent.amount
+            # event_registration.payment_intent_id = payment_intent.id
+            # event_registration.payment_status = payment_intent.status
+            # event_registration.save()
+
+            
+            charge = stripe.Charge.create(
+                amount=settings.RESERVATION_UPFRONT_AMOUNT,  # Convert the amount to cents
+                currency='usd',
                 customer=stripe_customer_id,
-                amount=settings.RESERVATION_UPFRONT_AMOUNT,
-                currency="usd",
-                description="Payment for event reservation",
-                payment_method=payment_method,
-                confirm=True,
+                source=payment_method,
+                description='Payment for event reservation',
+                transfer_data={
+                    'destination': stripe_account_id,
+                },
             )
 
             event_registration.reserved = True
-            event_registration.amount_paid = payment_intent.amount
-            event_registration.payment_intent_id = payment_intent.id
-            event_registration.payment_status = payment_intent.status
+            event_registration.amount_paid = charge.amount
+            event_registration.charge_id = charge.id
+            event_registration.payment_status = charge.status
             event_registration.save()
+
             send_notification(notification_type="new_reservation", obj=event_registration)
-            return Response(payment_intent, status=status.HTTP_200_OK)
+            return Response(charge, status=status.HTTP_200_OK)
 
         except ObjectDoesNotExist as e:
             return Response(

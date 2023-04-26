@@ -2,6 +2,7 @@ import requests
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.conf import settings
 from rest_framework.authtoken.models import Token
 from django.views.generic import DetailView, RedirectView, UpdateView
 from django_filters.rest_framework import DjangoFilterBackend
@@ -32,10 +33,13 @@ from home.api.v1.serializers import (
     CustomSocialLoginSerializer,
     CustomAppleSocialLoginSerializer,
 )
+import stripe
+from rest_framework.views import APIView
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_403_FORBIDDEN,
+    HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
@@ -56,6 +60,7 @@ try:
 except Exception:
     APP_DOMAIN = ""
 
+stripe.api_key = settings.STRIPE_API_KEY
 
 class UserDetailView(LoginRequiredMixin, DetailView):
 
@@ -299,51 +304,114 @@ class GCMDeviceRegistrationViewset(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class BankAccountViewset(ModelViewSet):
-    http_method_names = ['post']
-    queryset = BankAccount.objects.all()
-    serializer_class = BankAccountSerializer
-
-    def perform_create(self, serializer):
-        try:
-            serializer.save(user=self.request.user)
-        except IntegrityError as e:
-            logging.warning(e)
-            pass
-
-
-class WithdrawalViewset(ModelViewSet):
-    http_method_names = ['post', 'get']
-
-    queryset = Withdrawal.objects.all()
-    serializer_class = WithdrawalSerializer
-
-    def perform_create(self, serializer):
-        try:
-            serializer.save(bank_account=self.request.user.bank_account)
-        except IntegrityError as e:
-            logging.warning(e)
-            pass
-
-    def get_queryset(self):
-        return self.queryset.filter(bank_account=self.request.user.bank_account).order_by("-timestamp")
+class BankAccountView(APIView):
     
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        amount = serializer.validated_data['amount']
-        try:
-            bank_account = request.user.bank_account
-        except:
-            return Response({'detail': 'No bank connected'}, status=HTTP_400_BAD_REQUEST)
-        
-        # Check for sufficient balance before making the withdrawal
-        # wallet = {}
-        # if wallet.balance >= amount:
+    def post(self, request, *args, **kwargs):
+        bank_account_id = request.data.get('bank_account_id')
 
-        #     wallet.balance -= amount
-        #     self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
-        # else:
-        #     return Response({'detail': 'Insufficient balance'}, status=HTTP_400_BAD_REQUEST)
+        if not bank_account_id:
+            return Response({'detail': 'Bank account id is required.'}, status=HTTP_400_BAD_REQUEST)
+
+        try:
+            user = request.user
+            stripe_account_id = user.stripe_connect_account_id
+            if not stripe_account_id:
+                return Response({'detail': 'User does not have a Stripe Connect Account.'}, status=HTTP_400_BAD_REQUEST)
+
+            # Attach the bank account token to the user's Stripe Connect account
+            bank_account = stripe.Account.create_external_account(
+                stripe_account_id,
+                external_account=bank_account_id,
+            )
+            user.stripe_bank_account_id = bank_account.id
+            user.save()
+            return Response({'detail': 'Stripe bank account created', 'bank_account_id': bank_account.id}, status=HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found'}, status=HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': 'Error creating Stripe bank account: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+        
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            user = request.user
+            stripe_account_id = user.stripe_connect_account_id
+            if not stripe_account_id:
+                return Response({'detail': 'User does not have a Stripe Connect Account'}, status=HTTP_400_BAD_REQUEST)
+
+            # List bank accounts
+            bank_accounts = stripe.Account.list_external_accounts(
+                stripe_account_id,
+                object='bank_account',
+            )
+
+            return Response({'account_id': stripe_account_id, 'bank_accounts': bank_accounts}, status=HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found'}, status=HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': 'Error listing bank accounts: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+
+
+class WithdrawalView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        amount = request.data.get('amount')
+
+        if not amount:
+            return Response({'detail': 'Amount is required'}, status=HTTP_400_BAD_REQUEST)
+
+        try:
+            user = request.user
+            # This assumes you have already created a Stripe Connect Account and added the bank account to it
+            stripe_connect_account_id = user.stripe_connect_account_id
+            stripe_bank_account_id = user.stripe_bank_account_id
+
+            payout = stripe.Payout.create(
+                amount=int(amount * 100), # Convert the amount to cents
+                currency="usd",
+                destination=stripe_bank_account_id,
+                stripe_account=stripe_connect_account_id,
+            )
+            withdrawal = Withdrawal.objects.create(
+                user=user,
+                payout_id=payout.id,
+                amount=payout.amount,
+                currency=payout.currency
+            )
+            withdrawal_data = WithdrawalSerializer(withdrawal).data
+            return Response({'detail': 'Payout successful', 'withdrawal': withdrawal_data}, status=HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'detail': 'Error processing payout: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+        
+    
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            user = request.user
+            withdrawals = Withdrawal.objects.filter(user=user).order_by("-timestamp")
+            withdrawal_data = WithdrawalSerializer(withdrawals, many=True).data
+            return Response(withdrawal_data, status=HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'detail': 'Error listing withdrawals: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+
+
+class AccountBalanceView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            user = request.user
+            stripe_account_id = user.stripe_connect_account_id
+            if not stripe_account_id:
+                return Response({'detail': 'User does not have a Stripe Connect Account'}, status=HTTP_400_BAD_REQUEST)
+
+            # Retrieve the Stripe Connect account balance
+            balance = stripe.Balance.retrieve(stripe_account=stripe_account_id)
+
+            return Response({'account_id': stripe_account_id, 'balance': balance}, status=HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': 'Error retrieving account balance: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
