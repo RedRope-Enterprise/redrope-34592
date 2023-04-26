@@ -2,13 +2,11 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.viewsets import UserViewset, MyEventViewset, \
     NotificationViewset, GCMDeviceRegistrationViewset, \
-    BankAccountViewset, WithdrawalViewset
+    BankAccountView, WithdrawalView, AccountBalanceView
 
 
 router = DefaultRouter()
 
-router.register("add-bank", BankAccountViewset, basename="add_bank")
-router.register("withdraw-to-bank", WithdrawalViewset, basename="withdraw_to_bank")
 router.register("register-device", GCMDeviceRegistrationViewset, basename="register_device")
 router.register("my-events", MyEventViewset, basename="my_events")
 router.register("notifications", NotificationViewset, basename="notifications")
@@ -23,6 +21,9 @@ from users.viewsets import (
 app_name = "users"
 
 urlpatterns = [
+    path("account-balance/", AccountBalanceView.as_view(), name="account_balance"),
+    path("withdraw-to-bank/", WithdrawalView.as_view(), name="withdraw_to_bank"),
+    path("bank-accounts/", BankAccountView.as_view(), name="bank_accounts"),
     path("", include(router.urls)),
     path("~redirect/", view=user_redirect_view, name="redirect"),
     path("~update/", view=user_update_view, name="update"),

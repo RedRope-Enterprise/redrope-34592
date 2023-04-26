@@ -24,7 +24,7 @@ class UserEventRegistrationAdmin(admin.ModelAdmin):
         "reserved",
         "amount_paid",
         "amount_left",
-        "payment_intent_id",
+        "charge_id",
         "updated_at",
     )
 

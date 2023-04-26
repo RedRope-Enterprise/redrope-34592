@@ -174,8 +174,8 @@ class UserEventRegistration(BaseModel):
     amount_left = models.DecimalField(
         _("Amount left"), max_digits=8, default=0, decimal_places=2
     )
-    payment_intent_id = models.CharField(
-        _("Payment Intent ID"), max_length=50, blank=True, null=True
+    charge_id = models.CharField(
+        _("Charge ID"), max_length=50, blank=True, null=True
     )
     # transaction_id = models.CharField(
     #     _("Transaction ID"), max_length=50, blank=True, null=True
@@ -248,6 +248,7 @@ class FavoriteEvent(BaseModel):
         related_name="favorited",
         on_delete=models.CASCADE,
     )
+    notification = GenericRelation(Notification)
 
     class Meta:
         unique_together = ["user", "event"]

@@ -25,6 +25,9 @@ class NotificationSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         data = super(NotificationSerializer, self).to_representation(instance)
-        if instance.notification_type == "new_reservation":
+        if instance.notification_type in ("new_reservation", "interest_in_event"):
             data["reservation_id"] = instance.content_object.id
+        
+        if instance.notification_type == "event_likes":
+            data["event_id"] = instance.content_object.id
         return data

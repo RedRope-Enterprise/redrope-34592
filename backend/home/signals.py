@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from home.models import UserEventRegistration, Event
+from home.models import UserEventRegistration, Event, \
+    FavoriteEvent
 from users.models import User
 from push_notifications.models import GCMDevice
 from pyfcm import FCMNotification
@@ -89,6 +90,46 @@ def new_event_created(sender, instance, created, **kwargs):
                         logging.warning(e)
                 else:
                     logging.warning("No devices found for the user.")
+
+        except Exception as e:
+            raise Exception(e)
+        
+@receiver(post_save, sender=FavoriteEvent)
+def new_event_like(sender, instance, created, **kwargs):
+    """Send notification to event organizer when user likes an event"""
+
+    if created:
+        try:
+            message_body = f"{instance.user.name} likes event: {instance.event.title}."
+            content_type = ContentType.objects.get_for_model(instance)
+            push_service = FCMNotification(api_key=settings.PUSH_NOTIFICATIONS_SETTINGS["FCM_API_KEY"])
+            notify = instance.notification.create(
+                target=instance.event.user,
+                from_user=instance.user,
+                notification_type="event_likes",
+                verb=message_body,
+                content_type=content_type,
+            )
+
+
+            registration_ids = [device.registration_id for device in GCMDevice.objects.filter(user=instance.event.user, active=True)]
+
+            if registration_ids:
+                data_message = {
+                    "notification_type":"event_likes",
+                    "event_id": instance.event.id
+                }
+                try:
+                    result = push_service.notify_multiple_devices(
+                        registration_ids=registration_ids, 
+                        message_title="Event Likes", 
+                        message_body=message_body,
+                        data_message=data_message
+                        )
+                except Exception as e:
+                    logging.warning(e)
+            else:
+                logging.warning("No devices found for the user.")
 
         except Exception as e:
             raise Exception(e)
