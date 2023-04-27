@@ -11,6 +11,8 @@ import {
   StyleSheet
 } from "react-native"
 import ImgLocation from "../../assets/images/location.png"
+import ImgDollar from "../../assets/images/Dollar.png"
+
 import ImgArrow from "../../assets/images/arrow.png"
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
@@ -101,11 +103,22 @@ const PlannerProfileEditScreen = () => {
     })
   }
 
-  const renderGenericItem = (title, img, bottleService, isLocation = false) => {
+  const renderGenericItem = (
+    title,
+    img,
+    bottleService,
+    isLocation = false,
+    onPress = null
+  ) => {
     return (
       <View style={[styles.shortFieldContainer, { aspectRatio: 5.02 }]}>
         <TouchableOpacity
           onPress={() => {
+            if (onPress) {
+              onPress()
+              return
+            }
+
             if (!isLocation) {
               navigation.navigate("AddNewBottleScreen", {
                 onSubmit: addNewBottleServices,
@@ -126,7 +139,7 @@ const PlannerProfileEditScreen = () => {
               style={[
                 styles.FONT_16,
                 styles.flex1,
-                { color: Colors.WHITE, marginHorizontal: "6%" , flex:1}
+                { color: Colors.WHITE, marginHorizontal: "6%", flex: 1 }
               ]}
             >
               {title}
@@ -351,12 +364,48 @@ Please setup your profile`}
           isMultiLine={true}
         />
 
-        {renderGenericItem(
-          location ? location : "Add Location",
-          ImgLocation,
-          null,
-          true
-        )}
+        <View>
+          <Text
+            style={{
+              color: Colors.PRIMARY_1,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_600,
+              marginVertical: "2%"
+            }}
+          >
+            Location
+          </Text>
+          {renderGenericItem(
+            location ? location : "Add Location",
+            ImgLocation,
+            null,
+            true
+          )}
+        </View>
+
+        <View style={{ marginVertical: "2%" }}>
+          <Text
+            style={{
+              color: Colors.PRIMARY_1,
+              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+              fontSize: Typography.FONT_SIZE_14,
+              fontWeight: Typography.FONT_WEIGHT_600,
+              marginVertical: "2%"
+            }}
+          >
+            Connect Bank Account
+          </Text>
+          {renderGenericItem(
+            "Connect your bank account",
+            ImgDollar,
+            null,
+            false,
+            () => {
+              navigation.navigate("ConnectBankAccount")
+            }
+          )}
+        </View>
 
         {/* <View>
           <Text
@@ -459,5 +508,5 @@ let styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1,
     transform: [{ rotate: "270deg" }]
-  },
+  }
 })

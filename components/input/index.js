@@ -34,7 +34,7 @@ const Input = props => {
           borderRightWidth: isFocused ? 1 : 1,
           borderLeftWidth: isFocused ? 1 : 1,
           borderBottomWidth: 1,
-          borderColor: isFocused ? selectedBorderColor : Colors.BORDER,
+          borderColor: isFocused ? selectedBorderColor : Colors.BORDER
 
           // ...Mixins.boxShadow(Colors.GRAY_MEDIUM)
         }}
@@ -76,7 +76,8 @@ const Input = props => {
             fontWeight: Typography.FONT_WEIGHT_REGULAR,
             fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
             marginVertical: "3%",
-            alignSelf: "center"
+            alignSelf: "center",
+            marginLeft: iconLeft ? 0 : 10
           }}
           multiline={isMultiLine}
           placeholderTextColor={Colors.NETURAL_2}

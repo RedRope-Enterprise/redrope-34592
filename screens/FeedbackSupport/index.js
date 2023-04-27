@@ -7,12 +7,14 @@ import {
   SafeAreaView,
   StyleSheet,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from "react-native"
 import { Colors, Typography, Mixins } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { Button, Input, CustomModal } from "../../components"
 import { submitFeedback } from "../../services/feedbackSupport"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 const FeedbackSupportScreen = () => {
   const [feedback, setFeedback] = useState("")
@@ -22,7 +24,7 @@ const FeedbackSupportScreen = () => {
 
   const submitPressed = async () => {
     const resp = await submitFeedback({ subject: feedback, body: message })
-    if(resp){
+    if (resp) {
       setFeedback("")
       setMessage("")
     }
@@ -37,27 +39,34 @@ const FeedbackSupportScreen = () => {
       }}
     >
       <NavigationHeader></NavigationHeader>
-      <Text style={styles.header}>Feedback & Support</Text>
 
-      <Input
-        width={"90%"}
-        onChangeText={value => setFeedback(value)}
-        value={feedback}
-        placeholder="Subject"
-        height={Mixins.scaleHeight(40)}
-        selectedBorderColor={Colors.PRIMARY_1}
-      />
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{ alignItems: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={styles.header}>Feedback & Support</Text>
 
-      <Input
-        width={"90%"}
-        onChangeText={value => setMessage(value)}
-        value={message}
-        placeholder="Message"
-        height={Mixins.scaleHeight(200)}
-        selectedBorderColor={Colors.PRIMARY_1}
-        isMultiLine={true}
-      />
-      <View style={{ flex: 1 }}></View>
+        <Input
+          width={"90%"}
+          onChangeText={value => setFeedback(value)}
+          value={feedback}
+          placeholder="Subject"
+          height={Mixins.scaleHeight(40)}
+          selectedBorderColor={Colors.PRIMARY_1}
+        />
+
+        <Input
+          width={"90%"}
+          onChangeText={value => setMessage(value)}
+          value={message}
+          placeholder="Message"
+          height={Mixins.scaleHeight(200)}
+          selectedBorderColor={Colors.PRIMARY_1}
+          isMultiLine={true}
+        />
+        <View style={{ flex: 1 }}></View>
+      </ScrollView>
 
       <View
         style={{

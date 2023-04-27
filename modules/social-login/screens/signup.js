@@ -66,14 +66,15 @@ const SignupScreen = ({}) => {
           return
         }
         setDataStorage("@key", res?.token)
-        setDataStorage("@user", res)
+        setDataStorage("@user", res.user ? res.user : res)
 
-        global.user = res
-        if (res.event_planner) {
+        res.user ? (global.user = res.user) : res
+
+        if (res.user.event_planner) {
           navigation.navigate("PlannerProfileEdit")
         } else {
           navigation.navigate("Profile", {
-            initialSetup : true
+            initialSetup: true
           })
         }
       })
@@ -95,7 +96,12 @@ const SignupScreen = ({}) => {
       ])
       if (!fb_result.isCancelled) {
         const data = await AccessToken.getCurrentAccessToken()
-        dispatch(facebookLogin({ access_token: data.accessToken, event_planner: event_planner  }))
+        dispatch(
+          facebookLogin({
+            access_token: data.accessToken,
+            event_planner: event_planner
+          })
+        )
           .then(unwrapResult)
           .then(res => {
             if (res.key) navigation.navigate(HOME_SCREEN_NAME)
@@ -117,7 +123,12 @@ const SignupScreen = ({}) => {
       await GoogleSignin.hasPlayServices()
       await GoogleSignin.signIn()
       const tokens = await GoogleSignin.getTokens()
-      dispatch(googleLogin({ access_token: tokens.accessToken, event_planner: event_planner }))
+      dispatch(
+        googleLogin({
+          access_token: tokens.accessToken,
+          event_planner: event_planner
+        })
+      )
         .then(unwrapResult)
         .then(res => {
           if (res.key) navigation.navigate(HOME_SCREEN_NAME)
@@ -138,7 +149,11 @@ const SignupScreen = ({}) => {
       const result = await signinFunction()
       console.log("result ", result)
       dispatch(
-        appleLogin({ id_token: result.id_token, access_token: result.code, event_planner: event_planner  })
+        appleLogin({
+          id_token: result.id_token,
+          access_token: result.code,
+          event_planner: event_planner
+        })
       )
         .then(unwrapResult)
         .then(res => {
@@ -330,7 +345,9 @@ const SignupScreen = ({}) => {
               </TouchableOpacity>
             )}
 
-            <TouchableOpacity onPress={() => onFacebookConnect(dispatch, false)}>
+            <TouchableOpacity
+              onPress={() => onFacebookConnect(dispatch, false)}
+            >
               <Image
                 style={{
                   resizeMode: "contain",
@@ -351,7 +368,12 @@ const SignupScreen = ({}) => {
               onTintColor={Colors.PRIMARY_1}
               boxType={"square"}
               onFillColor={Colors.PRIMARY_1}
-              style={{marginRight: width *0.04,width: 20, height: 20, color: "#fff" }}
+              style={{
+                marginRight: width * 0.04,
+                width: 20,
+                height: 20,
+                color: "#fff"
+              }}
               disabled={false}
               value={termsAndConditionsCheckBox}
               onValueChange={newValue =>
@@ -364,7 +386,7 @@ const SignupScreen = ({}) => {
                 color: Colors.WHITE,
                 fontFamily: Typography.FONT_FAMILY_POPPINS_LIGHT,
                 fontWeight: Typography.FONT_WEIGHT_400,
-                flex: 1,
+                flex: 1
                 // marginLeft: "3%"
               }}
               multiline={true}
