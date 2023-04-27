@@ -15,9 +15,13 @@ def user_signed_up(sender, instance, created, **kwargs):
     if created:
         try:
             account = stripe.Account.create(
-                type='standard',
+                type='express',
                 country='US',
                 email=instance.email,
+                capabilities={
+                    'card_payments': {'requested': True},
+                    'transfers': {'requested': True},
+                }
             )
 
             # Save the Stripe Connect Account ID to the user model
