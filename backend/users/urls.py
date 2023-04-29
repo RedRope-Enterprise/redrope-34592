@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.viewsets import UserViewset, MyEventViewset, \
     NotificationViewset, GCMDeviceRegistrationViewset, \
-    BankAccountView, WithdrawalView, AccountBalanceView
+    BankAccountView, WithdrawalView, AccountBalanceView, \
+    DemoBankToken
 
 
 router = DefaultRouter()
@@ -21,6 +22,7 @@ from users.viewsets import (
 app_name = "users"
 
 urlpatterns = [
+    path("demo-bank-token/", DemoBankToken.as_view(), name="demo_bank_token"),
     path("account-balance/", AccountBalanceView.as_view(), name="account_balance"),
     path("withdraw-to-bank/", WithdrawalView.as_view(), name="withdraw_to_bank"),
     path("bank-accounts/", BankAccountView.as_view(), name="bank_accounts"),
