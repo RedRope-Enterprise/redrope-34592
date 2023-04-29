@@ -109,6 +109,7 @@ class Event(BaseModel):
     start_time = models.TimeField(_("Event start time"), blank=True, null=True)
     end_date = models.DateField(_("Event end date"))
     end_time = models.TimeField(_("Event end time"), blank=True, null=True)
+    notification = GenericRelation(Notification)
 
 
 class Category(BaseModel):

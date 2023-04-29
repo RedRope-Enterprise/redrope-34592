@@ -415,3 +415,24 @@ class AccountBalanceView(APIView):
             return Response({'account_id': stripe_account_id, 'balance': balance}, status=HTTP_200_OK)
         except Exception as e:
             return Response({'detail': 'Error retrieving account balance: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+        
+
+class DemoBankToken(APIView):
+
+    def get(self, request, *args, **kwargs):
+        
+        try:
+            bank = stripe.Token.create(
+                bank_account={
+                    "country": "US",
+                    "currency": "usd",
+                    "account_holder_name": "Jenny Rosen",
+                    "account_holder_type": "individual",
+                    "routing_number": "110000000",
+                    "account_number": "000123456789",
+                },
+                )
+
+            return Response(bank, status=HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': 'Error creating bank token: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
