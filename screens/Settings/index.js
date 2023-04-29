@@ -43,9 +43,6 @@ const SettingsScreen = () => {
     return unsubscribe
   }, [navigation])
 
-  const onProfileSettingsPress = () => {
-    console.log("onProfileSettingsPress")
-  }
   const settingsMenu = [
     {
       key: 0,
@@ -57,8 +54,11 @@ const SettingsScreen = () => {
     },
     {
       key: 1,
-      text: "Payment Settings",
-      onPress: () => navigation.navigate("CardsScreen")
+      text: user?.event_planner ? "Wallet" : "Payment Settings",
+      onPress: () =>
+        user?.event_planner
+          ? navigation.navigate("EventPlannerWallet")
+          : navigation.navigate("CardsScreen")
     },
     { key: 2, text: "FAQ", onPress: () => navigation.navigate("FAQ") },
     {
@@ -178,7 +178,6 @@ const SettingsScreen = () => {
                 console.log("delete account resp ", resp)
               } catch (error) {
                 setDeleteLoading(false)
-
               }
             }}
           >

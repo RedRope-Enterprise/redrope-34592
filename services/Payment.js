@@ -42,6 +42,18 @@ async function confirmReservation(params = {}) {
   return response.data
 }
 
+async function addBankAccount(params = {}) {
+  const response = await api.post("/api/v1/users/bank-accounts/", params)
+  return response.data
+}
+
+async function getBankAccount(params = {}) {
+  const response = await api.get("/api/v1/users/bank-accounts/", {
+    params: {}
+  })
+  return response.data
+}
+
 export {
   getCardsList,
   createCard,
@@ -49,5 +61,7 @@ export {
   deleteCard,
   createPaymentIntent,
   confirmReservation,
-  makeReservation
+  makeReservation,
+  addBankAccount,
+  getBankAccount
 }

@@ -16,6 +16,8 @@ import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
 import ImagePicker from "react-native-image-crop-picker"
 import { getUser, updateUser } from "../../services/user"
+import { getBankAccount } from "../../services/Payment"
+
 import {
   getDataStorage,
   setDataStorage,
@@ -44,6 +46,7 @@ const PlannerProfileScreen = () => {
   const [about, setAbout] = useState("")
   const [location, setLocation] = useState("")
   const [bAccount, setBAccount] = useState("")
+  const [bankAccountData, setBankAccountData] = useState()
 
   const [profileView, setProfileView] = useState(true)
 
@@ -60,12 +63,23 @@ const PlannerProfileScreen = () => {
 
   useEffect(() => {
     setInitialValues()
+    getUserBankAccount()
   }, [])
+
+  const getUserBankAccount = async () => {
+    const resp = await getBankAccount()
+    if (
+      resp.bank_accounts &&
+      resp.bank_accounts.data &&
+      resp.bank_accounts.data.length > 0
+    ) {
+      setBankAccountData(resp.bank_accounts.data[0])
+    }
+  }
 
   setInitialValues = async () => {
     let eUser = await global.user
     const primaryLocation = await getDataStorage("@PRIMARY_LOCATION")
-    debugger
     setExistingUser(eUser)
     if (!eUser?.likes) {
       setIsModalVisible(true)
@@ -261,7 +275,7 @@ Please setup your profile`}
             disabled={profileView}
             onPress={() => {
               navigation.navigate("AddNewLocationScreen", {
-                isPrimaryLocation : true
+                isPrimaryLocation: true
               })
             }}
           >
@@ -296,52 +310,54 @@ Please setup your profile`}
           </TouchableOpacity>
         </View>
 
-        <View>
-          <Text
-            style={{
-              color: Colors.PRIMARY_1,
-              fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-              fontSize: Typography.FONT_SIZE_14,
-              fontWeight: Typography.FONT_WEIGHT_600
-            }}
-          >
-            Connect Bank Account
-          </Text>
-          <TouchableOpacity
-            style={{ width: "90%" }}
-            disabled={profileView}
-            onPress={() => {}}
-          >
-            <Input
-              editable={false}
-              onChangeText={value => setBAccount(value)}
-              value={bAccount}
-              placeholder={profileView ? "..." : "Connect your bank account"}
-              selectedBorderColor={Colors.PRIMARY_1}
-              height={Mixins.scaleHeight(50)}
-              iconLeft={
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/login_signup/web.png")}
-                />
-              }
-              iconRight={
-                !profileView && (
+        {bankAccountData && (
+          <View>
+            <Text
+              style={{
+                color: Colors.PRIMARY_1,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontSize: Typography.FONT_SIZE_14,
+                fontWeight: Typography.FONT_WEIGHT_600
+              }}
+            >
+              Bank Account
+            </Text>
+            <TouchableOpacity
+              style={{ width: "90%" }}
+              disabled={profileView}
+              onPress={() => {}}
+            >
+              <Input
+                editable={false}
+                onChangeText={value => setBAccount(value)}
+                value={`${bankAccountData.bank_name} - ${bankAccountData.account_holder_name}`}
+                placeholder={profileView ? "..." : "Connect your bank account"}
+                selectedBorderColor={Colors.PRIMARY_1}
+                height={Mixins.scaleHeight(50)}
+                iconLeft={
                   <Image
                     style={{ width: 24, height: 24, margin: 10 }}
-                    source={require("../../assets/images/RightArrow.png")}
+                    source={require("../../assets/images/Dollar.png")}
                   />
-                )
-              }
-              iconHighlighted={
-                <Image
-                  style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/login_signup/web_active.png")}
-                />
-              }
-            />
-          </TouchableOpacity>
-        </View>
+                }
+                iconRight={
+                  !profileView && (
+                    <Image
+                      style={{ width: 24, height: 24, margin: 10 }}
+                      source={require("../../assets/images/RightArrow.png")}
+                    />
+                  )
+                }
+                iconHighlighted={
+                  <Image
+                    style={{ width: 24, height: 24, margin: 10 }}
+                    source={require("../../assets/images/login_signup/web_active.png")}
+                  />
+                }
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </KeyboardAwareScrollView>
       {/* <View style={{ alignItems: "center", marginBottom: "5%" }}>
         <Button

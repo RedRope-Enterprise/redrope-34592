@@ -16,6 +16,7 @@ export const FONT_WEIGHT_400 = "400"
 
 // FONT SIZE
 export const FONT_SIZE_50 = scaleFont(50)
+export const FONT_SIZE_40 = scaleFont(40)
 export const FONT_SIZE_36 = scaleFont(36)
 export const FONT_SIZE_34 = scaleFont(34)
 export const FONT_SIZE_32 = scaleFont(32)

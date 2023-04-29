@@ -28,10 +28,13 @@ import {
   clearStorage
 } from "../../utils/storage"
 
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector, useDispatch, connect } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { useRoute } from "@react-navigation/native"
+
+import { createToken } from "@stripe/stripe-react-native"
+import { addBankAccount, getBankAccount } from "../../services/Payment"
 
 const ConnectBankAccount = () => {
   const navigation = useNavigation()
@@ -43,6 +46,7 @@ const ConnectBankAccount = () => {
   const [rountingNumber, setRountingNumber] = useState()
   const [iban, setIban] = useState()
   const [swift, setSwift] = useState()
+  const [showModal, setShowModal] = useState(false)
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
@@ -58,7 +62,53 @@ const ConnectBankAccount = () => {
     setInitialValues()
   }, [])
 
-  setInitialValues = async () => {}
+  setInitialValues = async () => {
+    const resp = await getBankAccount()
+    if (
+      resp.bank_accounts &&
+      resp.bank_accounts.data &&
+      resp.bank_accounts.data.length > 0
+    ) {
+      const bankData = resp.bank_accounts.data[0]
+      if (!bankData) return
+      setBankName(bankData.bank_name)
+      setAccountName(bankData.account_holder_name)
+      setAccountNumber()
+      setRountingNumber(bankData.routing_number)
+      setIban()
+      setSwift()
+    }
+  }
+
+  const connectBankAccountPressed = async () => {
+    const bankAccountParams = {
+      accountNumber: accountNumber, // 000123456789
+      routingNumber: rountingNumber, // 110000000
+      accountHolderName: accountName,
+      accountHolderType: "individual",
+      country: "US",
+      currency: "USD",
+      iban: iban,
+      swift: swift
+    }
+    try {
+      const token = await createToken({
+        type: "BankAccount",
+        ...bankAccountParams
+      })
+      console.log("token created ", token)
+
+      const resp = await addBankAccount({
+        bank_account_id: token.token.id
+      })
+      if (resp) {
+        // TODO: show popup modal
+        setShowModal(true)
+      }
+    } catch (error) {
+      Alert.alert("OOPS !", "Something went wrong. Try again later")
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
@@ -165,11 +215,24 @@ const ConnectBankAccount = () => {
             fontSize: Typography.FONT_SIZE_14
           }}
           // loading={props.loading}
-          onPress={() => {}}
+          onPress={connectBankAccountPressed}
         >
           SAVE
         </Button>
       </View>
+
+      <CustomModal
+        showSuccessIcon
+        isVisible={showModal}
+        text={"Bank information\nsaved"}
+        onClose={() => {
+          setShowModal(false)
+          navigation.goBack()
+        }}
+        description={
+          "We are linking bank account, we will send you an email very soon.."
+        }
+      ></CustomModal>
     </SafeAreaView>
   )
 }

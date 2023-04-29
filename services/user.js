@@ -18,5 +18,19 @@ async function deleteAccount(payload) {
   return response.data
 }
 
+async function getUserAccountBalance(payload) {
+  const response = await api.get("/api/v1/users/account-balance/", payload)
+  return response.data
+}
 
-export { getUser, updateUser, deleteAccount }
+async function withdrawToBank(payload) {
+  const response = await api.post("/api/v1/users/withdraw-to-bank/", payload)
+  return response.data
+}
+
+async function getWalletHistory(payload) {
+  const response = await api.get("/api/v1/users/withdraw-to-bank/", payload)
+  return response.data
+}
+
+export { getUser, updateUser, deleteAccount, getUserAccountBalance, withdrawToBank, getWalletHistory }

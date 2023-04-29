@@ -46,7 +46,7 @@ const HomeEventItem = props => {
         }}
         resizeMode="cover"
         source={{
-          uri: event?.event_images ? event?.event_images[0].image : "",
+          uri: event?.event_images ? event?.event_images[0]?.image : "",
           priority: FastImage.priority.high
         }}
       >

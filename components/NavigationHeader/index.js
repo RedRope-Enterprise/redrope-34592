@@ -102,7 +102,7 @@ const NavigationHeader = ({
 const styles = StyleSheet.create({
   header: {
     position: "absolute",
-    top: Platform.os === "android" ? 25 : 40,
+    top: Platform.OS === "android" ? 25 : 50,
     zIndex: 1,
     flexDirection: "row",
     justifyContent: "space-between",

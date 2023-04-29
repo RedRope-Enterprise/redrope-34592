@@ -147,7 +147,7 @@ const AddNewEventScreen = () => {
         console.log(error.request)
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message)
+        console.log("Error", error)
       }
     }
   }

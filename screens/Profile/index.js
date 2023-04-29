@@ -101,7 +101,6 @@ const ProfileScreen = () => {
 
   setupUserProfile = async () => {
     console.log("userImage ", userImage)
-    debugger
     let likes = await getInterestsIds()
     console.log("likesss ", likes)
     const data = new FormData()
@@ -135,7 +134,6 @@ const ProfileScreen = () => {
     // await clearStorage()
     let data = await getDataStorage("@user")
     data = JSON.parse(data)
-    debugger
     if (data) {
       setUserInterests(data.likes)
       setUpdateInterests(Date.now())

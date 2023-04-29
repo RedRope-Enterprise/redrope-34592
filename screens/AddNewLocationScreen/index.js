@@ -40,7 +40,6 @@ const AddNewLocationScreen = () => {
   }, [])
 
   const setInitialValues = async() => {
-    debugger
     if (route?.params?.isPrimaryLocation) {
       const primaryLocation  = await getDataStorage("@PRIMARY_LOCATION")
       if(primaryLocation){

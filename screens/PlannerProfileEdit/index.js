@@ -22,6 +22,7 @@ import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
 import ImagePicker from "react-native-image-crop-picker"
 import { getUser, updateUser } from "../../services/user"
+import { getBankAccount } from "../../services/Payment"
 import {
   getDataStorage,
   setDataStorage,
@@ -52,6 +53,7 @@ const PlannerProfileEditScreen = () => {
   const [bAccount, setBAccount] = useState("")
 
   const [profileView, setProfileView] = useState(false)
+  const [bankAccountData, setBankAccountData] = useState()
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
@@ -71,7 +73,19 @@ const PlannerProfileEditScreen = () => {
 
   useEffect(() => {
     setInitialValues()
+    getUserBankAccount()
   }, [])
+
+  const getUserBankAccount = async () => {
+    const resp = await getBankAccount()
+    if (
+      resp.bank_accounts &&
+      resp.bank_accounts.data &&
+      resp.bank_accounts.data.length > 0
+    ) {
+      setBankAccountData(resp.bank_accounts.data[0])
+    }
+  }
 
   setInitialValues = async () => {
     let eUser = await global.user
@@ -127,7 +141,9 @@ const PlannerProfileEditScreen = () => {
               })
               return
             }
-            navigation.navigate("AddNewLocationScreen")
+            navigation.navigate("AddNewLocationScreen", {
+              isPrimaryLocation: true
+            })
           }}
         >
           <View style={styles.genericItemContainer}>
@@ -394,10 +410,12 @@ Please setup your profile`}
               marginVertical: "2%"
             }}
           >
-            Connect Bank Account
+            {"Connect Bank Account"}
           </Text>
           {renderGenericItem(
-            "Connect your bank account",
+            bankAccountData
+              ? `${bankAccountData.bank_name} - ${bankAccountData.account_holder_name}`
+              : "Connect Your Bank Account",
             ImgDollar,
             null,
             false,
