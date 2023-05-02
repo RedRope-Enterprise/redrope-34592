@@ -47,6 +47,7 @@ class User(AbstractUser):
     address_longitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     event_planner = models.BooleanField(_("Event planner"), default=False)
+    is_stripe_complete = models.BooleanField(_("Is Stripe Complete"), default=False)
     business_name = models.CharField(
         _("Business name"), max_length=100, blank=True, null=True
     )

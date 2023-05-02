@@ -34,6 +34,7 @@ from home.api.v1.serializers import (
     CustomAppleSocialLoginSerializer,
 )
 import stripe
+import time
 from rest_framework.views import APIView
 from rest_framework.status import (
     HTTP_200_OK,
@@ -45,7 +46,7 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 from users.serializers import UserSerializer, GCMDeviceSerializer, \
-    BankAccountSerializer, WithdrawalSerializer
+    BankAccountSerializer, WithdrawalSerializer, CompleteAccountStripeSerializer
 from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import EventDetailsSerializer
 from django.db import IntegrityError
@@ -61,6 +62,16 @@ except Exception:
     APP_DOMAIN = ""
 
 stripe.api_key = settings.STRIPE_API_KEY
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 
 class UserDetailView(LoginRequiredMixin, DetailView):
 
@@ -436,3 +447,94 @@ class DemoBankToken(APIView):
             return Response(bank, status=HTTP_200_OK)
         except Exception as e:
             return Response({'detail': 'Error creating bank token: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+        
+
+class CompleteStripeAcountView(APIView):
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            user = request.user
+            post_data = request.data
+            serializer = CompleteAccountStripeSerializer(data=post_data)
+
+            serializer.is_valid(raise_exception=True)
+
+            client_id = get_client_ip(request)
+            # This assumes you have already created a Stripe Connect Account and added the bank account to it
+            
+            stripe_connect_account_id = user.stripe_connect_account_id
+            individual_details = {
+                "first_name": serializer.validated_data["first_name"],
+                "last_name": serializer.validated_data["last_name"],
+                "ssn_last_4": serializer.validated_data["ssn_last_4"],
+                "phone": serializer.validated_data["phone"],
+                "email": user.email,
+                "dob": {
+                    "day": serializer.validated_data["dob"].day,
+                    "month": serializer.validated_data["dob"].month,
+                    "year": serializer.validated_data["dob"].year,
+                },
+                "address": {
+                    "line1": serializer.validated_data["address"]["line1"],
+                    "line2": serializer.validated_data["address"]["line2"],
+                    "city": serializer.validated_data["address"]["city"],
+                    "state": serializer.validated_data["address"]["state"],
+                    "postal_code": serializer.validated_data["address"]["postal_code"],
+                },
+            }
+            tos_acceptance = {
+                "date": int(time.time()),
+                "ip": client_id,
+            }
+            account = stripe.Account.modify(
+                stripe_connect_account_id,
+                business_type="individual",
+                business_profile={
+                    "url": "http://redrope-34592.botics.co/",
+                    "mcc": "5734",  # Merchant Category Code for the industry
+                },
+                individual=individual_details,
+                tos_acceptance=tos_acceptance,
+            )
+            user.is_stripe_complete = True
+            user.save()
+            return Response({'detail': 'Acct updated successful', 'Account': account}, status=HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'detail': 'Error processing payout: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+
+
+from rest_framework.decorators import api_view, permission_classes
+
+@api_view(["GET"])
+def generate_stripe_connect_url(request):
+    your_client_id = "ca_NodbjiRosSGJw68tVECIw2BQDsm7aFv4"
+    your_redirect_uri = "http://localhost:8000/api/v1/users/handle-stripe-redirect/"
+    
+    stripe_connect_url = f"https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id={your_client_id}&scope=read_write&redirect_uri={your_redirect_uri}"
+    
+    return Response({"url": stripe_connect_url})
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def handle_stripe_redirect(request):
+    authorization_code = request.GET.get("code")
+
+    response = requests.post("https://connect.stripe.com/oauth/token", data={
+        "client_secret": settings.STRIPE_API_KEY,
+        "code": authorization_code,
+        "grant_type": "authorization_code",
+    })
+
+    access_token = response.json().get("access_token")
+    refresh_token = response.json().get("refresh_token")
+    stripe_user_id = response.json().get("stripe_user_id")
+
+    # Store the tokens and Stripe user ID in your application as needed
+
+    return Response({"message": "Successfully connected Stripe account", "data":{
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "stripe_user_id": stripe_user_id
+    }})

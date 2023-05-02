@@ -15,7 +15,7 @@ def user_signed_up(sender, instance, created, **kwargs):
     if created:
         try:
             account = stripe.Account.create(
-                type='express',
+                type='custom',
                 country='US',
                 email=instance.email,
                 capabilities={

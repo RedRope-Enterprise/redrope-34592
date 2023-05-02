@@ -39,12 +39,15 @@ class SignupViewSet(ModelViewSet):
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            user_instance = User.objects.create(
+            user_instance = User(
                 **serializer.data,
                 username=generate_unique_username(
                     [serializer.data.get("name"), serializer.data.get("email"), "user"]
                 )
             )
+
+            user_instance.set_password(serializer.validated_data.get("password"))
+            user_instance.save()
             token, created = Token.objects.get_or_create(user=user_instance)
 
             user_serializer = CustomUserDetailSerializer(
