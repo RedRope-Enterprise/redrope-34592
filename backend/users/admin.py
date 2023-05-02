@@ -52,6 +52,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "address_longitude",
                     "address_latitude",
                     "event_planner",
+                    "stripe_connect_account_id",
                     "business_name",
                     "business_reg_no",
                 )

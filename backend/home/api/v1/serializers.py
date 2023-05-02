@@ -206,6 +206,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "stripe_customer_id",
             "stripe_connect_account_id",
             "stripe_bank_account_id",
+            "is_stripe_complete",
             "phone",
             "website",
             
