@@ -530,6 +530,7 @@ const SignupScreen = ({}) => {
           />
 
           <Input
+            maxLength={9}
             width={"90%"}
             onChangeText={value => setEmployerNumber(value)}
             value={employerNumber}

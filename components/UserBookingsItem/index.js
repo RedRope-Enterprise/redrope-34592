@@ -42,7 +42,7 @@ const UserBookingsItem = props => {
               borderBottomLeftRadius: 10
             }}
             source={{
-              uri: event?.event_images ? event?.event_images[0].image : ""
+              uri: event?.event_images ? event?.event_images[0]?.image : ""
             }}
           />
         </View>
@@ -90,7 +90,7 @@ const UserBookingsItem = props => {
               }}
             >
               <Text style={{ color: Colors.PRIMARY_1, margin: 5 }}>
-                {event?.event_categories[0].name}
+                {event?.event_categories[0]?.name}
               </Text>
             </View>
 

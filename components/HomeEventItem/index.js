@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  ImageBackground,
-  Switch
+  ImageBackground
 } from "react-native"
+
+import { Switch } from "react-native-switch"
 
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
@@ -171,19 +172,36 @@ const HomeEventItem = props => {
             )}
 
             {global?.user?.event_planner && (
-              <Switch
-                trackColor={{ false: "#767577", true: "##83d475" }}
-                thumbColor={toggle ? Colors.WHITE : Colors.WHITE}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={async value => {
-                  activeDeactiveEvent({ id: event?.id, status: value })
-                  setToggle(value)
-                }}
-                value={toggle}
-                activeText={"On"}
-                inActiveText={"Off"}
-                style={{ marginBottom: 10 }}
-              />
+              <View style={{ marginBottom: "3%" }}>
+                <Switch
+                  barHeight={40}
+                  activeTextStyle={{
+                    color: Colors.WHITE,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    fontSize: Typography.FONT_SIZE_14,
+                    fontWeight: Typography.FONT_WEIGHT_BOLD
+                  }}
+                  inactiveTextStyle={{
+                    color: Colors.WHITE,
+                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                    fontSize: Typography.FONT_SIZE_14,
+                    fontWeight: Typography.FONT_WEIGHT_BOLD
+                  }}
+                  switchLeftPx={3}
+                  switchRightPx={15}
+                  switchWidthMultiplier={3.5}
+                  circleSize={35}
+                  backgroundActive={"#459550"}
+                  backgroundInactive={Colors.NETURAL_4}
+                  onValueChange={async value => {
+                    activeDeactiveEvent({ id: event?.id, status: value })
+                    setToggle(value)
+                  }}
+                  value={toggle}
+                  activeText={"ACTIVE"}
+                  inActiveText={"DEACTIVE"}
+                />
+              </View>
             )}
           </View>
         </LinearGradient>
