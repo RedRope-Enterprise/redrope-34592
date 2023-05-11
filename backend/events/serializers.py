@@ -166,7 +166,7 @@ class MyEventSerializer(serializers.ModelSerializer):
     event_images = serializers.SerializerMethodField()
     event_bottle_service = serializers.SerializerMethodField()
     going_count = serializers.SerializerMethodField()
-    event_price = serializers.CharField(source="bottle_service.price")
+    event_price = serializers.SerializerMethodField()
     event_title = serializers.CharField(source="event.title")
     location = serializers.CharField(source="event.location")
     date = serializers.CharField(source="event.start_date")
@@ -218,6 +218,12 @@ class MyEventSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return "reserved" if obj.reserved else "interested"
 
+    def get_event_price(self, obj):
+        if obj.reserved:
+            price = obj.bottle_service.price
+        else:
+            price = "-"
+        return price
 
 class RegisterEventSerializer(serializers.ModelSerializer):
     class Meta:

@@ -63,6 +63,12 @@ class EventAdmin(admin.ModelAdmin):
 
     event_organizer.short_description = "Organizer"
 
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.response = obj.response.replace('\r\n', ' ')
+        super().save_model(request, obj, form, change)
+
 
 admin.site.register(Notification)
 # admin.site.register(Event)
@@ -70,5 +76,5 @@ admin.site.register(FavoriteEvent)
 admin.site.register(Category)
 admin.site.register(Interest)
 admin.site.register(AboutUs)
-admin.site.register(FAQ)
+# admin.site.register(FAQ)
 admin.site.register(BottleService)
