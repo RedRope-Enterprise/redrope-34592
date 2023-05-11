@@ -71,7 +71,7 @@ def filter_events_with_get_param(queryset, request):
     end_date = request.query_params.get("end_date", None)
 
     if min_cost and max_cost:
-        queryset = queryset.filter(price__range=(min_cost, max_cost))
+        queryset = queryset.filter(bottle_services__price__range=(min_cost, max_cost)).distinct()
 
     if categories:
         queryset = queryset.filter(
