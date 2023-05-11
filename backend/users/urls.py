@@ -3,8 +3,9 @@ from rest_framework.routers import DefaultRouter
 from users.viewsets import UserViewset, MyEventViewset, \
     NotificationViewset, GCMDeviceRegistrationViewset, \
     BankAccountView, WithdrawalView, AccountBalanceView, \
-    DemoBankToken, CompleteStripeAcountView, generate_stripe_connect_url, \
-    handle_stripe_redirect
+    DemoBankToken, CompleteStripeAcountView, PasswordResetView,\
+    PasswordResetConfirmView, ResetPasswordVerifyToken, \
+    generate_stripe_connect_url, handle_stripe_redirect
 
 
 router = DefaultRouter()
@@ -30,6 +31,11 @@ urlpatterns = [
     path("bank-accounts/", BankAccountView.as_view(), name="bank_accounts"),
     path('generate_stripe_connect_url/', generate_stripe_connect_url),
     path('handle-stripe-redirect/', handle_stripe_redirect),
+    path('password/reset/', PasswordResetView.as_view(), name='api-rest_password'),
+    path('password/reset/confirm/', PasswordResetConfirmView.as_view(),
+         name='api-rest_password_confirm'),
+    path('password/reset/verify-token/',
+         ResetPasswordVerifyToken.as_view(), name='api-rest_password'),
     path("", include(router.urls)),
     path("~redirect/", view=user_redirect_view, name="redirect"),
     path("~update/", view=user_update_view, name="update"),

@@ -12,6 +12,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from requests.exceptions import HTTPError
 from rest_framework.viewsets import GenericViewSet
 from utils.custom_permissions import IsOwnerAndReadOnly
+from utils.helper import HelperClass
 from rest_framework.mixins import ListModelMixin
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.mixins import RetrieveModelMixin
@@ -46,11 +47,20 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 from users.serializers import UserSerializer, GCMDeviceSerializer, \
-    BankAccountSerializer, WithdrawalSerializer, CompleteAccountStripeSerializer
+    BankAccountSerializer, WithdrawalSerializer, \
+    CompleteAccountStripeSerializer, PasswordResetTokenSerializer
 from rest_auth.registration.serializers import SocialLoginSerializer
 from events.serializers import EventDetailsSerializer
 from django.db import IntegrityError
 from users.models import BankAccount, Withdrawal
+from django_rest_passwordreset.models import ResetPasswordToken
+from django_rest_passwordreset.views import (
+    HTTP_IP_ADDRESS_HEADER, 
+    HTTP_USER_AGENT_HEADER, 
+    ResetPasswordRequestToken, 
+    ResetPasswordConfirm, 
+    ResetPasswordValidateToken
+)
 import logging
 
 
@@ -395,7 +405,7 @@ class WithdrawalView(APIView):
             return Response({'detail': 'Payout successful', 'withdrawal': withdrawal_data}, status=HTTP_200_OK)
 
         except Exception as e:
-            return Response({'detail': 'Error processing payout: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
+            return Response({'detail': str(e)}, status=HTTP_400_BAD_REQUEST)
         
     
     def get(self, request, *args, **kwargs):
@@ -504,6 +514,46 @@ class CompleteStripeAcountView(APIView):
         except Exception as e:
             return Response({'detail': 'Error processing payout: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
 
+
+class PasswordResetView(ResetPasswordRequestToken):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            try:
+                user = User.objects.get(email=request.data['email'])
+                token = ResetPasswordToken.objects.create(
+                    user=user,
+                    user_agent=request.META.get(HTTP_USER_AGENT_HEADER, ''),
+                    ip_address=request.META.get(HTTP_IP_ADDRESS_HEADER, ''),
+                )
+                data = {'email_body': 'Reset token for Redrope is '+token.key, 'to_emails': [request.data['email']],
+                        'email_subject': 'Reset your passsword'}
+                HelperClass.send_email(data)
+                response.data["detail"] = "Password reset e-mail has been sent."
+            except User.DoesNotExist as e:
+                response.data["status"] = "error"
+                response.data["detail"] = "Email not associated to any user."
+                response.status_code = 400
+
+        return response
+    
+
+class PasswordResetConfirmView(ResetPasswordConfirm):
+    serializer_class = PasswordResetTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            response.data["detail"] = "Password has been reset successfuly"
+
+        return response
+
+class ResetPasswordVerifyToken(ResetPasswordValidateToken):
+    def post(self, request, *args, **kwargs):
+
+        response = super().post(request, *args, **kwargs)
+        return response
+    
 
 from rest_framework.decorators import api_view, permission_classes
 

@@ -63,6 +63,9 @@ class User(AbstractUser):
     stripe_customer_id = models.CharField(
         _("Stripe ID"), blank=True, null=True, max_length=80
     )
+    location = models.CharField(
+        _("Location"), blank=True, null=True, max_length=80
+    )
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

@@ -63,7 +63,7 @@ class SignupViewSet(ModelViewSet):
                 error_str = {"error": error.detail.get("email")[0]}
             else:
                 error_str = error.detail
-            return Response(error_str, status=HTTP_200_OK)
+            return Response(error_str, status=HTTP_400_BAD_REQUEST)
         except Exception as error:
             return Response(
                 {"error": str(error)}, status=HTTP_500_INTERNAL_SERVER_ERROR
@@ -107,6 +107,9 @@ class FeedBackSupportViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     # permission_classes = (permissions.AllowAny,)
     serializer_class = FeedBackSupportSerializer
     queryset = FeedBackSupport.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 # class TermsAndConditionViewSet(ListModelMixin, GenericViewSet):

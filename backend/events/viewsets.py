@@ -111,9 +111,8 @@ class EventViewset(ModelViewSet):
         "title",
         "desc",
         "location",
-        "date",
-        "images",
-        "categories",
+        "start_date",
+        "categories__name",
     ]
     # filterset_fields = ["title",]
 
@@ -125,11 +124,6 @@ class EventViewset(ModelViewSet):
         return EventListSerializer
 
     def get_queryset(self):
-        # queryset = (
-        #     self.filter_queryset(self.queryset)
-        #     .filter(categories__in=self.request.user.interests.all())
-        #     .distinct()
-        # )
         queryset = self.queryset
         if not self.request.user.event_planner:
             queryset = self.queryset.filter(active=True)

@@ -5,9 +5,10 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from home.models import UserEventRegistration, Event, \
-    FavoriteEvent
+    FavoriteEvent, FeedBackSupport
 from users.models import User
 from push_notifications.models import GCMDevice
+from utils.helper import HelperClass
 from pyfcm import FCMNotification
 import logging
 
@@ -130,6 +131,26 @@ def new_event_like(sender, instance, created, **kwargs):
                     logging.warning(e)
             else:
                 logging.warning("No devices found for the user.")
+
+        except Exception as e:
+            raise Exception(e)
+        
+
+@receiver(post_save, sender=FeedBackSupport)
+def new_user_feedback(sender, instance, created, **kwargs):
+    """Send notification to admin when new feed back is recieved"""
+
+    if created:
+        try:
+            
+
+            admin_emails = [admin_user.email for admin_user in User.objects.filter(is_superuser=True, is_active=True)]
+
+            email_body = f"<p>{instance.user.name} sent in a new feedback, click the link below for details.</p>"
+            email_body += f"<p>redrope-34592.botics.co/home/feedbacksupport/{instance.id}/change/</p>"
+            data = {'email_body': email_body, 'to_emails': admin_emails,
+                        'email_subject': 'Feedback Recieved'}
+            HelperClass.send_email(data)
 
         except Exception as e:
             raise Exception(e)
