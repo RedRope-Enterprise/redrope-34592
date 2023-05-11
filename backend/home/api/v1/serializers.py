@@ -16,6 +16,7 @@ from django.contrib.auth.hashers import check_password
 from requests.exceptions import HTTPError
 from allauth.socialaccount.helpers import complete_social_login
 from users.serializers import BankAccountSerializer
+
 User = get_user_model()
 
 
@@ -69,6 +70,7 @@ class FeedBackSupportSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedBackSupport
         fields = "__all__"
+        read_only_fields = ["user",]
 
 
 # class TermsAndConditionSerializer(serializers.ModelSerializer):
@@ -209,6 +211,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "is_stripe_complete",
             "phone",
             "website",
+            "location",
             
         )
         read_only_fields = (

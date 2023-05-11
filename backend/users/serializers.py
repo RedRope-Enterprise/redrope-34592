@@ -2,6 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from push_notifications.models import GCMDevice
 from users.models import BankAccount, Withdrawal
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+from django_rest_passwordreset.serializers import PasswordTokenSerializer
+
 User = get_user_model()
 
 
@@ -50,3 +54,13 @@ class CompleteAccountStripeSerializer(serializers.Serializer):
     phone = serializers.CharField()
     dob = serializers.DateField()
     address = StripeAccountRegisteredAddressSerializer()
+
+
+class PasswordResetTokenSerializer(PasswordTokenSerializer):
+    password2 = serializers.CharField(label=_("Password2"), style={
+                                      'input_type': 'password'})
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise ValidationError("The Two passwords don't match")
+        return super().validate(data)

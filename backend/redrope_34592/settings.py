@@ -88,6 +88,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "storages",
     "push_notifications",
+    "django_rest_passwordreset",
 ]
 MODULES_APPS = get_modules()
 

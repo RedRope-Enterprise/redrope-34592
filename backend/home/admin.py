@@ -9,10 +9,20 @@ from home.models import (
     BottleService,
     Interest,
     FavoriteEvent,
+    FeedBackSupport
 )
 
 # Register your models here.
 
+
+@admin.register(FeedBackSupport)
+class FeedBackSupportAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "subject",
+        "body",
+        "created_at",
+    )
 
 @admin.register(UserEventRegistration)
 class UserEventRegistrationAdmin(admin.ModelAdmin):
@@ -49,7 +59,7 @@ class EventAdmin(admin.ModelAdmin):
     )
 
     def event_organizer(self, obj):
-        return f"{obj.user.name}" if obj.user.name else "Unspecified"
+        return f"{obj.user.name}" if obj.user.name else "N/A"
 
     event_organizer.short_description = "Organizer"
 

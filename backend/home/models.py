@@ -32,6 +32,9 @@ class FAQ(BaseModel):
 
 
 class FeedBackSupport(BaseModel):
+    user = models.ForeignKey(
+        "users.User", related_name="feedbacks", on_delete=models.CASCADE
+    )
     subject = models.CharField(_("Subject"), max_length=600, blank=True, null=True)
     body = models.TextField(_("Content Body"))
 
