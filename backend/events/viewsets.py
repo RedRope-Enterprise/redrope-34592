@@ -39,6 +39,7 @@ from rest_framework.mixins import (
     RetrieveModelMixin
 )
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import BooleanField, Case, Value, When
 from utils.custom_permissions import (
     IsOwnerAndReadOnly,
     IsEventPlannerOrReadOnly,
@@ -105,7 +106,7 @@ def send_notification(notification_type, obj):
 class EventViewset(ModelViewSet):
     serializer_class = EventListSerializer
     permission_classes = (IsAuthenticated, IsEventPlannerOrReadOnly, IsOwnerAndReadOnly)
-    queryset = Event.objects.all().order_by("-id")
+    queryset = Event.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = [
         "title",
@@ -124,7 +125,14 @@ class EventViewset(ModelViewSet):
         return EventListSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.annotate(
+            is_favorited=Case(
+                When(favorited__user=self.request.user, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField()
+            )
+        ).order_by('-is_favorited', '-id')
+        
         if not self.request.user.event_planner:
             queryset = self.queryset.filter(active=True)
 
@@ -169,7 +177,7 @@ class EventViewset(ModelViewSet):
             """Retrieve events interested in or booked by user"""
 
             try:
-                my_events = UserEventRegistration.objects.filter(user=request.user)
+                my_events = UserEventRegistration.objects.filter(user=request.user).order_by("-created_at")
                 page = self.paginate_queryset(my_events)
                 if page is not None:
                     serializer = MyEventSerializer(
@@ -369,7 +377,10 @@ class CardPaymentViewset(APIView):
             # amount_to_pay = (percentage * total_amount) / 100
             # amount_to_balance = total_amount - amount_to_pay
 
-            amount_to_balance = total_amount - 50
+            amount = settings.RESERVATION_UPFRONT_AMOUNT
+            amount_to_balance = total_amount - amount
+
+            # Get stripe customer ID
             stripe_customer_id = request.user.stripe_customer_id
 
             if not stripe_customer_id:
@@ -390,15 +401,19 @@ class CardPaymentViewset(APIView):
                 },
             )
 
+            #Calculate Stripe fee 
+            stripe_fee = calculate_stripe_fee(amount)
+            amount_plus_fee = amount + stripe_fee
+
             if event_registration.reserved:
                 return Response(
                     {"error": "Reservation already exists."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             # Create a charge on the customer's card
-            stripe_account_id = event.user.stripe_connect_account_id
-            if not stripe_account_id:
-                return Response({'detail': 'User does not have a Stripe Connect Account'}, status=status.HTTP_400_BAD_REQUEST)
+            # stripe_account_id = event.user.stripe_connect_account_id
+            # if not stripe_account_id:
+            #     return Response({'detail': 'User does not have a Stripe Connect Account'}, status=status.HTTP_400_BAD_REQUEST)
             
             # payment_intent = stripe.PaymentIntent.create(
             #     customer=stripe_customer_id,
@@ -420,18 +435,28 @@ class CardPaymentViewset(APIView):
 
             
             charge = stripe.Charge.create(
-                amount=settings.RESERVATION_UPFRONT_AMOUNT,  # Convert the amount to cents
+                amount=int(amount_plus_fee * 100),  # Convert the amount to cents
                 currency='usd',
                 customer=stripe_customer_id,
                 source=payment_method,
                 description='Payment for event reservation',
-                transfer_data={
-                    'destination': stripe_account_id,
-                },
+                # transfer_data={
+                #     'destination': stripe_account_id,
+                # },
             )
 
-            event_registration.reserved = True
-            event_registration.amount_paid = charge.amount
+            if charge.status == "succeeded":
+                logging.warning("Payment succeeded")
+                event_registration.reserved = True
+                event_registration.stripe_fee = stripe_fee
+
+                # Update event planner wallet
+                event_planner_wallet = event.user.wallet
+                event_planner_wallet.balance = event_planner_wallet.balance + amount
+                event_planner_wallet.save()
+
+
+            event_registration.amount_paid = amount
             event_registration.charge_id = charge.id
             event_registration.payment_status = charge.status
             event_registration.save()
@@ -439,10 +464,23 @@ class CardPaymentViewset(APIView):
             send_notification(notification_type="new_reservation", obj=event_registration)
             return Response(charge, status=status.HTTP_200_OK)
 
-        except ObjectDoesNotExist as e:
+        except Event.DoesNotExist as e:
             return Response(
-                {"error": "Please enter valid IDs"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Please enter valid event ID"}, status=status.HTTP_400_BAD_REQUEST
             )
 
+        except BottleService.DoesNotExist as e:
+            return Response(
+                {"error": "Please enter valid bottle service ID"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def calculate_stripe_fee(amount):
+    fee_percentage = 0.029  # 2.9% fee for credit card payments in the US
+    fixed_fee = 0.30  # $0.30 fixed fee for credit card payments in the US
+
+    fee = (amount * fee_percentage) + fixed_fee
+    return fee

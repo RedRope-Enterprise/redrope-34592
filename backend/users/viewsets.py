@@ -389,20 +389,32 @@ class WithdrawalView(APIView):
             stripe_connect_account_id = user.stripe_connect_account_id
             stripe_bank_account_id = user.stripe_bank_account_id
 
-            payout = stripe.Payout.create(
+            if user.stripe_customer_id is None:
+
+                customer = stripe.Customer.create(
+                    email=user.email
+                )
+                user.stripe_customer_id = customer.id
+                user.save()
+            
+            # bank = stripe.Customer.create_source(
+            #     user.stripe_customer_id,
+            #     source="btok_1N9uilAKubeEoNjCePW51vHi",
+            #     )
+            transfer = stripe.Transfer.create(
                 amount=int(amount * 100), # Convert the amount to cents
                 currency="usd",
-                destination=stripe_bank_account_id,
-                stripe_account=stripe_connect_account_id,
+                source_type="bank_account",
+                destination=stripe_connect_account_id
             )
             withdrawal = Withdrawal.objects.create(
                 user=user,
-                payout_id=payout.id,
-                amount=payout.amount,
-                currency=payout.currency
+                payout_id=transfer.id,
+                amount=transfer.amount,
+                currency=transfer.currency
             )
             withdrawal_data = WithdrawalSerializer(withdrawal).data
-            return Response({'detail': 'Payout successful', 'withdrawal': withdrawal_data}, status=HTTP_200_OK)
+            return Response({'detail': 'Transfer successful', 'withdrawal': transfer}, status=HTTP_200_OK)
 
         except Exception as e:
             return Response({'detail': str(e)}, status=HTTP_400_BAD_REQUEST)
@@ -426,14 +438,93 @@ class AccountBalanceView(APIView):
         
         try:
             user = request.user
-            stripe_account_id = user.stripe_connect_account_id
-            if not stripe_account_id:
-                return Response({'detail': 'User does not have a Stripe Connect Account'}, status=HTTP_400_BAD_REQUEST)
+            # stripe_account_id = user.stripe_connect_account_id
+            # if not stripe_account_id:
+            #     return Response({'detail': 'User does not have a Stripe Connect Account'}, status=HTTP_400_BAD_REQUEST)
 
             # Retrieve the Stripe Connect account balance
-            balance = stripe.Balance.retrieve(stripe_account=stripe_account_id)
+            # balance = stripe.Balance.retrieve(stripe_account=stripe_account_id)
 
-            return Response({'account_id': stripe_account_id, 'balance': balance}, status=HTTP_200_OK)
+            return Response({'balance': user.wallet.balance}, status=HTTP_200_OK)
+            # ----------------------------------------------------------
+            # Retrieve user's bank account details from the request
+            # account_number = "000123456789"
+            # routing_number = "110000000"
+            # account_holder_name = "Jenny Rosen"
+            # amount = 100  # The amount to transfer
+
+            # try:
+            #     user = request.user
+            #     if user.stripe_customer_id is None:
+
+            #         customer = stripe.Customer.create(
+            #             email=user.email
+            #         )
+
+            #         user.stripe_customer_id = customer.id
+            #         user.save()
+
+            #     # Create a new bank account token using the user's details
+            #     token = stripe.Token.create(
+            #         bank_account={
+            #             'country': 'US',
+            #             'currency': 'usd',
+            #             'account_number': account_number,
+            #             'routing_number': routing_number,
+            #             'account_holder_name': account_holder_name,
+            #             'account_holder_type': 'individual',  # Specify the account holder type: 'company' or 'individual'
+            #             'usage': 'source',  # Validate the bank account at creation time
+            #         }
+            #     )
+            #     # Attach the bank account to a customer
+            #     # bank_account = stripe.Customer.create_source(
+            #     #     user.stripe_customer_id,
+            #     #     source=token.id
+            #     # )
+
+            #     # Retrieve customer
+            #     # customer = stripe.Customer.retrieve(user.stripe_customer_id)
+
+            #     # Retrieve the customer with expanded sources
+            #     customer_sources = stripe.Customer.retrieve(
+            #         user.stripe_customer_id,
+            #         expand=['sources']
+            #     )
+
+            #     # Extract the bank accounts from the customer's sources
+            #     bank_accounts = [
+            #         source for source in customer_sources.sources.data if source.object == 'bank_account'
+            #     ]
+            #     # Retrieve customer source
+            #     bank_account = bank_accounts[0]
+
+            #     # # Retrieve the bank account object and Verify the bank account by checking its status
+            #     if not bank_account.status == 'verified':
+            #         try:
+            #             bank_account.verify(amounts=[32, 45])
+            #         except stripe.error.StripeError as e:
+            #             # Handle any Stripe API errors
+            #             return Response({'error': 'Bank account verification failed'})
+                
+            #     # Initiate the transfer using the token and amount
+            #     transfer = stripe.Transfer.create(
+            #         amount=int(amount * 100),  # Amount in cents
+            #         currency='usd',
+            #         source_type='bank_account',
+            #         # source=bank_account.id,
+            #         destination='acct_1N3PO4PD41jAzQMs',  # Use the default bank account for your Stripe account
+            #     )
+
+            #         # Transfer was successful
+            #     return Response({'message': 'Transfer successful', 'transfer':transfer})
+            # except stripe.error.StripeError as e:
+            #     # Handle any Stripe API errors
+            #     return Response({'error': str(e)})
+
+            # except Exception as e:
+            #     # Handle other exceptions
+            #     return Response({'error': str(e)})
+            # --------------------------------------------------------------
         except Exception as e:
             return Response({'detail': 'Error retrieving account balance: {}'.format(e)}, status=HTTP_400_BAD_REQUEST)
         

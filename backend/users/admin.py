@@ -3,7 +3,7 @@ from push_notifications.models import GCMDevice
 # from django.contrib.admin import SimpleListFilter
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
-
+from users.models import UserWallet
 from users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
@@ -28,6 +28,10 @@ class UserRoleFilter(admin.SimpleListFilter):
         if self.value() == "ordinary_user":
             # Get websites that don't have any pages.
             return queryset.distinct().filter(event_planner=False)
+
+
+class UserWalletInline(admin.TabularInline):
+    model = UserWallet
 
 
 @admin.register(User)
@@ -61,3 +65,7 @@ class UserAdmin(auth_admin.UserAdmin):
     ) + auth_admin.UserAdmin.fieldsets
     list_display = ["username", "name", "event_planner", "is_superuser", "date_joined"]
     search_fields = ["name"]
+
+    inlines = [
+        UserWalletInline
+    ]
