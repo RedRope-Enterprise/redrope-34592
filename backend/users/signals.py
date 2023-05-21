@@ -1,7 +1,8 @@
 from django.db.models.signals import post_save
+from push_notifications.models import GCMDevice
 from django.dispatch import receiver
 from django.conf import settings
-from users.models import User
+from users.models import User, UserWallet
 import logging
 import stripe
 
@@ -14,6 +15,7 @@ def user_signed_up(sender, instance, created, **kwargs):
 
     if created:
         try:
+            wallet = UserWallet.objects.create(user=instance)
             account = stripe.Account.create(
                 type='custom',
                 country='US',
@@ -30,3 +32,17 @@ def user_signed_up(sender, instance, created, **kwargs):
         except Exception as e:
             raise Exception(e)
 
+
+
+@receiver(post_save, sender=GCMDevice)
+def device_registered(sender, instance, created, **kwargs):
+    """Create device profile after signup"""
+    try:
+
+        if created:
+            user_profile = instance.user
+            user_profile.subscribed_push_notification = True
+            user_profile.save()
+
+    except Exception as e:
+        raise Exception(e)

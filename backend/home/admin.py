@@ -34,6 +34,7 @@ class UserEventRegistrationAdmin(admin.ModelAdmin):
         "reserved",
         "amount_paid",
         "amount_left",
+        "stripe_fee",
         "charge_id",
         "updated_at",
     )

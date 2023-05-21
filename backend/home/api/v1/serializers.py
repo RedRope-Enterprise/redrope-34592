@@ -207,6 +207,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "address_latitude",
             "stripe_customer_id",
             "stripe_connect_account_id",
+            "subscribed_push_notification",
             "stripe_bank_account_id",
             "is_stripe_complete",
             "phone",
@@ -218,7 +219,8 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
             "email", 
             "event_planner",
             "stripe_customer_id",
-            "stripe_connect_account_id"
+            "stripe_connect_account_id",
+            "subscribed_push_notification",
             )
 
         extra_kwargs = {

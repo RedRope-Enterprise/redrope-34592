@@ -20,7 +20,7 @@ class AboutUs(BaseModel):
     body = models.TextField(_("Content Body"))
 
     class Meta:
-        verbose_name_plural = "About us"
+        verbose_name_plural = "About Us"
 
 
 class FAQ(BaseModel):
@@ -181,9 +181,9 @@ class UserEventRegistration(BaseModel):
     charge_id = models.CharField(
         _("Charge ID"), max_length=50, blank=True, null=True
     )
-    # transaction_id = models.CharField(
-    #     _("Transaction ID"), max_length=50, blank=True, null=True
-    # )
+    stripe_fee = models.CharField(
+        _("Stripe Fee"), max_length=50, blank=True, null=True
+    )
     payment_status = models.CharField(
         _("Payment Status"),
         max_length=50,
@@ -203,6 +203,8 @@ class UserEventRegistration(BaseModel):
 
 
     class Meta:
+        verbose_name_plural = "Event Registrations"
+        
         unique_together = ["user", "event"]
 
 
@@ -238,6 +240,9 @@ class BottleService(BaseModel):
     person = models.PositiveIntegerField(_("Number of persons"), default=1)
     desc = models.TextField(_("Description"), blank=True, null=True)
 
+    class Meta:
+        verbose_name_plural = "Bottle Services"
+
 
 class FavoriteEvent(BaseModel):
     user = models.ForeignKey(
@@ -255,4 +260,6 @@ class FavoriteEvent(BaseModel):
     notification = GenericRelation(Notification)
 
     class Meta:
+        verbose_name_plural = "Favorite Events"
+
         unique_together = ["user", "event"]

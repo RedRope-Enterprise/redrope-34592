@@ -48,6 +48,7 @@ class User(AbstractUser):
     address_latitude = models.DecimalField(max_digits=22, decimal_places=16, null=True)
     event_planner = models.BooleanField(_("Event planner"), default=False)
     is_stripe_complete = models.BooleanField(_("Is Stripe Complete"), default=False)
+    subscribed_push_notification = models.BooleanField(_("Subscribed For Push-Notification"), default=False)
     business_name = models.CharField(
         _("Business name"), max_length=100, blank=True, null=True
     )
@@ -70,6 +71,14 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
 
+
+class UserWallet(models.Model):
+    user = models.OneToOneField('users.User', related_name="wallet", on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - ${self.balance}"
+    
 
 class BankAccount(models.Model):
     user = models.OneToOneField('users.User', related_name="bank_account", on_delete=models.CASCADE)

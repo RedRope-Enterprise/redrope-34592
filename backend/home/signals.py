@@ -149,7 +149,7 @@ def new_user_feedback(sender, instance, created, **kwargs):
             email_body = f"<p>{instance.user.name} sent in a new feedback, click the link below for details.</p>"
             email_body += f"<p>https://redrope-34592.botics.co/home/feedbacksupport/{instance.id}/change/</p>"
             data = {'email_body': email_body, 'to_emails': admin_emails,
-                        'email_subject': 'Feedback Recieved'}
+                        'email_subject': 'Feedback Received'}
             HelperClass.send_email(data)
 
         except Exception as e:
