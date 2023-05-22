@@ -93,8 +93,8 @@ const AddNewEventScreen = () => {
   }
 
   const onCreateEventPress = async () => {
-    let originalDate = moment(eventDate, 'MM-DD-YYYY');
-    let newDate = originalDate.format('YYYY-MM-DD');
+    let originalDate = moment(eventDate, "MM-DD-YYYY")
+    let newDate = originalDate.format("YYYY-MM-DD")
 
     setLoading(true)
     const fromData = new FormData()
@@ -153,8 +153,8 @@ const AddNewEventScreen = () => {
   }
 
   const onUpdateEventPressed = async () => {
-    let originalDate = moment(eventDate, 'MM-DD-YYYY');
-    let newDate = originalDate.format('YYYY-MM-DD');
+    let originalDate = moment(eventDate, "MM-DD-YYYY")
+    let newDate = originalDate.format("YYYY-MM-DD")
 
     setLoading(true)
     const fromData = new FormData()
@@ -181,7 +181,8 @@ const AddNewEventScreen = () => {
     })
 
     categories.forEach(element => {
-      fromData.append("categories", element.id)
+      debugger
+      if (element.isEnabled === true) fromData.append("categories", element.id)
     })
 
     try {

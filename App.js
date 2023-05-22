@@ -7,6 +7,8 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { screens } from "@screens"
 import { modules, hooks, initialRoute } from "@modules"
 import { connectors } from "@store"
+import Toast from 'react-native-toast-message';
+
 
 import configureStore from "@store/custom/Store"
 import { PersistGate } from "redux-persist/integration/react"
@@ -72,6 +74,7 @@ const App = () => {
         {/* <MainLoader /> */}
         {/* <MainSnackbarAlert /> */}
       </PersistGate>
+      <Toast />
     </Provider>
   )
 }

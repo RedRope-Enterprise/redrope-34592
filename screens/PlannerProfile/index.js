@@ -17,6 +17,8 @@ import { useNavigation } from "@react-navigation/native"
 import ImagePicker from "react-native-image-crop-picker"
 import { getUser, updateUser } from "../../services/user"
 import { getBankAccount } from "../../services/Payment"
+import ImgLocation from "../../assets/images/location.png"
+
 
 import {
   getDataStorage,
@@ -289,7 +291,7 @@ Please setup your profile`}
               iconLeft={
                 <Image
                   style={{ width: 24, height: 24, margin: 10 }}
-                  source={require("../../assets/images/login_signup/web.png")}
+                  source={ImgLocation}
                 />
               }
               iconRight={

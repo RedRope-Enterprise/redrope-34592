@@ -15,6 +15,7 @@ import NavigationHeader from "../../components/NavigationHeader"
 import { Button, Input, CustomModal } from "../../components"
 import { submitFeedback } from "../../services/feedbackSupport"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import Toast from "react-native-toast-message"
 
 const FeedbackSupportScreen = () => {
   const [feedback, setFeedback] = useState("")
@@ -27,6 +28,11 @@ const FeedbackSupportScreen = () => {
     if (resp) {
       setFeedback("")
       setMessage("")
+      Toast.show({
+        type: "success",
+        text1: "Feedback sent",
+        text2: "Thanks for the feedback 👋"
+      })
     }
   }
 

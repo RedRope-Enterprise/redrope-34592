@@ -50,7 +50,7 @@ const MyBookingsScreen = () => {
     const events = await getMyEvents()
     console.log("MY events ", events)
 
-    if (events) setMyBookings(events.results)
+    if (events) setMyBookings(events.results.reverse())
   }
 
   React.useEffect(() => {

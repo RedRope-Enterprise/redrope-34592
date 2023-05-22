@@ -48,6 +48,7 @@ import {
   CardForm
 } from "@stripe/stripe-react-native"
 import { createCard, deleteCard } from "../../services/Payment"
+import Toast from "react-native-toast-message"
 
 const { width, height } = Dimensions.get("window")
 const popoverWidth = width * 0.6
@@ -193,12 +194,14 @@ const AddNewCardScreen = () => {
               {renderItem(ImgCalendar, "Expiry Date", setDate, date)}
               {renderItem(ImgLock, "CVV", setCvv, cvv)} */}
               <CardField
-              dangerouslyGetFullCardDetails={true}
+                dangerouslyGetFullCardDetails={true}
                 postalCodeEnabled={false}
-                cardStyle={ Platform.OS !== "android" && {
-                  backgroundColor: Colors.NETURAL_5,
-                  textColor: Colors.WHITE
-                }}
+                cardStyle={
+                  Platform.OS !== "android" && {
+                    backgroundColor: Colors.NETURAL_5,
+                    textColor: Colors.WHITE
+                  }
+                }
                 style={[styles.itemContainer]}
                 onCardChange={cardDetails => {
                   setCard(cardDetails)
@@ -236,12 +239,25 @@ const AddNewCardScreen = () => {
                 loading={isLoading}
                 onPress={async () => {
                   try {
-                    setIsLoading(true);
+                    setIsLoading(true)
                     const token = await createToken({ type: "Card", ...card })
-                    const result = await createCard({ token: token.token.id })
-                    setIsLoading(false);
-
-                    navigation.goBack()
+                    try {
+                      const result = await createCard({ token: token.token.id })
+                      Toast.show({
+                        type: "success",
+                        text1: "Payment method",
+                        text2: "Card Added! 👋"
+                      })
+                      navigation.goBack()
+                    } catch (error) {
+                      Toast.show({
+                        type: "error",
+                        text1: "Unable to add card",
+                        text2: "Please try again"
+                      })
+                      setIsLoading(false)
+                    }
+                    setIsLoading(false)
                   } catch (e) {}
                 }}
               >

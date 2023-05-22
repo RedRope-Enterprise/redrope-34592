@@ -173,6 +173,16 @@ const PlannerProfileEditScreen = () => {
 
   setupUserProfile = async () => {
     const data = new FormData()
+    let formatedWebsite = ""
+
+    if (!/^https?:\/\//i.test(website) && !/^www\./i.test(website)) {
+      formatedWebsite = "https://www." + website
+    } else if (!/^https?:\/\//i.test(website)) {
+      formatedWebsite = "https://" + website
+    } else {
+      formatedWebsite = website
+    }
+
     data.append("name", name)
     data.append("bio", about)
     data.append("profile_picture", {
@@ -180,7 +190,7 @@ const PlannerProfileEditScreen = () => {
       type: "image/jpeg",
       name: Date.now() + "photo.jpg"
     })
-    data.append("website", website)
+    data.append("website", formatedWebsite)
     data.append("business_name", bName)
     data.append("phone", phone)
     data.append("address_longitude", "-73.935242"),
@@ -350,6 +360,7 @@ Please setup your profile`}
         <Input
           editable={!profileView}
           width={"90%"}
+          autoCapitalize={"none"}
           onChangeText={value => setWebsite(value)}
           value={website}
           placeholder={profileView ? "..." : "Enter website"}

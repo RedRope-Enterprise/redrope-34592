@@ -194,8 +194,6 @@ const ConnectBankAccount = () => {
       <View style={{ alignItems: "center", marginBottom: "5%" }}>
         <Button
           disabled={
-            !swift ||
-            !iban ||
             !accountName ||
             !accountNumber ||
             !bankName ||

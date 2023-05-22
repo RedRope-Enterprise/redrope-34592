@@ -94,33 +94,43 @@ const HomeEventItem = props => {
               )}
             </View>
 
-            <View style={{ flexDirection: "row", marginTop: "2%", flex: 1 }}>
-              {event?.event_categories?.[0] && (
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderColor: Colors.WHITE,
-                    borderRadius: 10,
-                    marginRight: "3%",
-                    height: 30
-                  }}
-                >
-                  <Text style={{ color: Colors.WHITE, margin: 5 }}>
-                    {event?.event_categories?.length > 0
-                      ? event?.event_categories[0].name
-                      : ""}
-                  </Text>
-                </View>
-              )}
+            <View style={{ flexDirection: "row", marginTop: "2%" }}>
+              {event?.event_categories?.[0] &&
+                event?.event_categories.map(item => {
+                  return (
+                    <View
+                      style={{
+                        borderWidth: 1,
+                        borderColor: Colors.WHITE,
+                        borderRadius: 10,
+                        marginRight: "3%",
+                        height: 30
+                      }}
+                    >
+                      <Text style={{ color: Colors.WHITE, margin: 5 }}>
+                        {event?.event_categories?.length > 0 ? item.name : ""}
+                      </Text>
+                    </View>
+                  )
+                })}
+            </View>
 
+            <View
+              style={{
+                flex: 1
+              }}
+            >
               <View
                 style={{
+                  height: "20%",
+                  width: "30%",
                   borderColor: Colors.WHITE,
                   borderRadius: 10,
                   backgroundColor: Colors.NETURAL_4,
-                  height: 30,
+                  justifyContent: "center",
                   alignItems: "center",
-                  justifyContent: "center"
+                  marginVertical: 5
+
                 }}
               >
                 <Text
