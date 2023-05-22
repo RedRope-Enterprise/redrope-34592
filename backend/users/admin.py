@@ -56,7 +56,9 @@ class UserAdmin(auth_admin.UserAdmin):
                     "address_longitude",
                     "address_latitude",
                     "event_planner",
+                    "is_stripe_complete",
                     "stripe_connect_account_id",
+                    "stripe_customer_id",
                     "business_name",
                     "business_reg_no",
                 )
@@ -64,7 +66,7 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
     ) + auth_admin.UserAdmin.fieldsets
     list_display = ["username", "name", "event_planner", "is_superuser", "date_joined"]
-    search_fields = ["name"]
+    search_fields = ["name", "username", "email", "phone"]
 
     inlines = [
         UserWalletInline

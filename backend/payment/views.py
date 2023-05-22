@@ -16,7 +16,7 @@ class CardsAPIView(APIView):
     def get(self, request, format=None):
         try:
             if request.user.stripe_customer_id is None:
-                raise exceptions.NotFound("No cards saved")
+                raise exceptions.NotFound("No cards saved.")
 
             cards = stripe.Customer.list_sources(
                 request.user.stripe_customer_id,
@@ -26,7 +26,7 @@ class CardsAPIView(APIView):
             return Response(cards)
         except Exception as e:
             print(e)
-            return Response({"error": e.detail})
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         serializer = CustomerCardTokenSerializer(data=request.data)
