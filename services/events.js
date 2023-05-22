@@ -79,6 +79,11 @@ async function registerForEvent(payload) {
   return response.data
 }
 
+async function getRegistedEvent(id) {
+  const response = await api.get(`/api/v1/events/register-event/${id}/`, {})
+  return response.data
+}
+
 async function activeDeactiveEvent(payload) {
   console.log("payload ", payload)
   const response = await api.put(
@@ -115,5 +120,6 @@ export {
   activeDeactiveEvent,
   deleteEvent,
   updateEvent,
-  updateBottleService
+  updateBottleService,
+  getRegistedEvent
 }

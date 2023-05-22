@@ -38,6 +38,7 @@ const MyBookingsScreen = () => {
   const navigation = useNavigation()
   const [searchValue, setSearchValue] = useState("")
   const [myBookings, setMyBookings] = useState([])
+  const [searchedEvents, setSearchedEvents] = useState([])
 
   const [user, setUser] = useState()
 
@@ -50,7 +51,7 @@ const MyBookingsScreen = () => {
     const events = await getMyEvents()
     console.log("MY events ", events)
 
-    if (events) setMyBookings(events.results.reverse())
+    if (events) setMyBookings(events.results)
   }
 
   React.useEffect(() => {
@@ -62,6 +63,23 @@ const MyBookingsScreen = () => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe
   }, [navigation])
+
+  SearchForEvent = value => {
+    setSearchValue(value)
+    let searchResult = []
+    if (value.length >= 3) {
+      myBookings.forEach(event => {
+        console.log("event ", event)
+        if (event.event_title.toLowerCase().includes(value.toLowerCase())) {
+          searchResult.push(event)
+        }
+      })
+
+      setSearchedEvents(searchResult)
+    } else {
+      setSearchedEvents([])
+    }
+  }
 
   const getUser = async () => {
     let u = global.user
@@ -112,7 +130,7 @@ const MyBookingsScreen = () => {
             placeholder={"Search my events"}
             placeholderTextColor={Colors.NETURAL_2}
             value={searchValue}
-            onChangeText={value => setSearchValue(value)}
+            onChangeText={value => SearchForEvent(value)}
           />
         </View>
 
@@ -123,8 +141,8 @@ const MyBookingsScreen = () => {
           }}
           contentContainerStyle={{ paddingRight: 10 }}
           numColumns={1}
-          data={myBookings}
-          extraData={myBookings}
+          data={searchValue.length >= 3 ? searchedEvents : myBookings}
+          extraData={searchedEvents}
           renderItem={({ item }) => (
             <UserBookingsItem
               event={item}

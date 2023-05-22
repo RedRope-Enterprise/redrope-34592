@@ -10,4 +10,4 @@ export const validateEmail = new RegExp(
 export const HOME_SCREEN_NAME = "Onboarding"
 
 export const STRIPE_PUBLISHABLE =
-  "pk_test_51J3gNzElVGmWobJEwGVOIGJFfP7oFitNfbKZfNvPfxudzCIrt9EdZJ2SynayDVhY67y11RxFAq1Q5xaNHGRZqL9000NU3V0Syb"
+  "pk_live_51L1JAlAKubeEoNjCWQ8Sc280YOQ1EovPW9MmLY9dGj0aTCftQANAjhBqcCnNspd40UnpQUmSQSXIs85MHD0AZ18X00WK5WVNko"

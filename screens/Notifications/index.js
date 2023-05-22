@@ -26,6 +26,7 @@ import { unwrapResult } from "@reduxjs/toolkit"
 const { width, height } = Dimensions.get("window")
 import { SwipeListView } from "react-native-swipe-list-view"
 import { getAllNotifications } from "../../services/notifications"
+import { getRegistedEvent, getEventDetails } from "../../services/events"
 import moment from "moment"
 
 const NotificationScreen = () => {
@@ -45,7 +46,20 @@ const NotificationScreen = () => {
     const parts = notification?.verb?.split(" is")
 
     return (
-      <TouchableOpacity style={{ flex: 1 }}>
+      <TouchableOpacity
+        style={{ flex: 1 }}
+        onPress={async () => {
+          if (notification.notification_type == "new_event")
+            navigation.navigate("Home")
+          if (notification.notification_type == "interest_in_event") {
+            const eventRes = await getRegistedEvent(notification.reservation_id)
+            const event = await getEventDetails(eventRes.event)
+            navigation.navigate("EventDetails", { event })
+          }
+          // get event by reservation_id
+          // go to event details
+        }}
+      >
         <View
           style={{
             flex: 1,
@@ -54,7 +68,16 @@ const NotificationScreen = () => {
             marginVertical: "3%"
           }}
         >
-          <Image style={{}} source={{uri : notification.sender_avatar}} />
+          <Image
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 1000,
+              borderWidth: 1,
+              borderColor: "white"
+            }}
+            source={{ uri: notification.sender_avatar }}
+          />
 
           <View
             style={{
@@ -93,7 +116,9 @@ const NotificationScreen = () => {
             marginRight: "5%"
           }}
         >
-          {moment(notification.created_at).fromNow()}
+          {moment(notification?.created_at, "MM-DD-YYYY HH:mm")
+            .local()
+            .fromNow()}
         </Text>
 
         <View

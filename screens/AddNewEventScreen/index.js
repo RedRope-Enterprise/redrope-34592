@@ -118,7 +118,7 @@ const AddNewEventScreen = () => {
     })
 
     categories.forEach(element => {
-      fromData.append("categories", element.id)
+      if (element.isEnabled === true) fromData.append("categories", element.id)
     })
 
     try {
@@ -181,7 +181,6 @@ const AddNewEventScreen = () => {
     })
 
     categories.forEach(element => {
-      debugger
       if (element.isEnabled === true) fromData.append("categories", element.id)
     })
 
@@ -330,7 +329,7 @@ const AddNewEventScreen = () => {
                   { color: Colors.WHITE, marginTop: "2%" }
                 ]}
               >
-                upload photo (max 20)
+                upload photo
               </Text>
             </>
           )}

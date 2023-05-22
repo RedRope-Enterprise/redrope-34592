@@ -75,6 +75,8 @@
 		D57D6A657EBA4B49898FE5B1 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		DB80355DC6414944A4C69304 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		E0FCF8A4A9F0DC9CDDA64387 /* Pods-redrope_34592-redrope_34592Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; path = "Target Support Files/Pods-redrope_34592-redrope_34592Tests/Pods-redrope_34592-redrope_34592Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		E66D05082A1BEC3B006DA238 /* libGoogleSignIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGoogleSignIn.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E66D050A2A1BEC4A006DA238 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EFFEADCC954B4B26AAE7A348 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +163,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E66D050A2A1BEC4A006DA238 /* libRNGoogleSignin.a */,
+				E66D05082A1BEC3B006DA238 /* libGoogleSignIn.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				AA3BB5D041E92F53EEC83573 /* libPods-redrope_34592.a */,
 				B1894FF7D648350536224B8A /* libPods-redrope_34592-redrope_34592Tests.a */,

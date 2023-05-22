@@ -41,6 +41,7 @@ import VisaIcon from "../../assets/images/payment/visa.png"
 import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 import BigCardDesign from "../../components/BigCard"
 import { getCardsList } from "../../services/Payment"
+import Toast from "react-native-toast-message"
 
 import { data } from "../../data"
 
@@ -52,12 +53,21 @@ const CardsScreen = () => {
   const [data, setData] = useState([])
 
   async function getCardsData(params = "") {
-    setLoading(true)
-    let response = await getCardsList(params)
-    console.log("Cards List: ", JSON.stringify(response, null, 2))
-    setLoading(false)
-    setData([])
-    setData(response.data)
+    try {
+      setLoading(true)
+      let response = await getCardsList(params)
+      console.log("Cards List: ", JSON.stringify(response, null, 2))
+      setLoading(false)
+      setData([])
+      setData(response.data)
+    } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "Unable to get cards",
+        text2: "Please try again"
+      })
+      setLoading(false)
+    }
   }
 
   useFocusEffect(
