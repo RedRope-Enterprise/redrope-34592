@@ -234,7 +234,7 @@ const EventMenuScreen = () => {
             itemWidth={sliderWidth}
           />
           <NavigationHeader
-            showLeftBtn1={true}
+            // showLeftBtn1={true}
             // showLeftBtn2={true}
           ></NavigationHeader>
           {pagination()}

@@ -129,6 +129,11 @@ const PaymentScreen = () => {
                   } else {
                     // Use the payment result for further processing
                     console.log("Payment succeeded:", paymentResult)
+                    let response = await makeReservation({
+                      event: event?.id,
+                      attendee: attendeeCount,
+                      bottle_service: event?.bottle_services[0].id
+                    })
                   }
                 } catch (error) {
                   console.log("error ", error)

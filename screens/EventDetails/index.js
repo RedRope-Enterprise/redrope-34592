@@ -11,6 +11,8 @@ import {
   ScrollView,
   ActivityIndicator
 } from "react-native"
+import Share from "react-native-share"
+
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal, LoaderComponent } from "../../components"
 import { Colors, Typography, Mixins } from "../../styles"
@@ -88,8 +90,13 @@ const EventDetailsScreen = () => {
         showLeftBtn2={!global?.user?.event_planner}
         iconRight2={isFavEvent ? Like : HeartImg}
         onLeftBtn1={async () => {
-        
-          console.log("adding to favt resp ")
+          Share.open({ message: "How a look at https://redrope.com" })
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              err && console.log(err)
+            })
         }}
         onLeftBtn2={async () => {
           if (isFavEvent) {

@@ -120,7 +120,7 @@ const TableConfirmScreen = () => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
-        showLeftBtn1={true}
+        // showLeftBtn1={true}
         // showLeftBtn2={true}
         // onLeftBtn2={async () => {
         //   if (isFavEvent) {

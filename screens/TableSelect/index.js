@@ -50,7 +50,6 @@ const TableSelectScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
-        showLeftBtn1={true}
         // showLeftBtn2={true}
       ></NavigationHeader>
       <View style={{ justifyContent: "center", alignContent: "center" }}>
