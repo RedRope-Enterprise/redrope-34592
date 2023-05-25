@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  web:
+  web_rr:
     depends_on:
       - postgres
       - redis
