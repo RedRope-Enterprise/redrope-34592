@@ -103,8 +103,25 @@ const SignupScreen = ({}) => {
           })
         )
           .then(unwrapResult)
-          .then(res => {
-            if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+          .then(async res => {
+            console.log("signup data ", res)
+
+            if (res.error) {
+              Alert.alert("INFO", res.error)
+              return
+            }
+            setDataStorage("@key", res?.token)
+            setDataStorage("@user", res.user ? res.user : res)
+
+            res.user ? (global.user = res.user) : res
+
+            if (res.user.event_planner) {
+              navigation.navigate("PlannerProfileEdit")
+            } else {
+              navigation.navigate("Profile", {
+                initialSetup: true
+              })
+            }
           })
       }
     } catch (err) {
@@ -130,8 +147,25 @@ const SignupScreen = ({}) => {
         })
       )
         .then(unwrapResult)
-        .then(res => {
-          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        .then(async res => {
+          console.log("signup data ", res)
+
+          if (res.error) {
+            Alert.alert("INFO", res.error)
+            return
+          }
+          setDataStorage("@key", res?.token)
+          setDataStorage("@user", res.user ? res.user : res)
+
+          res.user ? (global.user = res.user) : res
+
+          if (res.user.event_planner) {
+            navigation.navigate("PlannerProfileEdit")
+          } else {
+            navigation.navigate("Profile", {
+              initialSetup: true
+            })
+          }
         })
     } catch (err) {
       if (err.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -156,8 +190,25 @@ const SignupScreen = ({}) => {
         })
       )
         .then(unwrapResult)
-        .then(res => {
-          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        .then(async res => {
+          console.log("signup data ", res)
+
+          if (res.error) {
+            Alert.alert("INFO", res.error)
+            return
+          }
+          setDataStorage("@key", res?.token)
+          setDataStorage("@user", res.user ? res.user : res)
+
+          res.user ? (global.user = res.user) : res
+
+          if (res.user.event_planner) {
+            navigation.navigate("PlannerProfileEdit")
+          } else {
+            navigation.navigate("Profile", {
+              initialSetup: true
+            })
+          }
         })
     } catch (err) {
       console.log(JSON.stringify(err))

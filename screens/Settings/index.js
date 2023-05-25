@@ -9,7 +9,8 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  Platform
 } from "react-native"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Button, Input, CustomModal } from "../../components"
@@ -62,12 +63,12 @@ const SettingsScreen = () => {
     },
     { key: 2, text: "FAQ", onPress: () => navigation.navigate("FAQ") },
     {
-      key: 1,
+      key: 3,
       text: "Feedback & Support",
       onPress: () => navigation.navigate("FeedbackSupport")
     },
     {
-      key: 1,
+      key: 4,
       text: "Terms and Conditions",
       onPress: () =>
         navigation.navigate("CustomWebView", {
@@ -75,14 +76,14 @@ const SettingsScreen = () => {
         })
     },
     {
-      key: 1,
+      key: 5,
       text: "Privacy Policy",
       onPress: () =>
         navigation.navigate("CustomWebView", {
           url: "https://app.termly.io/document/privacy-policy/ffe5e1d0-ab91-4d33-956c-57bdbdd99d59"
         })
     },
-    { key: 1, text: "About us", onPress: () => navigation.navigate("AboutUs") }
+    { key: 6, text: "About us", onPress: () => navigation.navigate("AboutUs") }
   ]
 
   return (
@@ -108,6 +109,8 @@ const SettingsScreen = () => {
         </View>
 
         {settingsMenu.map(menuItem => {
+          if(menuItem.key == 1 && !user?.event_planner && Platform.OS === "ios")
+            return null
           return (
             <TouchableOpacity
               style={styles.menuItem}

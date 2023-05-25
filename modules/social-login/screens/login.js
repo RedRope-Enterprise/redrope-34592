@@ -86,8 +86,14 @@ const LoginScreen = ({}) => {
           })
         )
           .then(unwrapResult)
-          .then(res => {
-            if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+          .then(async res => {
+            await setDataStorage("@key", res?.token)
+            await setDataStorage("@user", res?.user)
+
+            global.user = res?.user
+            if (global.user.event_planner) {
+              navigation.replace("EventPlannerDashboard")
+            } else navigation.replace("Dashboard")
           })
       }
     } catch (err) {
@@ -112,8 +118,14 @@ const LoginScreen = ({}) => {
         })
       )
         .then(unwrapResult)
-        .then(res => {
-          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        .then(async res => {
+          await setDataStorage("@key", res?.token)
+          await setDataStorage("@user", res?.user)
+
+          global.user = res?.user
+          if (global.user.event_planner) {
+            navigation.replace("EventPlannerDashboard")
+          } else navigation.replace("Dashboard")
         })
     } catch (err) {
       if (err.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -122,7 +134,7 @@ const LoginScreen = ({}) => {
     }
   }
 
-  const onAppleConnect = async (dispatch) => {
+  const onAppleConnect = async dispatch => {
     try {
       const signinFunction = Platform.select({
         ios: appleForiOS,
@@ -133,11 +145,18 @@ const LoginScreen = ({}) => {
       dispatch(
         appleLogin({
           id_token: result.id_token,
-          access_token: result.code  })
+          access_token: result.code
+        })
       )
         .then(unwrapResult)
-        .then(res => {
-          if (res.key) navigation.navigate(HOME_SCREEN_NAME)
+        .then(async res => {
+          await setDataStorage("@key", res?.token)
+          await setDataStorage("@user", res?.user)
+
+          global.user = res?.user
+          if (global.user.event_planner) {
+            navigation.replace("EventPlannerDashboard")
+          } else navigation.replace("Dashboard")
         })
     } catch (err) {
       console.log(JSON.stringify(err))

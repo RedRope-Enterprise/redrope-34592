@@ -1,6 +1,6 @@
 // Please, update the values below as instructed in the README.md file.
-export const GOOGLE_WEB_CLIENT_ID = "406178550116-491aoap2rnop4pq2qp6nmgcm2n9sfkp1.apps.googleusercontent.com"
-export const GOOGLE_IOS_CLIENT_ID = "406178550116-491aoap2rnop4pq2qp6nmgcm2n9sfkp1.apps.googleusercontent.com"
+export const GOOGLE_WEB_CLIENT_ID = "406178550116-u67m3j557g19k28j2du0gn1asa5n0hj7.apps.googleusercontent.com"
+export const GOOGLE_IOS_CLIENT_ID = "406178550116-77vb4vash5immvdpf1f17k28h8p6qsim.apps.googleusercontent.com"
 export const APPLE_SERVICE_ID = "H2VCZ2BX4G.org.reactjs.native.example.redrope-34592"
 export const APPLE_REDIRECT_CALLBACK =
   "https://your-app-here.com/accounts/apple/login/callback/"

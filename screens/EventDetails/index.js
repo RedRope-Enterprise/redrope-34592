@@ -87,6 +87,10 @@ const EventDetailsScreen = () => {
         showLeftBtn1={!global?.user?.event_planner}
         showLeftBtn2={!global?.user?.event_planner}
         iconRight2={isFavEvent ? Like : HeartImg}
+        onLeftBtn1={async () => {
+        
+          console.log("adding to favt resp ")
+        }}
         onLeftBtn2={async () => {
           if (isFavEvent) {
             const resp = await removeEventFromFavorite(favEventData?.id)

@@ -73,15 +73,20 @@ const PaymentScreen = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1)
 
   const { confirmPayment } = useConfirmPayment()
-  const { presentApplePay, confirmApplePayPayment } = useApplePay()
+  // const { presentApplePay, confirmApplePayPayment } = useApplePay()
+  const { canMakePayments, showApplePaySetup, presentApplePay } = useApplePay()
 
   async function getCardsData(params = "") {
-    setLoading(true)
-    let response = await getCardsList(params)
-    console.log(JSON.stringify(response.data, null, 2))
-    setLoading(false)
-    setData([])
-    setData(response.data)
+    try {
+      setLoading(true)
+      let response = await getCardsList(params)
+      console.log(JSON.stringify(response.data, null, 2))
+      setLoading(false)
+      setData([])
+      setData(response.data)
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   useFocusEffect(
@@ -99,57 +104,34 @@ const PaymentScreen = () => {
               setLoading(true)
               if (event?.id && event.bottle_services.length > 0) {
                 try {
-                  // let response = await createPaymentIntent({
-                  //   event: event?.id,
-                  //   attendee: attendeeCount,
-                  //   bottle_service: event?.bottle_services[0].id
-                  // })
-                  // console.log("customerid: ", JSON.stringify(response, null, 2))
-                  // console.log("client secret: ", response?.client_secret)
-                  // if (
-                  //   response.id &&
-                  //   response.client_secret &&
-                  //   response.amount
-                  // ) {
-                  // payment intent id
-
-                  const { error, paymentMethod } = await presentApplePay({
+                  // Create a payment request manually
+                  const paymentRequest = {
+                    currencyCode: "USD",
+                    country: "US",
+                    merchantCapabilities: ["supports3DS"],
+                    supportedNetworks: ["visa", "mastercard"],
                     cartItems: [
                       {
-                        label: "payment label",
-                        amount: "50", // amount as string
-                        type: "final"
+                        label: event?.title,
+                        amount: price,
+                        paymentType: "Immediate",
+
                       }
                     ],
-                    country: "US", // enter any country code supported by stripe,
-                    currency: "USD", // enter any currency supported by stripe,
-                  })
-                  if (error) {
-                    console.log("apple pay error ", error)
-                    Alert.alert(error.code, error.message)
-                  } else {
-                    setIsModalVisible(true)
-                    // const { error: confirmApplePayError } =
-                    //   await confirmApplePayPayment(response.client_secret)
-                    // if (confirmApplePayError) {
-                    //   Alert.alert(
-                    //     confirmApplePayError.code,
-                    //     confirmApplePayError.message
-                    //   )
-                    // } else {
-                    //   Alert.alert(
-                    //     "Success",
-                    //     "The payment was confirmed successfully!"
-                    //   )
-                    // }
+                    
                   }
 
-                  // let result = await confirmReservation({
-                  //   payment_intent_id: response.id
-                  // })
-                  // console.log(JSON.stringify(result, null, 2))
-                  // }
+                  const paymentResult = await presentApplePay(paymentRequest)
+
+                  if (paymentResult.error) {
+                    // Handle payment error
+                    console.log("Payment failed:", paymentResult.error)
+                  } else {
+                    // Use the payment result for further processing
+                    console.log("Payment succeeded:", paymentResult)
+                  }
                 } catch (error) {
+                  console.log("error ", error)
                   Alert.alert(
                     "Payment process",
                     "Unable to complete payment process at the moment. Pleae try again later."
@@ -180,7 +162,7 @@ const PaymentScreen = () => {
     )
   }
 
-  const renderCard = (card,index, title, icon, ) => {
+  const renderCard = (card, index, title, icon) => {
     return (
       <View style={[styles.center, { flexDirection: "row" }]}>
         <CheckBox
@@ -197,11 +179,9 @@ const PaymentScreen = () => {
           disabled={false}
           value={index === selectedCardIndex}
           onValueChange={newValue => {
-            if(newValue === false){
-            setSelectedCardIndex(-1)
-
-            }else
-              setSelectedCardIndex(index)
+            if (newValue === false) {
+              setSelectedCardIndex(-1)
+            } else setSelectedCardIndex(index)
           }}
         />
         <TouchableOpacity onPress={() => {}}>
@@ -262,20 +242,25 @@ const PaymentScreen = () => {
             Payment Method
           </Text>
         </View>
-        {Platform.os === "android" &&
+        {Platform.OS === "android" &&
           renderPaymentMethod("Google Pay", GoogleIcon)}
         {renderPaymentMethod("Apple Pay", AppleIcon)}
-        <View style={styles.subTitleContainer}>
-          <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
-            Pay with Debit/Credit Card
-          </Text>
-        </View>
-        {data?.map((cardItem, index) => {
-          return renderCard(cardItem, index)
-        })}
+        {Platform.OS === "android" && (
+          <View style={styles.subTitleContainer}>
+            <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
+              Pay with Debit/Credit Card
+            </Text>
+          </View>
+        )}
+        {Platform.OS === "android" &&
+          data?.map((cardItem, index) => {
+            return renderCard(cardItem, index)
+          })}
 
         <View style={styles.border}></View>
-        {data?.length == 0 && renderAddCardButton()}
+        {Platform.OS === "android" &&
+          data?.length == 0 &&
+          renderAddCardButton()}
       </ScrollView>
       <View style={styles.nextBtnContainer}>
         <Button
