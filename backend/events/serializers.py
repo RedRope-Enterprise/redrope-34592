@@ -167,6 +167,7 @@ class MyEventSerializer(serializers.ModelSerializer):
     event_bottle_service = serializers.SerializerMethodField()
     going_count = serializers.SerializerMethodField()
     event_price = serializers.SerializerMethodField()
+    event_id = serializers.CharField(source="event.id")
     event_title = serializers.CharField(source="event.title")
     location = serializers.CharField(source="event.location")
     date = serializers.CharField(source="event.start_date")
