@@ -27,6 +27,7 @@ from allauth.socialaccount.models import SocialAccount, SocialApp
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.viewsets import ModelViewSet
 from notifications.serializers import NotificationSerializer
+from rest_auth.registration.serializers import SocialLoginSerializer
 from push_notifications.models import GCMDevice
 from home.models import Event, Notification
 from home.api.v1.serializers import (
@@ -119,44 +120,76 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 # -------------------------------------------------------------------------------------
-class FacebookLogin(SocialLoginView):
-    permission_classes = (AllowAny,)
-    adapter_class = FacebookOAuth2Adapter
-    client_class = OAuth2Client
-    # serializer_class = CustomAppleSocialLoginSerializer
-
+class CustomSocialLoginView(SocialLoginView):
+    serializer_class = CustomSocialLoginSerializer
+    
+    
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
-        kwargs["context"] = self.get_serializer_context()
-        return serializer_class(*args, **kwargs)
-
+        kwargs['context'] = self.get_serializer_context()
+        serializer = serializer_class(*args, **kwargs)
+        serializer.context.update({"view": self})
+        return serializer
+    
     def post(self, request, *args, **kwargs):
         try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
             response = super().post(request, *args, **kwargs)
+            # post_save.send(sender=User, instance=user_instance, created=True)
             if response.status_code == 200:
                 cur_user = self.request.user
                 social_account = SocialAccount.objects.filter(user=cur_user)[0]
                 cur_user.name = social_account.extra_data["name"]
-                cur_user.save()
 
                 if social_account.extra_data.get("picture"):
                     cur_user.alt_profile_picture = social_account.extra_data["picture"]
-                cur_user.save()
 
-                data = UserSerializer(cur_user).data
-                return Response(data, status=HTTP_200_OK)
+                if request.data.get("event_planner"):
+                    if not cur_user.approved:
+                        cur_user.approved = False
+                        cur_user.event_planner = request.data["event_planner"]
+                        cur_user.business_name = request.data["business_name"]
+                        cur_user.business_reg_no = request.data["business_reg_no"]
+
+                cur_user.save()
+                # cur_user.subscribe_user_send_grid()
+
+                token, created = Token.objects.get_or_create(user=cur_user)
+
+                data = CustomUserDetailSerializer(
+                    cur_user, context={"request": request, "user": cur_user}
+                ).data
+                return Response({"token": token.key, "user": data}, status=HTTP_200_OK)
             else:
                 return response
         except KeyError as error:
+            logging.warning(f"error: {error}")
+
             return Response(
                 {"error_message": "Missing key :" + str(error)},
                 status=HTTP_400_BAD_REQUEST,
             )
+        except ValidationError as e:
+            if e.detail.get("business_details_error"):
+                error_str = {"error": e.detail.get("business_details_error")[0]}
+
+            elif e.detail.get("non_field_errors"):
+                error_str = {"error": e.detail.get("non_field_errors")[0]}
+            return Response(
+                error_str,
+                status=HTTP_400_BAD_REQUEST,
+            )
         except Exception as error:
             return Response(
-                {"error_message": str(error)}, status=HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": str(error)}, status=HTTP_500_INTERNAL_SERVER_ERROR
             )
+    
 
+class FacebookLogin(CustomSocialLoginView):
+    permission_classes = (AllowAny,)
+    adapter_class = FacebookOAuth2Adapter
+    
 
 class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
     # provider_id = GoogleProvider.id
@@ -197,63 +230,10 @@ class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
             return {"error_message": str(error)}
 
 
-class GoogleLogin(SocialLoginView):
+class GoogleLogin(CustomSocialLoginView):
     permission_classes = (AllowAny,)
-    adapter_class = CustomGoogleOAuth2Adapter
-    client_class = OAuth2Client
-    serializer_class = CustomAppleSocialLoginSerializer
-
-    def get_serializer(self, *args, **kwargs):
-        serializer_class = self.get_serializer_class()
-        kwargs["context"] = self.get_serializer_context()
-        return serializer_class(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        try:
-            serializer = CustomSocialLoginSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            response = super().post(request, *args, **kwargs)
-            if response.status_code == 200:
-                cur_user = self.request.user
-                social_account = SocialAccount.objects.filter(user=cur_user)[0]
-                cur_user.name = social_account.extra_data["name"]
-
-                if social_account.extra_data.get("picture"):
-                    cur_user.alt_profile_picture = social_account.extra_data["picture"]
-
-                if request.data.get("event_planner"):
-                    cur_user.event_planner = request.data.get("event_planner")
-                    cur_user.business_name = request.data.get("business_name")
-                    cur_user.business_reg_no = request.data.get("business_reg_no")
-
-                cur_user.save()
-                # cur_user.subscribe_user_send_grid()
-
-                token, created = Token.objects.get_or_create(user=cur_user)
-
-                data = CustomUserDetailSerializer(
-                    cur_user, context={"request": request, "user": cur_user}
-                ).data
-                return Response({"token": token.key, "user": data}, status=HTTP_200_OK)
-            else:
-                return response
-        except KeyError as error:
-            return Response(
-                {"error_message": "Missing key :" + str(error)},
-                status=HTTP_400_BAD_REQUEST,
-            )
-        except ValidationError as e:
-            if e.detail.get("business_details_error"):
-                error_str = {"error": e.detail.get("business_details_error")[0]}
-            return Response(
-                error_str,
-                status=HTTP_400_BAD_REQUEST,
-            )
-        except Exception as error:
-            return Response(
-                {"error": str(error)}, status=HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
+    adapter_class = GoogleOAuth2Adapter
+    
 
 class AppleLogin(SocialLoginView):
     adapter_class = AppleOAuth2Adapter

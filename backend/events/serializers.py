@@ -237,6 +237,9 @@ class RegisterEventSerializer(serializers.ModelSerializer):
             "reserved",
             "amount_paid",
             "amount_left",
+            "charge_id",
+            "payment_status",
+            "channel",
         )
 
 
@@ -261,6 +264,7 @@ class ReserveSerializer(serializers.ModelSerializer):
             "bottle_service",
             "attendee",
             "payment_method",
+            "channel",
             # "percentage_upfront",
         )
 

@@ -253,29 +253,18 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
 
 
-class CustomSocialLoginSerializer(serializers.Serializer):
-    event_planner = serializers.BooleanField(required=False)
+class CustomSocialLoginSerializer(SocialLoginSerializer):
+    event_planner = serializers.BooleanField(required=False)  # Extra field
     accept_tc = serializers.BooleanField(required=False)
-    business_name = serializers.CharField(required=False)
-    business_reg_no = serializers.CharField(required=False)
+    business_name = serializers.CharField(max_length=100, required=False)  # Extra field
+    business_reg_no = serializers.CharField(max_length=100, required=False)  # Extra field
 
-    def validate(self, attrs):
-
-        # attrs = super().validate(attrs)
-        # user = attrs["user"]
-
-        # if not user.is_active:
-        #     raise serializers.ValidationError(_("User account is not active."))
-
-        # if not user.accept_tc:
-        #     if not attrs.get("accept_tc"):
-        #         raise serializers.ValidationError(
-        #             {"accept_tc": "Please accept terms and conditions"}
-        #         )
-        #     user.accept_tc = attrs.get("accept_tc")
-
-        if attrs.get("event_planner"):
-            if not attrs.get("business_name") or not attrs.get("business_reg_no"):
+    def validate(self, data):
+        attr = super().validate(data)
+        
+        # Custom validation for event_planner
+        if attr.get('event_planner', None) is not None:
+            if not attr.get("business_name") or not attr.get("business_reg_no"):
                 raise serializers.ValidationError(
                     {
                         "business_details_error": _(
@@ -283,7 +272,7 @@ class CustomSocialLoginSerializer(serializers.Serializer):
                         )
                     }
                 )
-        return attrs
+        return attr
 
 
 class CustomAppleSocialLoginSerializer(SocialLoginSerializer):

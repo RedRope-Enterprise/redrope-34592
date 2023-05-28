@@ -190,6 +190,13 @@ class UserEventRegistration(BaseModel):
         blank=True,
         null=True,
     )
+    channel = models.CharField(
+        _("Payment Channel"),
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    
     notification = GenericRelation(Notification)
 
     def save(self, *args, **kwargs):
