@@ -36,6 +36,7 @@ class UserEventRegistrationAdmin(admin.ModelAdmin):
         "amount_left",
         "stripe_fee",
         "charge_id",
+        "channel",
         "updated_at",
     )
 

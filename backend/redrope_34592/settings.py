@@ -197,16 +197,19 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_UNIQUE_EMAIL = True
+
 LOGIN_REDIRECT_URL = "users:redirect"
 
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
+
 SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
 ACCOUNT_ALLOW_REGISTRATION = env.bool("ACCOUNT_ALLOW_REGISTRATION", True)
 SOCIALACCOUNT_ALLOW_REGISTRATION = env.bool("SOCIALACCOUNT_ALLOW_REGISTRATION", True)
+SOCIALACCOUNT_AUTO_SIGNUP = env.bool("SOCIALACCOUNT_AUTO_SIGNUP", True)
 
 REST_AUTH_SERIALIZERS = {
     # Replace password reset serializer to fix 500 error
@@ -311,6 +314,12 @@ SOCIALACCOUNT_PROVIDERS = {
             "client_id": FACEBOOK_CLIENT_ID,  # APP ID
             "secret": FACEBOOK_SECRET_KEY,
         },
+        'SCOPE': ['email', 'username', 'public_profile',],
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+        ],
     },
     "google": {
         "APP": {
@@ -342,4 +351,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Constants
-RESERVATION_UPFRONT_AMOUNT = 50
+PERCENTAGE_UPFRONT = 10
