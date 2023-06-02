@@ -60,7 +60,7 @@ def new_event_created(sender, instance, created, **kwargs):
 
     if created:
         try:
-            message_body = "Check the new events we founded for you."
+            message_body = "Check new events we’ve found for you that match your interests!"
             users = User.objects.filter(event_planner=False)
             content_type = ContentType.objects.get_for_model(instance)
             push_service = FCMNotification(api_key=settings.PUSH_NOTIFICATIONS_SETTINGS["FCM_API_KEY"])
