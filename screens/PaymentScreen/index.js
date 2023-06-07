@@ -114,11 +114,9 @@ const PaymentScreen = () => {
                       {
                         label: event?.title,
                         amount: price,
-                        paymentType: "Immediate",
-
+                        paymentType: "Immediate"
                       }
-                    ],
-                    
+                    ]
                   }
 
                   const paymentResult = await presentApplePay(paymentRequest)
@@ -132,8 +130,12 @@ const PaymentScreen = () => {
                     let response = await makeReservation({
                       event: event?.id,
                       attendee: attendeeCount,
-                      bottle_service: event?.bottle_services[0].id
+                      bottle_service: event?.bottle_services[0].id,
+                      payment_method: paymentResult?.paymentMethod?.id,
+                      channel: "apple"
                     })
+
+                    setIsModalVisible(true)
                   }
                 } catch (error) {
                   console.log("error ", error)

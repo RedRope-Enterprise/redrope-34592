@@ -148,9 +148,10 @@ const UserProfileScreen = () => {
           renderItem={({ item }) => (
             <HomeEventItem
               event={item}
-              onPress={() =>
+              onPress={() => {
+                item.id = item.event_id
                 navigation.navigate("EventDetails", { event: item })
-              }
+              }}
             />
           )}
           keyExtractor={(item, index) => index}

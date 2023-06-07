@@ -130,20 +130,21 @@ const HomeEventItem = props => {
                   justifyContent: "center",
                   alignItems: "center",
                   marginVertical: 5
-
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: Typography.FONT_SIZE_10,
-                    fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
-                    fontWeight: Typography.FONT_WEIGHT_500,
-                    color: Colors.WHITE,
-                    margin: 5
-                  }}
-                >
-                  {event?.start_date}
-                </Text>
+                {(event?.date || event?.start_date) && (
+                  <Text
+                    style={{
+                      fontSize: Typography.FONT_SIZE_10,
+                      fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                      fontWeight: Typography.FONT_WEIGHT_500,
+                      color: Colors.WHITE,
+                      margin: 5
+                    }}
+                  >
+                    {event.date || event?.start_date}
+                  </Text>
+                )}
               </View>
             </View>
 
