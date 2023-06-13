@@ -17,7 +17,7 @@ import { Button, Input, CustomModal } from "../../components"
 import { Colors, Typography } from "../../styles"
 import NavigationHeader from "../../components/NavigationHeader"
 import { useNavigation } from "@react-navigation/native"
-import FastImage from 'react-native-fast-image';
+import FastImage from "react-native-fast-image"
 
 import {
   getDataStorage,
@@ -102,7 +102,7 @@ const TableConfirmScreen = () => {
           <View
             style={{
               flex: 1,
-              justifyContent: 'center',
+              justifyContent: "center"
             }}
           >
             <Text style={[styles.desc, { color: Colors.WHITE }]}>
@@ -120,25 +120,25 @@ const TableConfirmScreen = () => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader
-        // showLeftBtn1={true}
-        // showLeftBtn2={true}
-        // onLeftBtn2={async () => {
-        //   if (isFavEvent) {
-        //     const resp = await removeEventFromFavorite(favEventData?.id)
-        //     setFavEventData(null)
-        //     setIsFavEvent(false)
-        //     console.log("Already in fav list ")
-        //     return
-        //   }
-        //   const resp = await addEventToFavorite({
-        //     event: event.id
-        //   })
-        //   if (resp) {
-        //     setFavEventData(resp)
-        //     setIsFavEvent(true)
-        //   }
-        //   console.log("adding to favt resp ", resp)
-        // }}
+      // showLeftBtn1={true}
+      // showLeftBtn2={true}
+      // onLeftBtn2={async () => {
+      //   if (isFavEvent) {
+      //     const resp = await removeEventFromFavorite(favEventData?.id)
+      //     setFavEventData(null)
+      //     setIsFavEvent(false)
+      //     console.log("Already in fav list ")
+      //     return
+      //   }
+      //   const resp = await addEventToFavorite({
+      //     event: event.id
+      //   })
+      //   if (resp) {
+      //     setFavEventData(resp)
+      //     setIsFavEvent(true)
+      //   }
+      //   console.log("adding to favt resp ", resp)
+      // }}
       ></NavigationHeader>
       {/* <View style={styles.titleContainer}>
         <Text style={[styles.title, { color: Colors.WHITE }]}>Disclaimer</Text>
@@ -250,9 +250,11 @@ const TableConfirmScreen = () => {
               fontWeight: Typography.FONT_WEIGHT_400
             }}
           >
-            Pay now to reserve
+            {`Pay $${
+              event?.attendeeCount * 50
+            } now to place deposit to reserve`}
           </Text>
-          <Text
+          {/* <Text
             style={{
               alignItems: "center",
               alignSelf: "center",
@@ -263,7 +265,7 @@ const TableConfirmScreen = () => {
             }}
           >
             {`$${event?.attendeeCount * 50}`}
-          </Text>
+          </Text> */}
         </View>
         {/* <Text style={styles.downpaymentPayText}>
           Decide the percentage you want to pay upfront

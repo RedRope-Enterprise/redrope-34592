@@ -107,9 +107,7 @@ const PaymentScreen = () => {
                   // Create a payment request manually
                   const paymentRequest = {
                     currencyCode: "USD",
-                    country: "US",
-                    merchantCapabilities: ["supports3DS"],
-                    supportedNetworks: ["visa", "mastercard"],
+                    jcbEnabled: true,
                     cartItems: [
                       {
                         label: event?.title,
@@ -123,7 +121,11 @@ const PaymentScreen = () => {
 
                   if (paymentResult.error) {
                     // Handle payment error
-                    console.log("Payment failed:", paymentResult.error)
+                    console.log("Payment Failed:", paymentResult.error)
+                    Alert.alert(
+                      "Payment Failed:",
+                      paymentResult.error?.message || ""
+                    )
                   } else {
                     // Use the payment result for further processing
                     console.log("Payment succeeded:", paymentResult)

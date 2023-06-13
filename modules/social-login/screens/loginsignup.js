@@ -144,7 +144,7 @@ const onGoogleConnect = async dispatch => {
       })
   } catch (err) {
     if (err.code === statusCodes.SIGN_IN_CANCELLED) {
-      Alert.alert("Error", "The user canceled the signin request.")
+      Alert.alert("Error", "The user cancelled the signin request.")
     }
   }
 }

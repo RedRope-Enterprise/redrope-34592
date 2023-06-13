@@ -67,7 +67,7 @@ const App = () => {
       <PersistGate loading={null} persistor={persistor}>
         <StripeProvider
           publishableKey={STRIPE_PUBLISHABLE}
-          merchantIdentifier="merchant.com.crowdbotics.redrope-34592"
+          merchantIdentifier="merchant.club.redrope"
         >
           <Navigation />
         </StripeProvider>

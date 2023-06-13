@@ -67,7 +67,7 @@ export const localOptions = {
   merchantName: "Example Inc.",
   enableGooglePay: true,
   enableApplePay: true,
-  merchantIdentifier:"merchant.com.crowdbotics.inaday",
+  merchantIdentifier:"merchant.club.redrope",
   merchantCountryCode: 'US',
   merchantCurrency: 'USD',
   stripeTestEnv: true,
