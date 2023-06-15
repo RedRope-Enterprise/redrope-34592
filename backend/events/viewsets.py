@@ -38,6 +38,7 @@ from rest_framework.mixins import (
     DestroyModelMixin,
     RetrieveModelMixin
 )
+from decimal import Decimal
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import BooleanField, Case, Value, When
 from utils.custom_permissions import (
@@ -372,7 +373,7 @@ class CardPaymentViewset(APIView):
         percentage = settings.PERCENTAGE_UPFRONT #int(serializer.data.get("percentage_upfront"))
 
         # Calculate the amount to pay based on the percentage upfront charge
-        total_amount = float(int(attendees) * bottle_service.price)
+        total_amount = Decimal(int(attendees) * bottle_service.price)
         amount_paid = (percentage * total_amount) / 100
         amount_to_balance = total_amount - amount_paid
         
@@ -485,7 +486,7 @@ class CardPaymentViewset(APIView):
 
                 # Update event planner wallet
                 event_planner_wallet = event.user.wallet
-                event_planner_wallet.balance = float(event_planner_wallet.balance) + amount_paid
+                event_planner_wallet.balance = event_planner_wallet.balance + amount_paid
                 event_planner_wallet.save()
 
 

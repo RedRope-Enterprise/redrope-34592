@@ -30,6 +30,7 @@ class EventListSerializer(serializers.ModelSerializer):
     event_bottle_services = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
     favorite = serializers.SerializerMethodField()
+    is_reserved = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -79,6 +80,10 @@ class EventListSerializer(serializers.ModelSerializer):
     def get_event_categories(self, obj):
         if hasattr(obj, "categories"):
             return CategorySerializer(obj.categories, many=True).data
+        
+    def get_is_reserved(self, obj):
+        user = self.context["request"].user
+        return user.going_event.filter(event=obj).exists()
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -110,6 +115,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     favorite = serializers.SerializerMethodField()
     interested_count = serializers.SerializerMethodField()
     paid_count = serializers.SerializerMethodField()
+    is_reserved = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -159,6 +165,10 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     def get_paid_count(self, obj):
         if hasattr(obj, "going"):
             return obj.going.filter(reserved=True).count()
+        
+    def get_is_reserved(self, obj):
+        user = self.context["request"].user
+        return user.going_event.filter(event=obj).exists()
 
 
 class MyEventSerializer(serializers.ModelSerializer):
