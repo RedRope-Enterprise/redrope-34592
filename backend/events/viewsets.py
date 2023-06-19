@@ -334,17 +334,27 @@ class ConfirmReservationViewset(APIView):
             check_payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
             if check_payment_intent.status == "succeeded":
-                obj = UserEventRegistration.objects.filter(
-                    payment_intent_id=payment_intent_id
-                ).update(
-                    reserved=True,
-                    # transaction_id=check_payment_intent.charges.data[
-                    #     0
-                    # ].balance_transaction,
-                    payment_status="succeeded",
+                event_registration = UserEventRegistration.objects.get(
+                    charge_id=payment_intent_id
                 )
-                return Response(check_payment_intent.status, status=status.HTTP_200_OK)
-            return Response("Payment not confirmed", status=status.HTTP_403_FORBIDDEN)
+                event_registration.reserved=True,
+                event_registration.payment_status=check_payment_intent.status
+                event_registration.save()
+
+                # Update event planner wallet
+                event_planner_wallet = event_registration.event.user.wallet
+                event_planner_wallet.balance = event_planner_wallet.balance + event_registration.amount_paid
+                event_planner_wallet.save()
+
+
+                send_notification(notification_type="new_reservation", obj=event_registration)
+                res_serializer = RegisterEventSerializer(event_registration).data
+
+                return Response({
+                    "status": "OK",
+                    "reservation": res_serializer
+                }, status=status.HTTP_200_OK)
+            return Response(f"Payment not confirmed: {check_payment_intent.status}", status=status.HTTP_403_FORBIDDEN)
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -388,28 +398,27 @@ class CardPaymentViewset(APIView):
                     {"error": "Reservation already exists."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+            
+            payment_intent = stripe.PaymentIntent.create(
+                amount=int(amount_paid * 100),  # amount is in cents
+                currency='usd',
+            )
             event_registration.bottle_service = bottle_service
             event_registration.attendee = attendees
             event_registration.amount_left = amount_to_balance
-            event_registration.reserved = True
+            # event_registration.reserved = True
             event_registration.amount_paid = amount_paid
-            event_registration.charge_id = payment_method
-            event_registration.payment_status = "succeeded"
+            event_registration.charge_id = payment_intent.id
+            event_registration.payment_status = payment_intent.status
             event_registration.channel = "apple"
             event_registration.save()
             
-            # Update event planner wallet
-            event_planner_wallet = event.user.wallet
-            event_planner_wallet.balance = event_planner_wallet.balance + amount_paid
-            event_planner_wallet.save()
-
-
-            send_notification(notification_type="new_reservation", obj=event_registration)
-            res_serializer = RegisterEventSerializer(event_registration).data
             return Response({
                 "status": "OK",
-                "reservation": res_serializer
+                "payment_intent_id": payment_intent.id,
+                "client_secret": payment_intent.client_secret,
                 }, status=status.HTTP_200_OK)
+
         else:
 
             # Get stripe customer ID
