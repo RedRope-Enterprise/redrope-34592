@@ -265,7 +265,7 @@ class GoingEventSerializer(serializers.ModelSerializer):
 class ReserveSerializer(serializers.ModelSerializer):
     attendee = serializers.IntegerField()
     # percentage_upfront = serializers.IntegerField()
-    payment_method = serializers.CharField()
+    payment_method = serializers.CharField(required=False)
 
     class Meta:
         model = UserEventRegistration
@@ -295,6 +295,10 @@ class ReserveSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"error": "The number of attendees exceeds the maximum limit."}
                 )
+        if not attrs.get("channel") and not attrs.get("payment_method"):
+            raise serializers.ValidationError(
+                {"payment_method": "Please provide a payment method."}
+            )
         if attrs.get("bottle_service") not in attrs.get("event").bottle_services.all():
             raise serializers.ValidationError(
                 {"bottle_services": "Event doesn't have selected bottle service."}
