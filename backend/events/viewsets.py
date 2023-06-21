@@ -107,7 +107,7 @@ def send_notification(notification_type, obj):
 class EventViewset(ModelViewSet):
     serializer_class = EventListSerializer
     permission_classes = (IsAuthenticated, IsEventPlannerOrReadOnly, IsOwnerAndReadOnly)
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by('-created_at')
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = [
         "title",
@@ -126,13 +126,14 @@ class EventViewset(ModelViewSet):
         return EventListSerializer
 
     def get_queryset(self):
-        queryset = self.queryset.annotate(
-            is_favorited=Case(
-                When(favorited__user=self.request.user, then=Value(True)),
-                default=Value(False),
-                output_field=BooleanField()
-            )
-        ).order_by('-is_favorited', '-id')
+        # queryset = self.queryset.annotate(
+        #     is_favorited=Case(
+        #         When(favorited__user=self.request.user, then=Value(True)),
+        #         default=Value(False),
+        #         output_field=BooleanField()
+        #     )
+        # ).order_by('-is_favorited', '-id')
+        queryset = self.queryset
         
         if not self.request.user.event_planner:
             queryset = self.queryset.filter(active=True)
