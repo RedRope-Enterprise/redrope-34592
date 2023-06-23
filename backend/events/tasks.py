@@ -13,18 +13,19 @@ from django.db import IntegrityError
 
 task_name = 'UserNotifier'
 
-if not PeriodicTask.objects.filter(name=task_name).exists():
-    try:
-        interval = IntervalSchedule.objects.create(every=1, period=IntervalSchedule.DAYS)
-        # create the periodic task
-        PeriodicTask.objects.create(
-            name=task_name,
-            interval=interval,
-            task="events.tasks.notify_event_attendees"
-        )
-    except Exception as e:
-        logging.warning(e)
-        pass
+try:
+    interval, created = IntervalSchedule.objects.get_or_create(every=1, period=IntervalSchedule.MINUTES)
+    # create or get the periodic task
+    task, created = PeriodicTask.objects.get_or_create(
+        name=task_name,
+        defaults={
+            'interval': interval,
+            'task': "events.tasks.notify_event_attendees",
+        }
+    )
+except IntegrityError as e:
+    logging.warning(e)
+    pass
 
 @shared_task
 def notify_event_attendees():
