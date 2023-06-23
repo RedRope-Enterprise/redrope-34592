@@ -38,7 +38,7 @@ from rest_framework.mixins import (
     DestroyModelMixin,
     RetrieveModelMixin
 )
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import BooleanField, Case, Value, When
 from utils.custom_permissions import (
@@ -68,6 +68,9 @@ def send_notification(notification_type, obj):
         if notification_type == "interest_in_event":
             message_body = f"Someone is interested in event. Event title: {obj.event.title}, see details."
             message_title = "Interest In Event"
+        if notification_type == "reservation_balance_paid":
+            message_body = f"You have successfully your reservation payment for event. Event title: {obj.event.title}."
+            message_title = "Reservation Balance Paid"
         content_type = ContentType.objects.get_for_model(obj)
         notify = obj.notification.create(
             target=obj.event.user,
@@ -335,21 +338,21 @@ class ConfirmReservationViewset(APIView):
             check_payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
             if check_payment_intent.status == "succeeded":
-                event_registration = UserEventRegistration.objects.get(
+                event_reservation = UserEventRegistration.objects.get(
                     charge_id=payment_intent_id
                 )
-                event_registration.reserved=True,
-                event_registration.payment_status=check_payment_intent.status
-                event_registration.save()
+                event_reservation.reserved=True,
+                event_reservation.payment_status=check_payment_intent.status
+                event_reservation.save()
 
                 # Update event planner wallet
-                event_planner_wallet = event_registration.event.user.wallet
-                event_planner_wallet.balance = event_planner_wallet.balance + event_registration.amount_paid
+                event_planner_wallet = event_reservation.event.user.wallet
+                event_planner_wallet.balance = event_planner_wallet.balance + event_reservation.amount_paid
                 event_planner_wallet.save()
 
 
-                send_notification(notification_type="new_reservation", obj=event_registration)
-                res_serializer = RegisterEventSerializer(event_registration).data
+                send_notification(notification_type="new_reservation", obj=event_reservation)
+                res_serializer = RegisterEventSerializer(event_reservation).data
 
                 return Response({
                     "status": "OK",
@@ -360,6 +363,53 @@ class ConfirmReservationViewset(APIView):
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class ConfirmReservationBalanceViewset(APIView):
+
+    http_method_names = ["post"]
+
+    def post(self, request):
+        serializer = ConfirmReservationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+
+            # Collect post data
+            payment_intent_id = serializer.data.get("payment_intent_id")
+
+            check_payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+            if check_payment_intent.status == "succeeded":
+                event_reservation = UserEventRegistration.objects.get(
+                    balance_charge_id=payment_intent_id
+                )
+
+                amount = event_reservation.amount_left
+                _, stripe_fee = calculate_stripe_fee(amount)
+
+                event_reservation.stripe_fee = event_reservation.stripe_fee + stripe_fee 
+                event_reservation.balance_paid = True
+                event_reservation.amount_paid = event_reservation.amount_paid + amount
+                event_reservation.amount_left = event_reservation.amount_left - amount
+                event_reservation.payment_status=check_payment_intent.status
+                event_reservation.save()
+
+                # Update event planner wallet
+                event_planner_wallet = event_reservation.event.user.wallet
+                event_planner_wallet.balance = event_planner_wallet.balance + amount
+                event_planner_wallet.save()
+
+
+                send_notification(notification_type="reservation_balance_paid", obj=event_reservation)
+                res_serializer = RegisterEventSerializer(event_reservation).data
+
+                return Response({
+                    "status": "OK",
+                    "reservation": res_serializer
+                }, status=status.HTTP_200_OK)
+            return Response(f"Payment not confirmed: {check_payment_intent.status}", status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
 class CardPaymentViewset(APIView):
 
     http_method_names = ["post"]
@@ -367,8 +417,7 @@ class CardPaymentViewset(APIView):
     def post(self, request):
         serializer = ReserveSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        # try:
-            # Collect post data
+        
         event = Event.objects.get(pk=serializer.data.get("event"))
         if event.user == request.user:
             return Response(
@@ -384,35 +433,38 @@ class CardPaymentViewset(APIView):
         percentage = settings.PERCENTAGE_UPFRONT #int(serializer.data.get("percentage_upfront"))
 
         # Calculate the amount to pay based on the percentage upfront charge
-        total_amount = Decimal(int(attendees) * bottle_service.price)
+        total_amount = int(attendees) * bottle_service.price
         amount_paid = (percentage * total_amount) / 100
         amount_to_balance = total_amount - amount_paid
         
-        if serializer.data.get("channel") == "apple":
-
-            event_registration, created = UserEventRegistration.objects.get_or_create(
+        event_reservation, created = UserEventRegistration.objects.get_or_create(
                 user=request.user,
                 event=event
             )
-            if event_registration.reserved:
-                return Response(
-                    {"error": "Reservation already exists."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        if event_reservation.reserved:
+            return Response(
+                {"error": "Reservation already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        #Calculate Stripe fee 
+        amount_plus_fee, stripe_fee = calculate_stripe_fee(amount_paid)
+
+        if serializer.data.get("channel") == "apple":
             
             payment_intent = stripe.PaymentIntent.create(
-                amount=int(amount_paid * 100),  # amount is in cents
+                amount=int(amount_plus_fee * 100),  # amount is in cents
                 currency='usd',
             )
-            event_registration.bottle_service = bottle_service
-            event_registration.attendee = attendees
-            event_registration.amount_left = amount_to_balance
-            # event_registration.reserved = True
-            event_registration.amount_paid = amount_paid
-            event_registration.charge_id = payment_intent.id
-            event_registration.payment_status = payment_intent.status
-            event_registration.channel = "apple"
-            event_registration.save()
+            event_reservation.bottle_service = bottle_service
+            event_reservation.attendee = attendees
+            event_reservation.amount_left = amount_to_balance
+            event_reservation.stripe_fee = stripe_fee
+            event_reservation.amount_paid = amount_paid
+            event_reservation.charge_id = payment_intent.id
+            event_reservation.payment_status = payment_intent.status
+            event_reservation.channel = "apple"
+            event_reservation.save()
             
             return Response({
                 "status": "OK",
@@ -428,54 +480,11 @@ class CardPaymentViewset(APIView):
             if not stripe_customer_id:
                 customer = stripe.Customer.create(email=request.user.email)
                 stripe_customer_id = customer.id
-
-            (
-                event_registration,
-                created,
-            ) = UserEventRegistration.objects.get_or_create(
-                user=request.user,
-                event=event
-            )
-
-            if event_registration.reserved:
-                return Response(
-                    {"error": "Reservation already exists."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
             
-            event_registration.bottle_service = bottle_service
-            event_registration.attendee = attendees
-            event_registration.amount_left = amount_to_balance
-            event_registration.payment_status = "payment_status"
-            event_registration.channel = "card"
-
-            #Calculate Stripe fee 
-            stripe_fee = calculate_stripe_fee(amount_paid)
-            amount_plus_fee = amount_paid + stripe_fee
-
-            
-            # Create a charge on the customer's card
-            # stripe_account_id = event.user.stripe_connect_account_id
-            # if not stripe_account_id:
-            #     return Response({'detail': 'User does not have a Stripe Connect Account'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # payment_intent = stripe.PaymentIntent.create(
-            #     customer=stripe_customer_id,
-            #     amount=settings.RESERVATION_UPFRONT_AMOUNT,
-            #     currency="usd",
-            #     description="Payment for event reservation",
-            #     payment_method=payment_method,
-            #     confirm=True,
-            #     transfer_data={
-            #         'destination': stripe_account_id,
-            #     },
-            # )
-
-            # event_registration.reserved = True
-            # event_registration.amount_paid = payment_intent.amount
-            # event_registration.payment_intent_id = payment_intent.id
-            # event_registration.payment_status = payment_intent.status
-            # event_registration.save()
+            event_reservation.bottle_service = bottle_service
+            event_reservation.attendee = attendees
+            event_reservation.amount_left = amount_to_balance
+            event_reservation.channel = "card"
 
             
             charge = stripe.Charge.create(
@@ -483,16 +492,15 @@ class CardPaymentViewset(APIView):
                 currency='usd',
                 customer=stripe_customer_id,
                 source=payment_method,
-                description='Payment for event reservation',
-                # transfer_data={
-                #     'destination': stripe_account_id,
-                # },
+                description='Payment for event reservation'
             )
 
             if charge.status == "succeeded":
                 logging.warning("Payment succeeded")
-                event_registration.reserved = True
-                event_registration.stripe_fee = stripe_fee
+                event_reservation.reserved = True
+                event_reservation.stripe_fee = stripe_fee
+                event_reservation.amount_paid = amount_paid
+                event_reservation.payment_status = charge.status
 
                 # Update event planner wallet
                 event_planner_wallet = event.user.wallet
@@ -500,35 +508,136 @@ class CardPaymentViewset(APIView):
                 event_planner_wallet.save()
 
 
-            event_registration.amount_paid = amount_paid
-            event_registration.charge_id = charge.id
-            event_registration.payment_status = charge.status
-            event_registration.save()
+            event_reservation.charge_id = charge.id
+            event_reservation.payment_status = charge.status
+            event_reservation.save()
 
-            send_notification(notification_type="new_reservation", obj=event_registration)
-            res_serializer = RegisterEventSerializer(event_registration).data
+            send_notification(notification_type="new_reservation", obj=event_reservation)
+            res_serializer = RegisterEventSerializer(event_reservation).data
             return Response({
                 "status": "OK",
                 "reservation": res_serializer
                 }, status=status.HTTP_200_OK)
 
-        # except Event.DoesNotExist as e:
-        #     return Response(
-        #         {"error": "Please enter valid event ID"}, status=status.HTTP_400_BAD_REQUEST
-        #     )
 
-        # except BottleService.DoesNotExist as e:
-        #     return Response(
-        #         {"error": "Please enter valid bottle service ID"}, status=status.HTTP_400_BAD_REQUEST
-        #     )
-        
-        # except Exception as e:
-        #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class BalancePaymentView(APIView):
+
+    http_method_names = ["post"]
+
+    def post(self, request):
+        try:
+            # Collect post data
+            event = request.data["event"]
+            payment_method = request.data.get("payment_method")
+            channel = request.data.get("channel")
+            event = Event.objects.get(pk=event)
+
+            if event.user == request.user:
+                return Response(
+                    {"error": "Cannot complete this request."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if not payment_method and not channel:
+                return Response(
+                    {"error": "Please provide a payment method."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            event_reservation = UserEventRegistration.objects.get(user=request.user, event=event)
+
+            if not event_reservation.reserved:
+                return Response(
+                    {"error": "Error completing the process."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if event_reservation.balance_paid and event_reservation.balance_charge_id:
+                return Response(
+                    {"error": "Balance already paid."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            amount = event_reservation.amount_left
+
+            #Calculate Stripe fee 
+            amount_plus_fee, stripe_fee = calculate_stripe_fee(amount)
+            
+            if channel == "apple":
+                payment_intent = stripe.PaymentIntent.create(
+                    amount=int(amount_plus_fee * 100),  # amount is in cents
+                    currency='usd',
+                )
+                event_reservation.balance_charge_id = payment_intent.id
+                event_reservation.balance_channel = channel
+                event_reservation.save()
+                
+                return Response({
+                    "status": "OK",
+                    "payment_intent_id": payment_intent.id,
+                    "client_secret": payment_intent.client_secret,
+                    }, status=status.HTTP_200_OK)
+
+            else:
+
+                # Get stripe customer ID
+                stripe_customer_id = request.user.stripe_customer_id
+
+                if not stripe_customer_id:
+                    customer = stripe.Customer.create(email=request.user.email)
+                    stripe_customer_id = customer.id
+                
+                charge = stripe.Charge.create(
+                    amount=int(amount_plus_fee * 100),  # Convert the amount to cents
+                    currency='usd',
+                    customer=stripe_customer_id,
+                    source=payment_method,
+                    description='Payment balance for event reservation'
+                )
+
+                if charge.status == "succeeded":
+                    logging.warning("Payment succeeded")
+                    event_reservation.balance_charge_id = charge.id
+                    event_reservation.balance_channel = "card"
+                    event_reservation.stripe_fee = event_reservation.stripe_fee + stripe_fee 
+                    event_reservation.balance_paid = True
+                    event_reservation.amount_paid = event_reservation.amount_paid + amount
+                    event_reservation.amount_left = event_reservation.amount_left - amount
+                    event_reservation.save()
+
+                    # Update event planner wallet
+                    event_planner_wallet = event.user.wallet
+                    event_planner_wallet.balance = event_planner_wallet.balance + amount
+                    event_planner_wallet.save()
+
+                send_notification(notification_type="reservation_balance_paid", obj=event_reservation)
+                res_serializer = RegisterEventSerializer(event_reservation).data
+                return Response({
+                    "status": "OK",
+                    "reservation": res_serializer
+                    }, status=status.HTTP_200_OK)
+
+        except KeyError:
+            return Response(
+                {"error": "Event ID is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        except Event.DoesNotExist:
+            return Response(
+                {"error": "Event not found."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except UserEventRegistration.DoesNotExist:
+            return Response(
+                {"error": "Event reservation not found."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def calculate_stripe_fee(amount):
-    fee_percentage = 0.029  # 2.9% fee for credit card payments in the US
-    fixed_fee = 0.30  # $0.30 fixed fee for credit card payments in the US
+    fee_percentage = Decimal("0.029")  # 2.9% fee for credit card payments in the US
+    fixed_fee = Decimal("0.30")  # $0.30 fixed fee for credit card payments in the US
 
-    fee = (amount * fee_percentage) + fixed_fee
-    return fee
+    gross_amount = (amount + fixed_fee) / (1 - fee_percentage)
+    gross_amount = gross_amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+    fee_amount = gross_amount - amount
+
+    return gross_amount, fee_amount
+

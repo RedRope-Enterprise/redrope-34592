@@ -22,6 +22,28 @@ services:
   redis:
     ports:
       - "6379:6379"
+  celery_worker:
+    restart: always
+    build:
+      context: .
+    command: celery -A redrope_34592 worker --loglevel=info
+    volumes:
+      - ./:/opt/webapp
+    depends_on:
+      - web_rr
+      - postgres
+      - redis
+  celery_beat:
+    restart: always
+    build:
+      context: .
+    command: celery -A redrope_34592 beat --loglevel=info
+    volumes:
+      - ./:/opt/webapp
+    depends_on:
+      - web_rr
+      - postgres
+      - redis
 
 volumes:
   postgres-data:

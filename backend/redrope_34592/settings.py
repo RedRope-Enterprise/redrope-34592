@@ -23,6 +23,9 @@ from modules.manifest import get_modules
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Set up the root logger's level and the output format
+# logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
 env_file = os.path.join(BASE_DIR, ".env")
 env = environ.Env()
 env.read_env(env_file)
@@ -46,7 +49,7 @@ except (DefaultCredentialsError, PermissionDenied):
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY")
+SECRET_KEY = env.str("SECRET_KEY", "<random_string_goes_here>")
 
 ALLOWED_HOSTS = env.list("HOST", default=["*"])
 SITE_ID = 1
@@ -89,6 +92,8 @@ THIRD_PARTY_APPS = [
     "storages",
     "push_notifications",
     "django_rest_passwordreset",
+    "celery",
+    "django_celery_beat",
 ]
 MODULES_APPS = get_modules()
 
@@ -352,3 +357,13 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # Constants
 PERCENTAGE_UPFRONT = 10
+
+# Celery configuration
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+# CELERY_BEAT_SCHEDULER = 'celery.beat.RedisScheduler'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'

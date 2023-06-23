@@ -12,7 +12,7 @@ class EmailThread(threading.Thread):
     def run(self):
         try:
             self.email.send()
-            logging.warning(f"Email sent to {self.email.to}")
+            logging.info(f"Email sent to {self.email.to}")
         except Exception as e:
             logging.warning(f"Failed to send email to {self.email.to}: {e}")
             
@@ -23,3 +23,4 @@ class HelperClass:
             subject=data['email_subject'], body=data['email_body'], to=data['to_emails'])
         email.content_subtype = "html"
         EmailThread(email).start()
+
