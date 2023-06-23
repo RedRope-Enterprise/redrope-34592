@@ -10,22 +10,21 @@ from django.db import IntegrityError
 # create an interval for the task to run every 30 seconds
 
 
-interval = IntervalSchedule.objects.create(every=1, period=IntervalSchedule.MINUTES)
 
 task_name = 'UserNotifier'
 
-try:
-    # create the periodic task
-    PeriodicTask.objects.get_or_create(
-        name=task_name,
-        defaults={
-            "interval":interval,
-            "task":"events.tasks.notify_event_attendees"
-        }
-    )
-except Exception as e:
-    logging.warning(e)
-    pass
+if not PeriodicTask.objects.filter(name=task_name).exists():
+    try:
+        interval = IntervalSchedule.objects.create(every=1, period=IntervalSchedule.DAYS)
+        # create the periodic task
+        PeriodicTask.objects.create(
+            name=task_name,
+            interval=interval,
+            task="events.tasks.notify_event_attendees"
+        )
+    except Exception as e:
+        logging.warning(e)
+        pass
 
 @shared_task
 def notify_event_attendees():
