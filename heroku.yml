@@ -8,3 +8,12 @@ release:
   image: web
   command:
     - python3 manage.py migrate
+run:
+  celery_worker:
+    command:
+      - celery -A redrope_34592 worker --loglevel=info
+    image: web
+  celery_beat:
+    command:
+      - celery -A redrope_34592 beat --loglevel=info
+    image: web
