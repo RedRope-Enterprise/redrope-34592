@@ -341,7 +341,7 @@ class ConfirmReservationViewset(APIView):
                 event_reservation = UserEventRegistration.objects.get(
                     charge_id=payment_intent_id
                 )
-                event_reservation.reserved=True,
+                event_reservation.reserved=True
                 event_reservation.payment_status=check_payment_intent.status
                 event_reservation.save()
 
