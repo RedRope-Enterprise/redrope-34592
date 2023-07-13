@@ -83,7 +83,7 @@ class EventListSerializer(serializers.ModelSerializer):
         
     def get_is_reserved(self, obj):
         user = self.context["request"].user
-        return user.going_event.filter(event=obj).exists()
+        return user.going_event.filter(event=obj, reserved=True).exists()
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -168,7 +168,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         
     def get_is_reserved(self, obj):
         user = self.context["request"].user
-        return user.going_event.filter(event=obj).exists()
+        return user.going_event.filter(event=obj, reserved=True).exists()
 
 
 class MyEventSerializer(serializers.ModelSerializer):
