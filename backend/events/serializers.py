@@ -116,6 +116,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     interested_count = serializers.SerializerMethodField()
     paid_count = serializers.SerializerMethodField()
     is_reserved = serializers.SerializerMethodField()
+    reservation_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -169,6 +170,14 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     def get_is_reserved(self, obj):
         user = self.context["request"].user
         return user.going_event.filter(event=obj, reserved=True).exists()
+    
+    def get_reservation_details(self, obj):
+        user = self.context["request"].user
+        reservation = user.going_event.filter(event=obj).first()
+        if reservation:
+            return RegisterEventSerializer(reservation).data
+        return None
+
 
 
 class MyEventSerializer(serializers.ModelSerializer):
