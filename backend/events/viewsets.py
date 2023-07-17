@@ -149,7 +149,7 @@ class EventViewset(ModelViewSet):
         """Retieve users going for an event"""
 
         try:
-            going = self.get_object().going.all()
+            going = self.get_object().going.filter(reserved=True)
             page = self.paginate_queryset(going)
             if page is not None:
                 serializer = GoingEventSerializer(page, many=True)
