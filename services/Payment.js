@@ -54,6 +54,21 @@ async function getBankAccount(params = {}) {
   return response.data
 }
 
+// about remaining amounts
+
+async function payBalanceAmount(params = {}) {
+  const response = await api.post("/api/v1/events/balance-payment/", params)
+  return response.data
+}
+
+async function confirmBalanceAmount(params = {}) {
+  const response = await api.post(
+    "/api/v1/events/confirm-balance-payment/",
+    params
+  )
+  return response.data
+}
+
 export {
   getCardsList,
   createCard,
@@ -63,5 +78,7 @@ export {
   confirmReservation,
   makeReservation,
   addBankAccount,
-  getBankAccount
+  getBankAccount,
+  payBalanceAmount,
+  confirmBalanceAmount
 }

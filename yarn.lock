@@ -1351,10 +1351,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stripe/stripe-react-native@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-react-native/-/stripe-react-native-0.23.0.tgz#188030471b0d26ef5c2728ee9799f98047dfbb15"
-  integrity sha512-ucEDwZ93aHV4o/XTw5Jhte1GNWq9OIg7Es20ggnCuhL/OWY97/X6dK+BvN+XfvC9/fAZMqna1ZmKmZTyl9Jsng==
+"@stripe/stripe-react-native@^0.27.2":
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-react-native/-/stripe-react-native-0.27.2.tgz#ad3ee207065f30c262df59fc6661472217815e55"
+  integrity sha512-3qCRWusQHYDrUXiNm8NzNHSRYz/AaSZ8lJnq4jbzvQqP5zCRwv5yZ4aZ1DUa4vS5dn+nFF15BQjvGK7kCggYPA==
 
 "@tootallnate/once@1":
   version "1.1.2"

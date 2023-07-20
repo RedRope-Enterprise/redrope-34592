@@ -109,8 +109,8 @@ const SettingsScreen = () => {
         </View>
 
         {settingsMenu.map(menuItem => {
-          if(menuItem.key == 1 && !user?.event_planner && Platform.OS === "ios")
-            return null
+          // if(menuItem.key == 1 && !user?.event_planner && Platform.OS === "ios")
+          //   return null
           return (
             <TouchableOpacity
               style={styles.menuItem}

@@ -132,13 +132,15 @@ const HomeScreen = () => {
           }
         }
 
-
-        events.filter(ev => ev.event_categories.map(evCategory=> {
-          return evCategory.name === "Love"
-        }))
+        events.filter(ev =>
+          ev.event_categories.map(evCategory => {
+            return evCategory.name === "Love"
+          })
+        )
 
         navigation.navigate("EventByCategoryScreen", {
-          events: eventsToBe, category : event.name
+          events: eventsToBe,
+          category: event.name
         })
       }}
       style={{
@@ -286,6 +288,8 @@ const HomeScreen = () => {
                     // marginTop: "5%"
                   }
                 }
+                refreshing={true}
+                onRefresh={() => getEventsFromBackend()}
                 contentContainerStyle={{ paddingRight: 10 }}
                 numColumns={1}
                 data={searchValue.length >= 3 ? searchedEvents : events}

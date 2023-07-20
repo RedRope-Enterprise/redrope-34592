@@ -59,6 +59,30 @@ const HomeEventItem = props => {
           ]}
           style={{ width: "100%", height: "100%" }}
         >
+          {!global?.user?.event_planner && event?.is_reserved === true && (
+            <View
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 5,
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                borderRadius: 10,
+                zIndex: 10
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  margin: 10,
+                  fontSize: Typography.FONT_SIZE_12,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD
+                }}
+              >
+                RESERVED
+              </Text>
+            </View>
+          )}
           <View style={{ marginHorizontal: "5%", flex: 1 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text

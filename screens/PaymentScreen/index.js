@@ -48,17 +48,26 @@ import GoogleIcon from "../../assets/images/payment/google.png"
 import VisaIcon from "../../assets/images/payment/visa.png"
 import SuccessPopupImg from "../../assets/images/payment/successPopup.png"
 
-import { useConfirmPayment } from "@stripe/stripe-react-native"
+import {
+  useConfirmPayment,
+  isPlatformPaySupported
+} from "@stripe/stripe-react-native"
 import { data } from "../../data"
 
 import {
   confirmReservation,
   createPaymentIntent,
   getCardsList,
-  makeReservation
+  makeReservation,
+  payBalanceAmount,
+  confirmBalanceAmount
 } from "../../services/Payment"
 
-import { useApplePay } from "@stripe/stripe-react-native"
+import {
+  useApplePay,
+  confirmPlatformPayPayment,
+  PlatformPay
+} from "@stripe/stripe-react-native"
 
 const { width, height } = Dimensions.get("window")
 
@@ -71,10 +80,18 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1)
+  const [isApplePaySupported, setIsApplePaySupported] = useState(false)
 
   const { confirmPayment } = useConfirmPayment()
   // const { presentApplePay, confirmApplePayPayment } = useApplePay()
-  const { canMakePayments, showApplePaySetup, presentApplePay } = useApplePay()
+
+  useEffect(() => {
+    ;(async function () {
+      const resp = await isPlatformPaySupported()
+      console.log(" resp", resp)
+      setIsApplePaySupported(await isPlatformPaySupported())
+    })()
+  }, [isPlatformPaySupported])
 
   async function getCardsData(params = "") {
     try {
@@ -95,6 +112,19 @@ const PaymentScreen = () => {
     }, [])
   )
 
+  // Apple Pay related config
+  const { presentApplePay, confirmApplePayPayment } = useApplePay({
+    onShippingMethodSelected: (shippingMethod, handler) => {
+      __DEV__ && console.log("shippingMethod", shippingMethod)
+      // Update cart summary based on selected shipping method.
+    },
+    onShippingContactSelected: (shippingContact, handler) => {
+      __DEV__ && console.log("shippingContact", shippingContact)
+      // Make modifications to cart here e.g. adding tax.
+      // handler(cart);
+    }
+  })
+
   const renderPaymentMethod = (title, icon) => {
     return (
       <View style={styles.center}>
@@ -102,49 +132,126 @@ const PaymentScreen = () => {
           onPress={async () => {
             if (title == "Apple Pay") {
               setLoading(true)
-              if (event?.id && event.bottle_services.length > 0) {
+              if (event?.id && event?.is_reserved) {
                 try {
-                  // Create a payment request manually
-                  const paymentRequest = {
-                    currencyCode: "USD",
-                    jcbEnabled: true,
-                    cartItems: [
-                      {
-                        label: event?.title,
-                        amount: price,
-                        paymentType: "Immediate"
+                  let response = await payBalanceAmount({
+                    event: event?.id,
+                    channel: "apple"
+                  })
+
+                  console.log("response ", response)
+
+                  const { error } = await confirmPlatformPayPayment(
+                    response.client_secret,
+                    {
+                      applePay: {
+                        cartItems: [
+                          {
+                            amount: event?.reservation_details?.amount_left,
+                            label: event?.title,
+                            paymentType: PlatformPay.PaymentType.Immediate
+                          }
+                        ],
+                        merchantCountryCode: "US",
+                        currencyCode: "USD",
+                        supportedNetworks: ["visa", "mastercard"],
+                        requiredBillingContactFields: [
+                          PlatformPay.ContactField.PhoneNumber
+                        ]
                       }
-                    ]
-                  }
+                    }
+                  )
 
-                  const paymentResult = await presentApplePay(paymentRequest)
-
-                  if (paymentResult.error) {
-                    // Handle payment error
-                    console.log("Payment Failed:", paymentResult.error)
+                  if (error) {
+                    console.log(
+                      "Payment Failed: error: " + JSON.stringify(error)
+                    )
                     Alert.alert(
                       "Payment Failed:",
-                      paymentResult.error?.message || ""
+                      error.localizedMessage || error || ""
                     )
                   } else {
-                    // Use the payment result for further processing
-                    console.log("Payment succeeded:", paymentResult)
-                    let response = await makeReservation({
-                      event: event?.id,
-                      attendee: attendeeCount,
-                      bottle_service: event?.bottle_services[0].id,
-                      payment_method: paymentResult?.paymentMethod?.id,
-                      channel: "apple"
+                    let resp = await confirmBalanceAmount({
+                      payment_intent_id: response.payment_intent_id
                     })
-
+                    console.log("confirm apple pay resp", resp)
                     setIsModalVisible(true)
                   }
-                } catch (error) {
-                  console.log("error ", error)
-                  Alert.alert(
-                    "Payment process",
-                    "Unable to complete payment process at the moment. Pleae try again later."
+                } catch (err) {
+                  console.log("error ", err)
+                  if (err?.error && err?.error == "Reservation already exists.")
+                    Alert.alert(
+                      "Reservation already exists.",
+                      "This bottle service is already reserved!"
+                    )
+                  else if (err?.error)
+                    Alert.alert("Payment process", err?.error.toString())
+                  else
+                    Alert.alert(
+                      "Payment process",
+                      "Unable to complete payment process at the moment. Pleae try again later."
+                    )
+                  setLoading(false)
+                }
+              } else if (event?.id && event.bottle_services.length > 0) {
+                try {
+                  let response = await makeReservation({
+                    event: event?.id,
+                    attendee: attendeeCount,
+                    bottle_service: event?.bottle_services[0].id,
+                    // payment_method: paymentResult?.paymentMethod?.id,
+                    channel: "apple"
+                  })
+
+                  const { error } = await confirmPlatformPayPayment(
+                    response.client_secret,
+                    {
+                      applePay: {
+                        cartItems: [
+                          {
+                            label: event?.title,
+                            amount: price,
+                            paymentType: PlatformPay.PaymentType.Immediate
+                          }
+                        ],
+                        merchantCountryCode: "US",
+                        currencyCode: "USD",
+                        supportedNetworks: ["visa", "mastercard"],
+                        requiredBillingContactFields: [
+                          PlatformPay.ContactField.PhoneNumber
+                        ]
+                      }
+                    }
                   )
+
+                  if (error) {
+                    Alert.alert("Payment Failed:", error || "")
+                  } else {
+                    let result = await confirmReservation({
+                      payment_intent_id: response.payment_intent_id
+                    })
+
+                    console.log(JSON.stringify(result, null, 2))
+                    if (result.status === "OK") {
+                      setIsModalVisible(true)
+                    }
+                  }
+
+                  console.log("error apple pay", error)
+                } catch (err) {
+                  console.log("error ", err)
+                  if (err?.error && err?.error == "Reservation already exists.")
+                    Alert.alert(
+                      "Reservation already exists.",
+                      "This bottle service is already reserved!"
+                    )
+                  else if (err?.error)
+                    Alert.alert("Payment process", err?.error.toString())
+                  else
+                    Alert.alert(
+                      "Payment process",
+                      "Unable to complete payment process at the moment. Pleae try again later."
+                    )
                   setLoading(false)
                 }
               }
@@ -155,7 +262,7 @@ const PaymentScreen = () => {
           <View style={styles.itemContainer}>
             <View style={styles.itemImgContainer}>
               <Image
-                resizeMode="center"
+                resizeMode="contain"
                 style={styles.itemIcon}
                 source={icon}
               ></Image>
@@ -238,6 +345,42 @@ const PaymentScreen = () => {
     )
   }
 
+  const makeBalancePaymentWithCard = async (eventId, paymentMethod) => {
+    try {
+      const resp = await payBalanceAmount({
+        event: eventId,
+        payment_method: paymentMethod
+      })
+
+      console.log("makeBalancePaymentWithCard payBalanceAmount resp", resp)
+      if (
+        resp.status === "OK" &&
+        resp?.reservation?.payment_status === "succeeded"
+      ) {
+        setLoading(false)
+        setIsModalVisible(true)
+      } else if (resp.error) {
+        Alert.alert("Payment process", resp.error)
+        navigation.goBack()
+      } else {
+        Alert.alert(
+          "Payment process",
+          "Something went wrong, Please try again later."
+        )
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+      Alert.alert("Payment process failed", error?.error || "try again later")
+      setLoading(false)
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Dashboard" }]
+      })
+    }
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.NETURAL_3 }}>
       <NavigationHeader></NavigationHeader>
@@ -253,23 +396,18 @@ const PaymentScreen = () => {
         </View>
         {Platform.OS === "android" &&
           renderPaymentMethod("Google Pay", GoogleIcon)}
-        {renderPaymentMethod("Apple Pay", AppleIcon)}
-        {Platform.OS === "android" && (
-          <View style={styles.subTitleContainer}>
-            <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
-              Pay with Debit/Credit Card
-            </Text>
-          </View>
-        )}
-        {Platform.OS === "android" &&
-          data?.map((cardItem, index) => {
-            return renderCard(cardItem, index)
-          })}
+        {isApplePaySupported && renderPaymentMethod("Apple Pay", AppleIcon)}
+        <View style={styles.subTitleContainer}>
+          <Text style={[styles.subTitle, { color: Colors.PRIMARY_1 }]}>
+            Pay with Debit/Credit Card
+          </Text>
+        </View>
+        {data?.map((cardItem, index) => {
+          return renderCard(cardItem, index)
+        })}
 
         <View style={styles.border}></View>
-        {Platform.OS === "android" &&
-          data?.length == 0 &&
-          renderAddCardButton()}
+        {data?.length == 0 && renderAddCardButton()}
       </ScrollView>
       <View style={styles.nextBtnContainer}>
         <Button
@@ -295,6 +433,14 @@ const PaymentScreen = () => {
               bottle_service: event?.bottle_services[0].id
             })
             setLoading(true)
+            if (event?.is_reserved) {
+              await makeBalancePaymentWithCard(
+                event?.id,
+                data[selectedCardIndex]?.id
+              )
+              return
+            }
+
             if (event?.id && event.bottle_services.length > 0) {
               try {
                 let response = await makeReservation({
@@ -303,42 +449,14 @@ const PaymentScreen = () => {
                   bottle_service: event?.bottle_services[0].id,
                   payment_method: data[selectedCardIndex]?.id
                 })
-                console.log(JSON.stringify(response, null, 2))
-                if (response.id) {
-                  console.log({
-                    payment_intent_id: response.id
-                  })
-                  const billingDetails = {
-                    email: "test@gmail.com"
-                  }
-                  console.log({
-                    paymentMethodType: "Card",
-                    paymentMethodData: {
-                      billingDetails
-                    }
-                  })
-                  const { paymentIntent, error } = await confirmPayment(
-                    response.client_secret,
-                    {
-                      paymentMethodType: "Card",
-                      paymentMethodData: {
-                        billingDetails
-                      }
-                    }
-                  )
-                  console.log("LOG: error ", JSON.stringify(error, null, 2))
-                  console.log(
-                    "LOG: paymentIntent ",
-                    JSON.stringify(paymentIntent, null, 2)
-                  )
-                  let result = await confirmReservation({
-                    payment_intent_id: response.id
-                  })
 
-                  console.log(JSON.stringify(result, null, 2))
-                  if (result === "succeeded") {
-                    setIsModalVisible(true)
-                  }
+                if (
+                  response?.status === "OK" &&
+                  response?.reservation?.payment_status === "succeeded"
+                ) {
+                  setLoading(false)
+
+                  setIsModalVisible(true)
                 }
               } catch (error) {
                 console.log("error ", error)
@@ -364,16 +482,25 @@ const PaymentScreen = () => {
             // setIsModalVisible(true)
           }}
         >
-          {`PAY $${event?.attendeeCount * 50}`}
+          {`PAY $${
+            event?.is_reserved ? event?.reservation_details?.amount_left : price
+          }`}
         </Button>
       </View>
 
       <CustomImageModal
         isVisible={isModalVisible}
-        text={`We are going to notify you when all users from your group are paid and`}
+        text={
+          event?.is_reserved
+            ? `Event reserved completly`
+            : `We are going to notify you when all users from your group are paid and`
+        }
         image={SuccessPopupImg}
         onClose={() => {
-          navigation.replace("Dashboard")
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Dashboard" }]
+          })
           setIsModalVisible(false)
         }}
       ></CustomImageModal>
@@ -467,8 +594,8 @@ let styles = StyleSheet.create({
     marginLeft: "4%"
   },
   itemIcon: {
-    width: "60%",
-    height: undefined,
+    width: 30,
+    height: 30,
     aspectRatio: 1
   },
   cardBackground: {

@@ -152,6 +152,16 @@ const EventDetailsScreen = () => {
               }}
             >{`${event?.venue_name}`}</Text>
           )}
+          {event?.reservation_details?.balance_paid && (
+            <Text
+              style={{
+                fontSize: Typography.FONT_SIZE_18,
+                fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                fontWeight: Typography.FONT_WEIGHT_BOLD,
+                color: Colors.GREY
+              }}
+            >{`Fully Paid`}</Text>
+          )}
         </View>
 
         {!global?.user?.event_planner && (
@@ -441,7 +451,7 @@ const EventDetailsScreen = () => {
             </Text>
           </TouchableOpacity>
 
-          {event?.bottle_services.length > 0 && (
+          {event?.bottle_services.length > 0 && !event?.is_reserved && (
             <TouchableOpacity
               onPress={() => navigation.navigate("EventMenu", { event })}
               style={{
@@ -464,6 +474,44 @@ const EventDetailsScreen = () => {
                 }}
               >
                 Reserve
+              </Text>
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_24,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_600,
+                  color: Colors.WHITE,
+                  marginHorizontal: "5%"
+                }}
+              >
+                {">"}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {event?.is_reserved && !event?.reservation_details?.balance_paid && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("PaymentScreen", { event })}
+              style={{
+                flexDirection: "row",
+                backgroundColor: Colors.BUTTON_RED,
+                alignItems: "center",
+                marginTop: "5%",
+                borderRadius: 10
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: Typography.FONT_SIZE_16,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_BOLD,
+                  color: Colors.WHITE,
+                  marginHorizontal: "5%",
+                  marginVertical: "5%",
+                  flex: 1
+                }}
+              >
+                Pay Balance Amount
               </Text>
               <Text
                 style={{
