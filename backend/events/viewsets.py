@@ -110,7 +110,7 @@ def send_notification(notification_type, obj):
 class EventViewset(ModelViewSet):
     serializer_class = EventListSerializer
     permission_classes = (IsAuthenticated, IsEventPlannerOrReadOnly, IsOwnerAndReadOnly)
-    queryset = Event.objects.all().order_by('-created_at')
+    queryset = Event.objects.all().order_by('start_date')
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = [
         "title",
