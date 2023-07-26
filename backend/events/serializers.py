@@ -346,7 +346,7 @@ class BottleServiceSerializer(serializers.ModelSerializer):
             event = self.context["event"]
             user = self.context["user"]
             user_reservation = UserEventRegistration.objects.get(
-                user=user, bottle_service=obj, event=event
+                bottle_service=obj, event=event
             )
             return user_reservation.available_slots
         except:
