@@ -9,6 +9,7 @@ from home.models import (
     Category,
 )
 from users.serializers import UserSerializer
+import logging
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -345,9 +346,10 @@ class BottleServiceSerializer(serializers.ModelSerializer):
         try:
             event = self.context["event"]
             user = self.context["user"]
-            user_reservation = UserEventRegistration.objects.get(
+            user_reservation = UserEventRegistration.objects.filter(
                 bottle_service=obj, event=event
-            )
+            ).first()
             return user_reservation.available_slots
-        except:
+        except Exception as e:
+            logging.warning(str(e))
             return obj.person
