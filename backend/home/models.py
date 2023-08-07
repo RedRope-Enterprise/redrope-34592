@@ -181,11 +181,27 @@ class UserEventRegistration(BaseModel):
     charge_id = models.CharField(
         _("Charge ID"), max_length=50, blank=True, null=True
     )
-    stripe_fee = models.CharField(
-        _("Stripe Fee"), max_length=50, blank=True, null=True
+    balance_charge_id = models.CharField(
+        _("Balance Charge ID"), max_length=50, blank=True, null=True
     )
+    stripe_fee = models.DecimalField(
+        _("Stripe Fee"), max_digits=8, default=0, decimal_places=2
+    )
+    balance_paid = models.BooleanField(_("Balance Paid"), default=False)
     payment_status = models.CharField(
         _("Payment Status"),
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    channel = models.CharField(
+        _("Payment Channel"),
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    balance_channel = models.CharField(
+        _("Balance Payment Channel"),
         max_length=50,
         blank=True,
         null=True,

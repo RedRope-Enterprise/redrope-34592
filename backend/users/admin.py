@@ -46,7 +46,9 @@ class UserAdmin(auth_admin.UserAdmin):
             "User",
             {
                 "fields": (
+                    "approved",
                     "name",
+                    "email",
                     "bio",
                     "profile_picture",
                     "interests",
@@ -64,8 +66,8 @@ class UserAdmin(auth_admin.UserAdmin):
                 )
             },
         ),
-    ) + auth_admin.UserAdmin.fieldsets
-    list_display = ["username", "name", "event_planner", "is_superuser", "date_joined"]
+    ) #+ auth_admin.UserAdmin.fieldsets
+    list_display = ["username", "email", "event_planner", "approved", "is_superuser", "date_joined", "name"]
     search_fields = ["name", "username", "email", "phone"]
 
     inlines = [

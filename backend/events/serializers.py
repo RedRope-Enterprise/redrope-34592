@@ -30,6 +30,7 @@ class EventListSerializer(serializers.ModelSerializer):
     event_bottle_services = serializers.SerializerMethodField()
     event_images = serializers.SerializerMethodField()
     favorite = serializers.SerializerMethodField()
+    is_reserved = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -79,6 +80,10 @@ class EventListSerializer(serializers.ModelSerializer):
     def get_event_categories(self, obj):
         if hasattr(obj, "categories"):
             return CategorySerializer(obj.categories, many=True).data
+        
+    def get_is_reserved(self, obj):
+        user = self.context["request"].user
+        return user.going_event.filter(event=obj, reserved=True).exists()
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -110,6 +115,8 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     favorite = serializers.SerializerMethodField()
     interested_count = serializers.SerializerMethodField()
     paid_count = serializers.SerializerMethodField()
+    is_reserved = serializers.SerializerMethodField()
+    reservation_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -159,6 +166,18 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     def get_paid_count(self, obj):
         if hasattr(obj, "going"):
             return obj.going.filter(reserved=True).count()
+        
+    def get_is_reserved(self, obj):
+        user = self.context["request"].user
+        return user.going_event.filter(event=obj, reserved=True).exists()
+    
+    def get_reservation_details(self, obj):
+        user = self.context["request"].user
+        reservation = user.going_event.filter(event=obj).first()
+        if reservation:
+            return RegisterEventSerializer(reservation).data
+        return None
+
 
 
 class MyEventSerializer(serializers.ModelSerializer):
@@ -167,6 +186,7 @@ class MyEventSerializer(serializers.ModelSerializer):
     event_bottle_service = serializers.SerializerMethodField()
     going_count = serializers.SerializerMethodField()
     event_price = serializers.SerializerMethodField()
+    event_id = serializers.CharField(source="event.id")
     event_title = serializers.CharField(source="event.title")
     location = serializers.CharField(source="event.location")
     date = serializers.CharField(source="event.start_date")
@@ -236,6 +256,9 @@ class RegisterEventSerializer(serializers.ModelSerializer):
             "reserved",
             "amount_paid",
             "amount_left",
+            "charge_id",
+            "payment_status",
+            "channel",
         )
 
 
@@ -251,7 +274,7 @@ class GoingEventSerializer(serializers.ModelSerializer):
 class ReserveSerializer(serializers.ModelSerializer):
     attendee = serializers.IntegerField()
     # percentage_upfront = serializers.IntegerField()
-    payment_method = serializers.CharField()
+    payment_method = serializers.CharField(required=False)
 
     class Meta:
         model = UserEventRegistration
@@ -260,6 +283,7 @@ class ReserveSerializer(serializers.ModelSerializer):
             "bottle_service",
             "attendee",
             "payment_method",
+            "channel",
             # "percentage_upfront",
         )
 
@@ -280,6 +304,10 @@ class ReserveSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"error": "The number of attendees exceeds the maximum limit."}
                 )
+        if not attrs.get("channel") and not attrs.get("payment_method"):
+            raise serializers.ValidationError(
+                {"payment_method": "Please provide a payment method."}
+            )
         if attrs.get("bottle_service") not in attrs.get("event").bottle_services.all():
             raise serializers.ValidationError(
                 {"bottle_services": "Event doesn't have selected bottle service."}
