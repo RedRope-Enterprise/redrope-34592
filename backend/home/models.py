@@ -1,5 +1,6 @@
 from django.db import models
 import logging
+from django.db.models import Sum
 from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
@@ -169,9 +170,6 @@ class UserEventRegistration(BaseModel):
     attendee = models.PositiveIntegerField(_("Number of attendees"), default=1)
     interested = models.BooleanField(_("Interested"), default=True)
     reserved = models.BooleanField(_("Reserved"), default=False)
-    available_slots = models.PositiveIntegerField(
-        _("Number of available_slots"), default=1
-    )
     amount_paid = models.DecimalField(
         _("Amount paid"), max_digits=8, default=0, decimal_places=2
     )
@@ -211,7 +209,9 @@ class UserEventRegistration(BaseModel):
     def save(self, *args, **kwargs):
         try:
             if self.reserved is True:
-                self.available_slots = int(self.bottle_service.person) - int(self.attendee)
+                bottle_service = self.bottle_service
+                bottle_service.available_slots = bottle_service.available_slots - self.attendee
+                bottle_service.save()
         except Exception as e:
             logging.warning(e)
             pass
@@ -254,6 +254,7 @@ class BottleService(BaseModel):
     name = models.CharField(_("Name"), max_length=50, blank=True, null=True)
     price = models.DecimalField(_("Price"), max_digits=8, decimal_places=2)
     person = models.PositiveIntegerField(_("Number of persons"), default=1)
+    available_slots = models.PositiveIntegerField(_("Number of available_slots"), default=0)
     desc = models.TextField(_("Description"), blank=True, null=True)
 
     class Meta:
