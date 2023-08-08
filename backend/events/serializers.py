@@ -8,6 +8,7 @@ from home.models import (
     Interest,
     Category,
 )
+from django.db.models import Sum
 from users.serializers import UserSerializer
 import logging
 
@@ -25,6 +26,14 @@ class EventImageSerializer(serializers.ModelSerializer):
         read_only_fields = ("event",)
 
 
+class BottleServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BottleService
+        fields = "__all__"
+        read_only_fields = ("user",)
+
+        
 class EventListSerializer(serializers.ModelSerializer):
     images = serializers.ImageField(write_only=True)
     event_categories = serializers.SerializerMethodField()
@@ -152,7 +161,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     def get_going_count(self, obj):
         if hasattr(obj, "going"):
-            return obj.going.filter(reserved=True).count()
+            return obj.going.filter(reserved=True).aggregate(Sum('attendee'))['attendee__sum']
 
     def get_favorite(self, obj):
         user = self.context["request"].user
@@ -228,7 +237,7 @@ class MyEventSerializer(serializers.ModelSerializer):
 
     def get_going_count(self, obj):
         if hasattr(obj.event, "going"):
-            return obj.event.going.filter(reserved=True).count()
+            return obj.event.going.filter(reserved=True).aggregate(Sum('attendee'))['attendee__sum']
 
     def get_favorite(self, obj):
         user = self.context["request"].user
@@ -247,6 +256,7 @@ class MyEventSerializer(serializers.ModelSerializer):
         return price
 
 class RegisterEventSerializer(serializers.ModelSerializer):
+    bottle_service = BottleServiceSerializer()
     class Meta:
         model = UserEventRegistration
         fields = "__all__"
@@ -260,6 +270,7 @@ class RegisterEventSerializer(serializers.ModelSerializer):
             "charge_id",
             "payment_status",
             "channel",
+            "bottle_service",
         )
 
 
@@ -289,22 +300,10 @@ class ReserveSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        try:
-            user = self.context["request"].user
-            user_reservation = UserEventRegistration.objects.get(
-                user=user,
-                bottle_service=attrs.get("bottle_service"),
-                event=attrs.get("event"),
+        if int(attrs.get("bottle_service").available_slots) < int(attrs.get("attendee")):
+            raise serializers.ValidationError(
+                {"error": "The number of attendees exceeds the maximum limit."}
             )
-            if user_reservation.available_slots < attrs.get("attendee"):
-                raise serializers.ValidationError(
-                    {"error": "The number of attendees exceeds the maximum limit."}
-                )
-        except:
-            if attrs.get("attendee") > attrs.get("bottle_service").person:
-                raise serializers.ValidationError(
-                    {"error": "The number of attendees exceeds the maximum limit."}
-                )
         if not attrs.get("channel") and not attrs.get("payment_method"):
             raise serializers.ValidationError(
                 {"payment_method": "Please provide a payment method."}
@@ -334,22 +333,4 @@ class InterestSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BottleServiceSerializer(serializers.ModelSerializer):
-    available_slots = serializers.SerializerMethodField()
 
-    class Meta:
-        model = BottleService
-        fields = "__all__"
-        read_only_fields = ("user",)
-
-    def get_available_slots(self, obj):
-        try:
-            event = self.context["event"]
-            user = self.context["user"]
-            user_reservation = UserEventRegistration.objects.filter(
-                bottle_service=obj, event=event
-            ).first()
-            return user_reservation.available_slots
-        except Exception as e:
-            logging.warning(str(e))
-            return obj.person

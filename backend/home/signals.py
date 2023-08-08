@@ -5,7 +5,7 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from home.models import UserEventRegistration, Event, \
-    FavoriteEvent, FeedBackSupport
+    FavoriteEvent, FeedBackSupport, BottleService
 from users.models import User
 from push_notifications.models import GCMDevice
 from utils.helper import HelperClass
@@ -152,5 +152,15 @@ def new_user_feedback(sender, instance, created, **kwargs):
                         'email_subject': 'Feedback Received'}
             HelperClass.send_email(data)
 
+        except Exception as e:
+            raise Exception(e)
+
+
+@receiver(post_save, sender=BottleService)
+def new_bottle_service(sender, instance, created, **kwargs):
+    if created:
+        try:
+            instance.available_slots = instance.person
+            instance.save()
         except Exception as e:
             raise Exception(e)
