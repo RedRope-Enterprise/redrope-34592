@@ -163,9 +163,6 @@ const PaymentScreen = () => {
                   )
 
                   if (error) {
-                    console.log(
-                      "Payment Failed: error: " + JSON.stringify(error)
-                    )
                     Alert.alert(
                       "Payment Failed:",
                       error.localizedMessage || error || ""
@@ -225,7 +222,10 @@ const PaymentScreen = () => {
                   )
 
                   if (error) {
-                    Alert.alert("Payment Failed:", error || "")
+                    Alert.alert(
+                      "Payment Failed:",
+                      error.localizedMessage || error || ""
+                    )
                   } else {
                     let result = await confirmReservation({
                       payment_intent_id: response.payment_intent_id
@@ -237,7 +237,7 @@ const PaymentScreen = () => {
                     }
                   }
 
-                  console.log("error apple pay", error)
+                  // console.log("error apple pay", error)
                 } catch (err) {
                   console.log("error ", err)
                   if (err?.error && err?.error == "Reservation already exists.")
