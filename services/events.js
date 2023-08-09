@@ -31,6 +31,13 @@ async function getMyEvents() {
   return response.data
 }
 
+async function getEventGoingUsers(id) {
+  const response = await api.get(`/api/v1/events/${id}/going/`, {
+    params: {}
+  })
+  return response.data
+}
+
 async function getEventDetails(id) {
   const response = await api.get(`/api/v1/events/${id}/`, {
     params: {}
@@ -46,7 +53,10 @@ async function addBottleService(payload) {
 
 async function updateBottleService(payload, id) {
   console.log("payload ", payload)
-  const response = await api.put(`/api/v1/events/bottle-service/${id}/`, payload)
+  const response = await api.put(
+    `/api/v1/events/bottle-service/${id}/`,
+    payload
+  )
   return response.data
 }
 
@@ -121,5 +131,6 @@ export {
   deleteEvent,
   updateEvent,
   updateBottleService,
-  getRegistedEvent
+  getRegistedEvent,
+  getEventGoingUsers
 }

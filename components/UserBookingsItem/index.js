@@ -8,14 +8,27 @@ import {
   FlatList,
   ImageBackground
 } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+
 import { Colors, Typography, Mixins } from "../../styles"
 import LinearGradient from "react-native-linear-gradient"
 import FastImage from "react-native-fast-image"
-
+import { getEventGoingUsers } from "./../../services/events"
 const { width, height } = Dimensions.get("window")
 
 const UserBookingsItem = props => {
+  const navigation = useNavigation()
+
   const { event, onPress } = props
+
+  const [goingUsers, setGoingUsers] = useState([])
+
+  useEffect(async () => {
+    if (global?.user?.event_planner) {
+      const resp = await getEventGoingUsers(event?.id)
+      setGoingUsers(resp.results)
+    }
+  }, [])
 
   return (
     <TouchableOpacity
@@ -181,6 +194,50 @@ const UserBookingsItem = props => {
                 {`${event?.going_count} going`}
               </Text>
             </View>
+          )}
+
+          {goingUsers.length > 0 && (
+            <TouchableOpacity
+              style={{ flexDirection: "row", marginVertical: "5%" }}
+              onPress={() =>
+                navigation.navigate("GoingList", {
+                  users: goingUsers
+                })
+              }
+            >
+              {goingUsers?.map((goingPerson, index) => {
+                return (
+                  <View
+                    style={{
+                      borderRadius: 1000,
+                      borderWidth: 1,
+                      overflow: "hidden",
+                      borderColor: Colors.WHITE,
+                      left: index === 0 ? 0 : -10 * index,
+                      zIndex: index === 0 ? 10000 : 1 * -index
+                    }}
+                  >
+                    <FastImage
+                      style={{ width: 32, height: 32 }}
+                      source={{ uri: goingPerson?.profile_picture }}
+                    />
+                  </View>
+                )
+              })}
+              {/* <Image style={{width : 20, height : 20}}source={require("../../assets/eventDetails/Group.png")} /> */}
+              <Text
+                style={{
+                  marginLeft: "2%",
+                  alignSelf: "center",
+                  fontSize: Typography.FONT_SIZE_16,
+                  fontFamily: Typography.FONT_FAMILY_POPPINS_REGULAR,
+                  fontWeight: Typography.FONT_WEIGHT_500,
+                  color: Colors.PRIMARY_1
+                }}
+              >
+                {`${goingUsers.length} going`}
+              </Text>
+            </TouchableOpacity>
           )}
 
           <View
